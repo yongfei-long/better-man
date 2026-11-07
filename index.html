@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F5F7FA">
+<title>我的时间记录</title>
+<style>
+/* ========== 基础与移动端适配 ========== */
+:root{
+  --blue:#2F7DF6;
+  --bg:#F5F7FA;
+  --text:#1F2A44;
+  --muted:#8A94A6;
+  --line:#EEF1F7;
+  --soft:#E8EDF5;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;background:var(--bg);}
+/* overflow-x:hidden 在部分浏览器会把 overflow-y 计算成 auto，可能使 sticky 失效；
+   支持 clip 的浏览器改用 clip（不创建滚动容器），保证状态条 sticky 生效 */
+@supports (overflow-x:clip){ html,body{overflow-x:clip;} }
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  color:var(--text);font-size:15px;line-height:1.5;
+  -webkit-text-size-adjust:100%;touch-action:manipulation;
+}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:0;background:none;color:inherit;-webkit-tap-highlight-color:transparent;}
+input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent;}
+.ellipsis{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+#app{
+  max-width:100%;
+  padding-top:calc(10px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));
+}
+#app-header{max-width:480px;margin:0 auto;padding:0 12px 6px;display:flex;align-items:center;gap:8px;}
+.avatar{
+  width:46px;height:46px;flex:0 0 46px;border-radius:50%;
+  background:linear-gradient(135deg,#4B93FF,#2F7DF6);color:#fff;
+  font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(47,125,246,.25);
+}
+.header-name{flex:1 1 auto;min-width:0;}
+.header-name-inner{display:flex;align-items:center;min-width:0;}
+.header-name-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px;font-weight:700;}
+.icon-btn{
+  width:44px;height:44px;flex:0 0 44px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:12px;color:var(--muted);font-size:22px;line-height:1;
+}
+.icon-btn:active{background:#EEF3FB;}
+.icon-btn.edit-btn{color:#6E7C93;}
+.icon-btn.plus{
+  background:var(--blue);color:#fff;border-radius:14px;font-size:26px;font-weight:400;
+  box-shadow:0 4px 10px rgba(47,125,246,.25);
+}
+.wrap{max-width:480px;margin:0 auto;padding:0 12px;}
+.card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,60,110,.06);padding:16px;margin-bottom:12px;}
+.section-title{font-size:16px;font-weight:700;margin-bottom:12px;}
+.empty-line{font-size:14px;color:var(--muted);padding:6px 0;}
+.empty-block{font-size:14px;color:var(--muted);text-align:center;padding:22px 8px;line-height:1.6;}
+
+/* ========== 状态条（仅计时中渲染，sticky） ========== */
+#status-bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:40;
+  max-width:480px;width:calc(100% - 24px);margin:8px auto 10px;padding:0 14px;
+  min-height:50px;display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.86);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.92);border-radius:14px;
+  box-shadow:0 4px 16px rgba(30,60,110,.10);
+}
+.status-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600;color:var(--blue);}
+.status-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 4px rgba(47,125,246,.10);}
+
+/* ========== 总览 ========== */
+.ov-block{margin-bottom:12px;}
+.ov-label{font-size:14px;color:var(--muted);margin-bottom:8px;}
+.stat-row{display:flex;align-items:center;gap:8px;min-height:34px;}
+.dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px;display:inline-block;}
+.stat-name{flex:1 1 auto;min-width:0;font-size:14px;}
+.stat-value{flex:0 0 auto;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;}
+.ov-total{padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.ov-numbers{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;}
+#stat-total{color:var(--blue);}
+.slash{color:#C9D2E0;font-weight:400;}
+#stat-target{color:var(--text);font-size:20px;}
+.ov-progress-text{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:12px 0 4px;}
+#stat-percent-text{font-size:15px;font-weight:700;}
+#stat-remaining{font-size:14px;color:var(--muted);}
+.ov-ring{display:flex;justify-content:center;padding-top:6px;}
+
+/* ========== 项目卡片 ========== */
+.project-card{
+  position:relative;overflow:visible;background:#fff;border-radius:16px;
+  box-shadow:0 2px 12px rgba(30,60,110,.06);
+  padding:14px 14px 14px 18px;margin-bottom:12px;
+}
+.proj-stripe{position:absolute;left:0;top:14px;bottom:14px;width:5px;border-radius:4px;background:var(--accent,#5B8FF9);}
+.proj-body{min-width:0;}
+.proj-top{display:flex;align-items:center;gap:8px;min-width:0;}
+.proj-left{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:2px;}
+.proj-name{flex:1 1 auto;min-width:0;font-size:16px;font-weight:700;}
+.proj-today{flex:0 0 auto;white-space:nowrap;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.menu-btn{font-size:22px;color:#9AA6B8;}
+.target-chip{
+  display:inline-flex;align-items:center;max-width:100%;min-height:44px;
+  margin:8px 0 2px;padding:0 12px;border-radius:10px;
+  background:#F2F7FF;border:1px solid #E3EDFF;color:var(--blue);font-size:14px;
+}
+.target-chip:active{background:#E7F0FF;}
+.interrupt-note{font-size:14px;color:#A0A9B8;padding:2px 0 0;}
+.proj-actions{margin-top:10px;}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:48px;min-height:48px;padding:0 12px;border-radius:12px;
+  font-size:15px;font-weight:600;text-align:center;white-space:nowrap;min-width:0;
+  transition:transform .08s ease,background .15s ease;
+}
+.btn:active{transform:scale(.985);}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,125,246,.22);}
+.btn-outline{background:#fff;color:var(--blue);border:1.5px solid #BFD6FB;}
+.btn-danger{background:#E8534A;color:#fff;}
+.btn-disabled{opacity:.6;}
+.btn-row{display:flex;gap:10px;}
+.btn-row .btn{flex:1 1 0;min-width:0;}
+.proj-actions>.btn{width:100%;}
+.proj-menu{
+  position:absolute;right:8px;top:50px;z-index:30;
+  width:176px;max-width:calc(100% - 16px);
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 10px 28px rgba(30,60,110,.16);padding:6px;
+}
+.menu-item{display:flex;align-items:center;width:100%;min-height:44px;padding:0 12px;border-radius:8px;font-size:14px;color:var(--text);text-align:left;}
+.menu-item:active{background:#F2F7FF;}
+.menu-item.danger{color:#E0453B;}
+
+/* ========== 记录列表 ========== */
+.record-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+.record-row:last-child{border-bottom:0;}
+.rec-main{flex:1 1 auto;min-width:0;}
+.rec-line1{display:flex;align-items:center;gap:8px;min-width:0;}
+.rec-name{flex:1 1 auto;min-width:0;font-size:14px;font-weight:600;}
+.rec-time{flex:0 0 auto;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.rec-line2{font-size:14px;color:var(--muted);margin-top:2px;}
+.tag{display:inline-block;margin-left:8px;padding:1px 6px;border-radius:6px;font-size:14px;color:#E8833A;background:#FFF3E6;}
+.tag-running{color:var(--blue);background:#EAF2FF;}
+.rec-del{flex:0 0 44px;color:#B4BDCB;font-size:24px;}
+.rec-del:active{color:#E0453B;background:#FFF1F0;}
+
+/* ========== 底部生成按钮 ========== */
+.generate-btn{
+  width:100%;height:52px;border-radius:14px;
+  background:linear-gradient(135deg,#4B93FF,#2F7DF6);color:#fff;
+  font-size:16px;font-weight:700;box-shadow:0 8px 20px rgba(47,125,246,.24);margin-top:4px;
+}
+.generate-btn:active{transform:scale(.99);}
+.footer-note{text-align:center;font-size:14px;color:#A6AFC0;margin-top:14px;}
+
+/* ========== Toast ========== */
+#toast{
+  position:fixed;top:calc(env(safe-area-inset-top,0px) + 66px);left:50%;
+  transform:translate(-50%,-10px);z-index:60;
+  max-width:calc(100% - 32px);padding:10px 16px;border-radius:12px;
+  background:rgba(31,42,68,.92);color:#fff;font-size:14px;line-height:1.45;text-align:center;
+  box-shadow:0 8px 24px rgba(20,35,60,.22);
+  opacity:0;pointer-events:none;word-break:break-word;
+  transition:opacity .24s ease,transform .24s ease;
+}
+#toast.show{opacity:1;transform:translate(-50%,0);}
+#toast:empty{display:none;}
+
+/* ========== 弹层 ========== */
+#modal-root:empty{display:none;}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,35,60,.42);z-index:100;}
+.modal-panel{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:101;
+  width:calc(100% - 32px);max-width:400px;max-height:calc(100vh - 48px);overflow-y:auto;
+  background:#fff;border-radius:18px;padding:20px;
+  box-shadow:0 18px 50px rgba(20,40,80,.24);
+  -webkit-overflow-scrolling:touch;
+}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+.modal-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:8px;}
+.confirm-desc{font-size:14px;color:var(--text);margin-top:10px;margin-bottom:6px;}
+.modal-label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px;}
+.modal-input{
+  width:100%;height:48px;padding:0 12px;border:1px solid #DCE5F2;border-radius:12px;
+  background:#F9FBFF;color:var(--text);font-size:16px;outline:none;
+}
+.modal-input:focus{border-color:var(--blue);background:#fff;}
+.modal-error{min-height:20px;margin-top:8px;font-size:14px;color:#E0453B;line-height:1.4;}
+.modal-actions{display:flex;gap:10px;margin-top:14px;}
+.modal-actions .btn{flex:1 1 0;min-width:0;}
+.target-inputs{display:flex;gap:10px;margin-top:12px;}
+.target-field{flex:1 1 0;min-width:0;}
+.target-field label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px;}
+.target-field .modal-input{text-align:center;}
+.preview-title{margin-bottom:12px;}
+.preview-scroll{max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#F5F7FA;border-radius:12px;padding:8px;}
+.card-preview{width:100%;}
+#card-canvas,.card-image{width:100%;height:auto;display:block;border-radius:8px;}
+.card-hint{font-size:14px;color:var(--muted);text-align:center;margin-top:10px;}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="app-header"></header>
+  <div class="wrap">
+    <section class="card" id="overview-card">
+      <div class="section-title">今日概览</div>
+      <div class="ov-block">
+        <div class="ov-label">今日各项目小计</div>
+        <div id="stat-project-list"></div>
+      </div>
+      <div class="ov-total">
+        <div class="ov-label">今日合计总时长 / 目标总时长</div>
+        <div class="ov-numbers">
+          <span id="stat-total">00:00</span>
+          <span class="slash">/</span>
+          <span id="stat-target">未设置目标</span>
+        </div>
+      </div>
+      <div class="ov-progress-text">
+        <span id="stat-percent-text">完成 0%</span>
+        <span id="stat-remaining">设置目标后查看完成情况</span>
+      </div>
+      <div class="ov-ring">
+        <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="目标完成度圆环">
+          <circle cx="80" cy="80" r="66" fill="none" stroke="#E8EDF5" stroke-width="12"></circle>
+          <circle id="ring-progress" cx="80" cy="80" r="66" fill="none" stroke="#2F7DF6" stroke-width="12"
+                  stroke-linecap="round" transform="rotate(-90 80 80)"
+                  stroke-dasharray="414.6902654139173" stroke-dashoffset="414.6902654139173" style="opacity:0"></circle>
+          <text id="ring-label" x="80" y="80" dy=".35em" text-anchor="middle"
+                font-size="34" font-weight="700" fill="#1F2A44"
+                font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif">0%</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">我的项目</div>
+      <div id="project-list"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">今日记录</div>
+      <div id="record-list"></div>
+    </section>
+
+    <button class="generate-btn" id="btn-generate-card" data-action="generate-card">生成今日记录卡</button>
+    <div class="footer-note">数据仅保存在本机浏览器 · 不上传</div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal-root"></div>
+
+<script>
+/* =====================================================================
+ * 我的时间记录 · 单文件版
+ * 分段：常量与工具函数 / 状态与存储 / 跨天规范化 / 渲染 /
+ *       事件与业务流程 / 弹层与 toast / 今日记录卡 canvas / 初始化
+ * 数据口径：一切以「段」为单位，一段 = {id,start,end,endType}；
+ *          时长统一走 minutesOfSegment，所有显示同源。
+ * ===================================================================== */
+
+/* -------------------- 一、常量与工具函数（纯函数为主） -------------------- */
+
+/** 项目标识色：固定 8 色，按 nextColorIndex 取模分配，删除不回收、不重排 */
+var PALETTE = ["#5B8FF9", "#61DDAA", "#65789B", "#F6BD16", "#7262FD", "#78D3F8", "#F08BB4", "#FF9D4D"];
+var STORAGE_KEY = "my-time-records:v1";
+var FONT_STACK = '-apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif';
+var WEEK_NAMES = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+var RING_CIRCUMFERENCE = 2 * Math.PI * 66;
+var PENCIL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+
+/** HTML 转义：所有用户输入进入 innerHTML 前必须经过这里，防 XSS 与布局崩坏 */
+function esc(value) {
+  return String(value === null || value === undefined ? "" : value)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+/** 本地时间 YYYY-MM-DD */
+function dayKeyOf(ts) {
+  var d = new Date(ts);
+  return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+}
+
+/** dayKey → 当天本地零点的时间戳 */
+function midnightOf(dayKey) {
+  var p = String(dayKey).split("-");
+  return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])).getTime();
+}
+
+/** ts 所属日期之后下一个本地零点（用 Date 构造，自动处理夏令时/月/年边界） */
+function nextMidnightOf(ts) {
+  var d = new Date(ts);
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1).getTime();
+}
+
+function isValidDayKey(k) {
+  if (typeof k !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(k)) return false;
+  var ms = midnightOf(k);
+  return Number.isFinite(ms) && dayKeyOf(ms) === k;
+}
+
+/** 每段时长口径：不足 1 分钟按 1 分钟，超过 1 分钟向上取整到整分钟 */
+function minutesOfSegment(seg, now) {
+  var endOrNow = (seg.end === null || seg.end === undefined) ? now : seg.end;
+  var diff = Math.max(0, endOrNow - seg.start);
+  return Math.max(1, Math.ceil(diff / 60000));
+}
+
+/** 分钟数 → HH:MM */
+function formatMinutes(mins) {
+  var m = Math.max(0, Math.floor(Number(mins) || 0));
+  return pad2(Math.floor(m / 60)) + ":" + pad2(m % 60);
+}
+
+/** 时间戳 → HH:MM（本地时间） */
+function formatTime(ts) {
+  var d = new Date(ts);
+  return pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+}
+
+/** 目标分钟数 → 中文可读文案 */
+function formatTarget(mins) {
+  var h = Math.floor(mins / 60), m = mins % 60;
+  if (h > 0 && m > 0) return h + " 小时 " + m + " 分钟";
+  if (h > 0) return h + " 小时";
+  return m + " 分钟";
+}
+
+function colorOf(colorIndex) {
+  var n = Math.floor(Number(colorIndex) || 0);
+  var i = ((n % PALETTE.length) + PALETTE.length) % PALETTE.length;
+  return PALETTE[i];
+}
+
+function toNonNegInt(v, fallback) {
+  if (typeof v === "number" && Number.isFinite(v) && Number.isInteger(v) && v >= 0) return v;
+  return fallback;
+}
+
+function parseNonNegInt(raw) {
+  var t = String(raw === null || raw === undefined ? "" : raw).trim();
+  if (t === "") return 0;
+  if (!/^\d+$/.test(t)) return null;
+  var n = Number(t);
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * 按本地零点切分 [start, end] 一段时间（纯函数）。
+ * 返回 [{dayKey,start,end,endType}]，按时间升序；
+ * 零点之前的所有段 endType = "finished"（系统切分），
+ * 最后一段 endType = finalEndType（用户实际操作类型）。
+ * 同一天内不切分：只返回一段。
+ */
+function splitSegmentByMidnight(start, end, finalEndType) {
+  var parts = [];
+  if (!(end > start)) {
+    return [{ dayKey: dayKeyOf(start), start: start, end: end, endType: finalEndType }];
+  }
+  var cursor = start;
+  var guard = 0;
+  while (guard++ < 5000) {
+    var boundary = nextMidnightOf(cursor);
+    if (end <= boundary) {
+      parts.push({ dayKey: dayKeyOf(cursor), start: cursor, end: end, endType: finalEndType });
+      break;
+    }
+    parts.push({ dayKey: dayKeyOf(cursor), start: cursor, end: boundary, endType: "finished" });
+    cursor = boundary;
+  }
+  return parts;
+}
+
+/**
+ * 计算某一天的统计（纯函数）。
+ * perProject：今天有段的项目（按 state.projects 顺序）；
+ * records：今天所有段（含进行中），按 start 从新到旧；
+ * totalMinutes / targetMinutes / hasTarget / ratio / percent 均为全局同源口径。
+ */
+function computeDayStats(state, dayKey, now) {
+  var bucket = (state && state.days && state.days[dayKey]) || {};
+  var projects = (state && Array.isArray(state.projects)) ? state.projects : [];
+  var perProject = [];
+  var records = [];
+  for (var i = 0; i < projects.length; i++) {
+    var p = projects[i];
+    var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
+    if (segs.length === 0) continue;
+    var sum = 0;
+    for (var j = 0; j < segs.length; j++) {
+      var seg = segs[j];
+      var m = minutesOfSegment(seg, now);
+      sum += m;
+      records.push({ segment: seg, project: p, minutes: m, colorIndex: p.colorIndex, projectName: p.name });
+    }
+    perProject.push({ projectId: p.id, name: p.name, colorIndex: p.colorIndex, minutes: sum });
+  }
+  records.sort(function (a, b) { return b.segment.start - a.segment.start; });
+  var totalMinutes = 0;
+  for (var a = 0; a < perProject.length; a++) totalMinutes += perProject[a].minutes;
+
+  var targetMinutes = 0, hasTarget = false;
+  for (var k = 0; k < projects.length; k++) {
+    var tm = projects[k].targetMinutes;
+    if (typeof tm === "number" && Number.isFinite(tm) && tm > 0) {
+      targetMinutes += tm;
+      hasTarget = true;
+    }
+  }
+  var ratio = (hasTarget && targetMinutes > 0) ? (totalMinutes / targetMinutes) : 0;
+  var percent = (hasTarget && targetMinutes > 0) ? Math.round(ratio * 100) : 0;
+  return {
+    dayKey: dayKey, now: now, perProject: perProject, records: records,
+    totalMinutes: totalMinutes, targetMinutes: targetMinutes,
+    hasTarget: hasTarget, ratio: ratio, percent: percent
+  };
+}
+
+/* -------------------- 二、状态与存储 -------------------- */
+
+function defaultState(now) {
+  return {
+    schemaVersion: 1,
+    nickname: "时间记录员",
+    nextColorIndex: 0,
+    nextId: 1,
+    currentDayKey: dayKeyOf(now),
+    projects: [],
+    days: {}
+  };
+}
+
+/** 模块级唯一状态；localStorage 不可用时自动降级为内存态 */
+var state = defaultState(Date.now());
+
+function newId(prefix) {
+  var n = (typeof state.nextId === "number" && Number.isFinite(state.nextId) && state.nextId > 0) ? state.nextId : 1;
+  state.nextId = n + 1;
+  return prefix + "_" + n;
+}
+
+function sanitizeSegment(raw, fallbackIndex) {
+  if (!raw || typeof raw !== "object") return null;
+  var start = raw.start;
+  if (typeof start !== "number" || !Number.isFinite(start) || start <= 0) return null;
+  var id = (typeof raw.id === "string" && raw.id) ? raw.id : ("s_" + Math.floor(start) + "_" + fallbackIndex);
+  var endType = raw.endType;
+  if (endType === "running") {
+    return { id: id, start: start, end: null, endType: "running" };
+  }
+  if (endType === "interrupted" || endType === "finished") {
+    if (typeof raw.end !== "number" || !Number.isFinite(raw.end) || raw.end < start) return null;
+    return { id: id, start: start, end: raw.end, endType: endType };
+  }
+  return null;
+}
+
+/** 轻量校验 + 迁移：字段缺失补默认值、非法值丢弃；schemaVersion 预留升级位 */
+function sanitizeState(obj) {
+  var now = Date.now();
+  var base = defaultState(now);
+  if (!obj || typeof obj !== "object" || Array.isArray(obj)) return base;
+  base.schemaVersion = 1; /* 目前仅支持 v1，后续可在此分支升级旧结构 */
+  if (typeof obj.nickname === "string" && obj.nickname.trim().length > 0) {
+    base.nickname = Array.from(obj.nickname.trim()).slice(0, 12).join("");
+  }
+  base.nextColorIndex = toNonNegInt(obj.nextColorIndex, 0);
+  base.nextId = Math.max(1, toNonNegInt(obj.nextId, 1));
+  base.currentDayKey = isValidDayKey(obj.currentDayKey) ? obj.currentDayKey : dayKeyOf(now);
+  base.projects = [];
+  base.days = {};
+  var seenPid = {};
+  var maxIdNumber = 0;
+
+  function trackId(idStr) {
+    var m = /(\d+)$/.exec(String(idStr));
+    if (m) maxIdNumber = Math.max(maxIdNumber, Number(m[1]));
+  }
+
+  if (Array.isArray(obj.projects)) {
+    for (var i = 0; i < obj.projects.length; i++) {
+      var raw = obj.projects[i];
+      if (!raw || typeof raw !== "object") continue;
+      var id = (typeof raw.id === "string" && raw.id) ? raw.id : null;
+      var name = (typeof raw.name === "string") ? raw.name.trim() : "";
+      if (!id || !name || seenPid[id]) continue;
+      seenPid[id] = true;
+      var ci = toNonNegInt(raw.colorIndex, 0) % PALETTE.length;
+      var tm = null;
+      if (typeof raw.targetMinutes === "number" && Number.isFinite(raw.targetMinutes) && raw.targetMinutes > 0) {
+        tm = Math.floor(raw.targetMinutes);
+      }
+      var createdAt = (typeof raw.createdAt === "number" && Number.isFinite(raw.createdAt)) ? raw.createdAt : now;
+      base.projects.push({
+        id: id, name: Array.from(name).slice(0, 10).join(""),
+        colorIndex: ci, targetMinutes: tm, createdAt: createdAt
+      });
+      trackId(id);
+    }
+  }
+  if (obj.days && typeof obj.days === "object" && !Array.isArray(obj.days)) {
+    var dayKeys = Object.keys(obj.days);
+    for (var d = 0; d < dayKeys.length; d++) {
+      var dk = dayKeys[d];
+      if (!isValidDayKey(dk)) continue;
+      var bucket = obj.days[dk];
+      if (!bucket || typeof bucket !== "object" || Array.isArray(bucket)) continue;
+      var pids = Object.keys(bucket);
+      for (var pi = 0; pi < pids.length; pi++) {
+        var pid = pids[pi];
+        if (!seenPid[pid]) continue; /* 丢弃已删除项目的孤儿段 */
+        var arr = bucket[pid];
+        if (!Array.isArray(arr)) continue;
+        var clean = [];
+        for (var s = 0; s < arr.length; s++) {
+          var seg = sanitizeSegment(arr[s], s);
+          if (!seg) continue;
+          clean.push(seg);
+          trackId(seg.id);
+        }
+        if (clean.length > 0) {
+          if (!base.days[dk]) base.days[dk] = {};
+          base.days[dk][pid] = clean;
+        }
+      }
+    }
+  }
+  base.nextId = Math.max(base.nextId, maxIdNumber + 1);
+  return base;
+}
+
+function load() {
+  var raw = null;
+  try { raw = window.localStorage.getItem(STORAGE_KEY); } catch (e) { raw = null; }
+  if (!raw) return defaultState(Date.now());
+  var obj = null;
+  try { obj = JSON.parse(raw); } catch (e) { return defaultState(Date.now()); }
+  return sanitizeState(obj);
+}
+
+function save() {
+  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  catch (e) { /* file:// 下 localStorage 不可用：优雅降级为内存态，不白屏 */ }
+}
+
+function ensureBucket(days, dayKey, pid) {
+  if (!days) { state.days = {}; days = state.days; } /* 防御：注入/损坏数据也能安全写入 */
+  if (!days[dayKey]) days[dayKey] = {};
+  if (!Array.isArray(days[dayKey][pid])) days[dayKey][pid] = [];
+  return days[dayKey][pid];
+}
+
+function getProject(pid) {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  for (var i = 0; i < ps.length; i++) if (ps[i].id === pid) return ps[i];
+  return null;
+}
+
+function removeSegmentRaw(st, dayKey, pid, seg) {
+  var bucket = st.days[dayKey];
+  if (!bucket || !Array.isArray(bucket[pid])) return;
+  var arr = bucket[pid];
+  var idx = arr.indexOf(seg);
+  if (idx >= 0) arr.splice(idx, 1);
+  if (arr.length === 0) delete bucket[pid];
+  if (Object.keys(bucket).length === 0) delete st.days[dayKey];
+}
+
+function findAllRunningSegments(st) {
+  var out = [];
+  var days = (st && st.days) || {};
+  var dks = Object.keys(days);
+  for (var d = 0; d < dks.length; d++) {
+    var bucket = days[dks[d]] || {};
+    var pids = Object.keys(bucket);
+    for (var p = 0; p < pids.length; p++) {
+      var arr = Array.isArray(bucket[pids[p]]) ? bucket[pids[p]] : [];
+      for (var s = 0; s < arr.length; s++) {
+        var seg = arr[s];
+        if (seg && seg.endType === "running" && seg.end === null) {
+          out.push({ dayKey: dks[d], projectId: pids[p], seg: seg });
+        }
+      }
+    }
+  }
+  out.sort(function (a, b) { return b.seg.start - a.seg.start; });
+  return out;
+}
+
+function findRunningSegment(st) {
+  var all = findAllRunningSegments(st);
+  return all.length > 0 ? all[0] : null;
+}
+
+/** 「上次中断」由数据推导：今天所有已闭合段中 end 最大者若 interrupted 则显示 */
+function lastInterruptionFor(st, dayKey, pid) {
+  var bucket = (st.days && st.days[dayKey]) || {};
+  var arr = Array.isArray(bucket[pid]) ? bucket[pid] : [];
+  var best = null;
+  var bestIndex = -1;
+  for (var i = 0; i < arr.length; i++) {
+    var seg = arr[i];
+    if (seg.end === null || seg.end === undefined || seg.endType === "running") continue;
+    /* 主规则取 end 最大的已闭合段；当 end 相同（同一毫秒连续操作或测试注入）
+       时依次用 start、数组顺序裁决，选中「最后一次闭合」产生的段，
+       保证点「结束」或系统代关后灰字一定自然消失 */
+    if (best === null ||
+        seg.end > best.end ||
+        (seg.end === best.end && seg.start > best.start) ||
+        (seg.end === best.end && seg.start === best.start && i > bestIndex)) {
+      best = seg;
+      bestIndex = i;
+    }
+  }
+  return (best && best.endType === "interrupted") ? best : null;
+}
+
+/* -------------------- 三、跨天规范化 -------------------- */
+
+/**
+ * 设计取舍（重要）：
+ *  - 同一天内刷新/关页再开，进行中段保持原 start、end=null，绝不补写结束时间，
+ *    也绝不拆成两段或复制出新段。加载时只做「读取 → 跨天规范化 → 渲染」。
+ *  - 只有真正跨过零点（currentDayKey 变化）才按零点切分：零点前的部分闭合进
+ *    各自旧日期（finished，系统切分），并在新日期创建 start=新零点、end=null 的
+ *    running 段（零点后的部分算今天，因此状态条显示 00:00 开始是正确的）。
+ *  - 跨多天时由 splitSegmentByMidnight 的循环逐个边界处理。
+ * 只修改 state，返回是否有变化；save/render 由调用方统一执行一次。
+ */
+function normalizeDayRollover(newDayKey) {
+  if (!isValidDayKey(newDayKey)) return false;
+  var todayMidnight = midnightOf(newDayKey);
+  var runnings = findAllRunningSegments(state);
+  var changed = false;
+  for (var i = 0; i < runnings.length; i++) {
+    var r = runnings[i];
+    if (r.seg.start >= todayMidnight) continue; /* 仍在同一天：保持原样，不拆分 */
+    var parts = splitSegmentByMidnight(r.seg.start, todayMidnight, "finished");
+    removeSegmentRaw(state, r.dayKey, r.projectId, r.seg);
+    for (var j = 0; j < parts.length; j++) {
+      var part = parts[j];
+      var b = ensureBucket(state.days, part.dayKey, r.projectId);
+      b.push({ id: newId("s"), start: part.start, end: part.end, endType: part.endType });
+    }
+    var b2 = ensureBucket(state.days, newDayKey, r.projectId);
+    b2.push({ id: newId("s"), start: todayMidnight, end: null, endType: "running" });
+    changed = true;
+  }
+  state.currentDayKey = newDayKey;
+  return changed;
+}
+
+/** 业务操作开头调用：若已跨天，先做数据规范化（不弹窗、不打扰） */
+function syncRolloverForNow(now) {
+  var k = dayKeyOf(now);
+  if (state.currentDayKey !== k) normalizeDayRollover(k);
+  else state.currentDayKey = k;
+}
+
+/** 30 秒轮询：只检测跨天，绝不刷新任何数字 */
+function checkDayAndRefresh() {
+  var k = dayKeyOf(Date.now());
+  if (state.currentDayKey === k) return;
+  normalizeDayRollover(k);
+  save();
+  render();
+}
+
+/**
+ * 闭合一个进行中段。
+ * 同一天内：原地写 end/endType，不拆分、不换 id；
+ * 跨零点：按零点切分，零点前段 finished，最后一段保留操作类型，各段新生成 id。
+ */
+function closeRunningAt(running, endTs, endType) {
+  var parts = splitSegmentByMidnight(running.seg.start, endTs, endType);
+  if (parts.length === 1 && parts[0].dayKey === running.dayKey) {
+    running.seg.end = parts[0].end;
+    running.seg.endType = parts[0].endType;
+    return;
+  }
+  removeSegmentRaw(state, running.dayKey, running.projectId, running.seg);
+  for (var i = 0; i < parts.length; i++) {
+    var b = ensureBucket(state.days, parts[i].dayKey, running.projectId);
+    b.push({ id: newId("s"), start: parts[i].start, end: parts[i].end, endType: parts[i].endType });
+  }
+}
+
+/* -------------------- 四、渲染（一次 now，全量重渲染） -------------------- */
+
+function renderHeader() {
+  document.getElementById("app-header").innerHTML =
+    '<div class="avatar">时</div>' +
+    '<div class="header-name"><div class="header-name-inner">' +
+      '<span class="header-name-text">' + esc(state.nickname) + '</span>' +
+      '<button class="icon-btn edit-btn" data-action="edit-nickname" aria-label="编辑昵称">' + PENCIL_SVG + '</button>' +
+    '</div></div>' +
+    '<button class="icon-btn plus" data-action="add-project" aria-label="新建项目">＋</button>';
+}
+
+/** 状态条作为 #app 的直接子元素（包含块足够高，sticky 才能持续生效）；无计时完全不渲染 */
+function renderStatusBar(running) {
+  var old = document.getElementById("status-bar");
+  if (old) old.remove();
+  if (!running) return;
+  var p = getProject(running.projectId);
+  if (!p) return;
+  var html = '<div id="status-bar">' +
+    '<span class="status-text">' + esc(p.name) + ' · 计时中，' + formatTime(running.seg.start) + ' 开始</span>' +
+    '<span class="status-dot" style="background:' + colorOf(p.colorIndex) + '"></span>' +
+  '</div>';
+  document.getElementById("app-header").insertAdjacentHTML("afterend", html);
+}
+
+function renderRing(stats) {
+  var ring = document.getElementById("ring-progress");
+  var label = document.getElementById("ring-label");
+  var ratio = stats.hasTarget ? Math.max(0, stats.ratio) : 0;
+  var clamped = Math.min(ratio, 1);
+  ring.setAttribute("stroke-dasharray", String(RING_CIRCUMFERENCE));
+  ring.setAttribute("stroke-dashoffset", String(RING_CIRCUMFERENCE * (1 - clamped)));
+  ring.style.opacity = ratio > 0 ? "1" : "0"; /* 0% 时弧长严格为 0，也不留圆头小点 */
+  label.textContent = stats.percent + "%"; /* 超过 100% 数字照实显示，如 120% */
+}
+
+function renderOverview(stats) {
+  var list = document.getElementById("stat-project-list");
+  if (stats.perProject.length === 0) {
+    list.innerHTML = '<div class="empty-line">今天还没有记录</div>';
+  } else {
+    var html = "";
+    for (var i = 0; i < stats.perProject.length; i++) {
+      var item = stats.perProject[i];
+      html += '<div class="stat-row">' +
+        '<span class="dot" style="background:' + colorOf(item.colorIndex) + '"></span>' +
+        '<span class="stat-name ellipsis">' + esc(item.name) + '</span>' +
+        '<span class="stat-value">' + formatMinutes(item.minutes) + '</span>' +
+      '</div>';
+    }
+    list.innerHTML = html;
+  }
+  document.getElementById("stat-total").textContent = formatMinutes(stats.totalMinutes);
+  document.getElementById("stat-target").textContent = stats.hasTarget ? formatMinutes(stats.targetMinutes) : "未设置目标";
+  document.getElementById("stat-percent-text").textContent = "完成 " + stats.percent + "%";
+
+  var remaining;
+  if (!stats.hasTarget) {
+    remaining = "设置目标后查看完成情况";
+  } else {
+    var diff = stats.targetMinutes - stats.totalMinutes;
+    if (diff > 0) remaining = "还差 " + diff + " 分钟";
+    else if (diff === 0) remaining = "已完成目标";
+    else remaining = "已超出 " + (-diff) + " 分钟";
+  }
+  document.getElementById("stat-remaining").textContent = remaining;
+  renderRing(stats);
+}
+
+function actionsHTML(pid, isRunning, hasSegments) {
+  var id = esc(pid);
+  if (isRunning) {
+    return '<div class="btn-row">' +
+      '<button class="btn btn-outline" data-action="interrupt" data-id="' + id + '">中断</button>' +
+      '<button class="btn btn-primary" data-action="finish" data-id="' + id + '">结束</button>' +
+    '</div>';
+  }
+  return '<button class="btn btn-primary" data-action="start" data-id="' + id + '">' +
+    (hasSegments ? "继续" : "开始") + '</button>';
+}
+
+function renderProjectList(stats, running, dayKey) {
+  var host = document.getElementById("project-list");
+  var projects = Array.isArray(state.projects) ? state.projects : [];
+  if (projects.length === 0) {
+    host.innerHTML = '<div class="empty-block">还没有项目，点击右上角 ＋ 新建一个吧</div>';
+    return;
+  }
+  var bucket = (state.days && state.days[dayKey]) || {};
+  var minutesByPid = {};
+  for (var m = 0; m < stats.perProject.length; m++) minutesByPid[stats.perProject[m].projectId] = stats.perProject[m].minutes;
+
+  var html = "";
+  for (var i = 0; i < projects.length; i++) {
+    var p = projects[i];
+    var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
+    var hasSegments = segs.length > 0;
+    var isRunning = !!running && running.projectId === p.id;
+    var lastInt = lastInterruptionFor(state, dayKey, p.id);
+    var pid = esc(p.id);
+    var targetText = (typeof p.targetMinutes === "number" && p.targetMinutes > 0)
+      ? "每日目标 " + formatTarget(p.targetMinutes) : "未设置目标";
+    html += '<div class="project-card" style="--accent:' + colorOf(p.colorIndex) + '">' +
+      '<div class="proj-stripe"></div>' +
+      '<div class="proj-body">' +
+        '<div class="proj-top">' +
+          '<div class="proj-left">' +
+            '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
+            '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
+          '</div>' +
+          '<div class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</div>' +
+        '</div>' +
+        '<button class="target-chip" data-action="target" data-id="' + pid + '">' + targetText + '</button>' +
+        (lastInt ? '<div class="interrupt-note">上次中断 ' + formatTime(lastInt.end) + '</div>' : "") +
+        '<div class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  host.innerHTML = html;
+}
+
+function renderRecordList(stats) {
+  var host = document.getElementById("record-list");
+  if (stats.records.length === 0) {
+    host.innerHTML = '<div class="empty-block">今天还没有记录，点「开始」记一段吧</div>';
+    return;
+  }
+  var html = "";
+  for (var i = 0; i < stats.records.length; i++) {
+    var rec = stats.records[i];
+    var seg = rec.segment;
+    var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
+    var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
+    var tag = isRunning ? '<span class="tag tag-running">计时中</span>'
+      : (seg.endType === "interrupted" ? '<span class="tag">中断</span>' : "");
+    html += '<div class="record-row">' +
+      '<span class="dot" style="background:' + colorOf(rec.project.colorIndex) + '"></span>' +
+      '<div class="rec-main">' +
+        '<div class="rec-line1">' +
+          '<span class="rec-name ellipsis">' + esc(rec.project.name) + '</span>' +
+          '<span class="rec-time">' + timeText + '</span>' +
+        '</div>' +
+        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + '</div>' +
+      '</div>' +
+      '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + esc(seg.id) + '" aria-label="删除本段">×</button>' +
+    '</div>';
+  }
+  host.innerHTML = html;
+}
+
+/** 一次 render 只取一次 now，向下传递，保证所有合计同源 */
+function render() {
+  var now = Date.now();
+  var dayKey = dayKeyOf(now);
+  var stats = computeDayStats(state, dayKey, now);
+  var running = findRunningSegment(state);
+  renderHeader();
+  renderStatusBar(running);
+  renderOverview(stats);
+  renderProjectList(stats, running, dayKey);
+  renderRecordList(stats);
+}
+
+/* -------------------- 五、事件与业务流程 -------------------- */
+
+function startTimer(pid) {
+  if (!getProject(pid)) return;
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  var toastText = null;
+  /* 全局最多一个进行中段：若别的项目正在计时，系统代关（finished），不弹窗、不二次确认 */
+  var guard = 0;
+  while (guard++ < 20) {
+    var running = findRunningSegment(state);
+    if (!running || running.projectId === pid) break;
+    var closedProject = getProject(running.projectId);
+    var mins = minutesOfSegment(running.seg, now);
+    if (!toastText && closedProject) toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
+    closeRunningAt(running, now, "finished");
+  }
+  var still = findRunningSegment(state);
+  if (still && still.projectId === pid) { save(); render(); return; } /* 防御：不重复开段 */
+  var b = ensureBucket(state.days, dayKey, pid);
+  b.push({ id: newId("s"), start: now, end: null, endType: "running" });
+  state.currentDayKey = dayKey;
+  save();
+  render();
+  if (toastText) showToast(toastText);
+}
+
+function stopTimer(pid, endType) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var running = findRunningSegment(state);
+  if (running && running.projectId === pid) closeRunningAt(running, now, endType);
+  state.currentDayKey = dayKeyOf(now);
+  save();
+  render();
+}
+
+function deleteRecordById(segId) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  var bucket = (state.days && state.days[dayKey]) || {};
+  var pids = Object.keys(bucket);
+  for (var i = 0; i < pids.length; i++) {
+    var arr = bucket[pids[i]];
+    if (!Array.isArray(arr)) continue;
+    var idx = -1;
+    for (var j = 0; j < arr.length; j++) if (arr[j].id === segId) { idx = j; break; }
+    if (idx >= 0) {
+      arr.splice(idx, 1);
+      if (arr.length === 0) delete bucket[pids[i]];
+      break;
+    }
+  }
+  if (Object.keys(bucket).length === 0 && state.days) delete state.days[dayKey];
+  state.currentDayKey = dayKey;
+  save();
+  render();
+}
+
+function deleteProjectById(pid) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  state.projects = (Array.isArray(state.projects) ? state.projects : []).filter(function (p) { return p.id !== pid; });
+  var days = state.days || {};
+  var dks = Object.keys(days);
+  for (var i = 0; i < dks.length; i++) {
+    if (days[dks[i]] && days[dks[i]][pid]) delete days[dks[i]][pid];
+    if (days[dks[i]] && Object.keys(days[dks[i]]).length === 0) delete days[dks[i]];
+  }
+  state.currentDayKey = dayKeyOf(now);
+  save();
+  render();
+}
+
+function onDocumentClick(e) {
+  var target = (e.target && typeof e.target.closest === "function") ? e.target : null;
+  if (!target) return;
+  var menuEl = target.closest(".proj-menu");
+  var isMenuBtn = !!target.closest('[data-action="menu"]');
+  if (!menuEl && !isMenuBtn) closeProjMenu();
+
+  var el = target.closest("[data-action]");
+  if (!el) return;
+  var action = el.getAttribute("data-action");
+  var id = el.getAttribute("data-id");
+  switch (action) {
+    case "edit-nickname": openNicknameModal(); break;
+    case "add-project": openProjectModal(); break;
+    case "start": startTimer(id); break;
+    case "interrupt": stopTimer(id, "interrupted"); break;
+    case "finish": stopTimer(id, "finished"); break;
+    case "menu": toggleProjMenu(id, el); break;
+    case "menu-target": closeProjMenu(); openTargetModal(id); break;
+    case "menu-delete": closeProjMenu(); openDeleteProjectModal(id); break;
+    case "target": openTargetModal(id); break;
+    case "delete-record": openDeleteRecordModal(id); break;
+    case "generate-card": openCardPreview(); break;
+    case "modal-cancel": closeModal(); break;
+    case "modal-confirm": handleModalConfirm(); break;
+    case "modal-backdrop": closeModal(); break;
+    case "save-image": saveCardImage(); break;
+    default: break;
+  }
+}
+
+function onDocumentKeydown(e) {
+  if (e.key === "Escape") { closeProjMenu(); if (modalState) closeModal(); }
+  if (e.key === "Enter" && modalState && modalState.kind !== "preview") {
+    var t = e.target;
+    if (t && t.tagName === "INPUT") { e.preventDefault(); handleModalConfirm(); }
+  }
+}
+
+/* -------------------- 六、弹层与 toast -------------------- */
+
+var modalState = null;
+var toastTimer = null;
+
+function closeModal() {
+  modalState = null;
+  document.getElementById("modal-root").innerHTML = "";
+}
+
+function openModalShell(panelHTML, config) {
+  modalState = config;
+  document.getElementById("modal-root").innerHTML =
+    '<div class="modal-backdrop" data-action="modal-backdrop"></div>' +
+    '<div class="modal-panel" role="dialog" aria-modal="true">' + panelHTML + '</div>';
+}
+
+function showModalError(msg) {
+  var box = document.getElementById("modal-error");
+  if (box) box.textContent = msg;
+}
+
+function readModalValues() {
+  var root = document.getElementById("modal-root");
+  var input = root.querySelector("#modal-input");
+  var hours = root.querySelector("#modal-input");
+  var minutes = root.querySelector("#modal-minutes");
+  return {
+    input: input ? input.value : "",
+    hours: hours ? hours.value : "",
+    minutes: minutes ? minutes.value : ""
+  };
+}
+
+function handleModalConfirm() {
+  if (!modalState || typeof modalState.onConfirm !== "function") { closeModal(); return; }
+  var ok = modalState.onConfirm(readModalValues());
+  if (ok === false) return; /* 校验失败：弹层内红字提示，不关闭 */
+  closeModal();
+}
+
+function openInputModal(config) {
+  var panel =
+    '<div class="modal-title">' + esc(config.title) + '</div>' +
+    (config.desc ? '<div class="modal-desc">' + esc(config.desc) + '</div>' : "") +
+    '<label class="modal-label" for="modal-input">' + esc(config.label) + '</label>' +
+    '<input id="modal-input" class="modal-input" type="text" maxlength="60" ' +
+      'value="' + esc(config.value) + '" placeholder="' + esc(config.placeholder || "") + '" autocomplete="off">' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+    '</div>';
+  openModalShell(panel, { kind: "input", onConfirm: config.onConfirm });
+}
+
+function openConfirmModal(config) {
+  var panel =
+    '<div class="modal-title">' + esc(config.title) + '</div>' +
+    '<div class="modal-desc confirm-desc">' + esc(config.message) + '</div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn ' + (config.danger ? "btn-danger" : "btn-primary") + '" data-action="modal-confirm">' +
+        esc(config.confirmText || "确认") + '</button>' +
+    '</div>';
+  openModalShell(panel, {
+    kind: "confirm",
+    onConfirm: function () { config.onConfirm(); return true; }
+  });
+}
+
+function openNicknameModal() {
+  openInputModal({
+    title: "修改昵称",
+    label: "昵称（去空格后非空，最多 12 个字）",
+    value: state.nickname,
+    placeholder: "请输入昵称",
+    onConfirm: function (v) {
+      var name = String(v.input || "").trim();
+      if (name.length === 0) { showModalError("昵称不能为空"); return false; }
+      if (Array.from(name).length > 12) { showModalError("昵称最多 12 个字"); return false; }
+      state.nickname = name;
+      save(); render();
+      return true;
+    }
+  });
+}
+
+function openProjectModal() {
+  openInputModal({
+    title: "新建项目",
+    label: "项目名称（最多 10 个字，不可重名）",
+    value: "",
+    placeholder: "例如：阅读、运动",
+    onConfirm: function (v) {
+      var name = String(v.input || "").trim();
+      if (name.length === 0) { showModalError("项目名称不能为空"); return false; }
+      if (Array.from(name).length > 10) { showModalError("项目名称最多 10 个字"); return false; }
+      var dup = (Array.isArray(state.projects) ? state.projects : []).some(function (p) {
+        return String(p.name).trim().toLowerCase() === name.toLowerCase();
+      });
+      if (dup) { showModalError("已存在同名项目"); return false; }
+      var idx = state.nextColorIndex % PALETTE.length;
+      state.nextColorIndex = idx + 1;
+      state.projects.push({
+        id: newId("p"), name: name, colorIndex: idx,
+        targetMinutes: null, createdAt: Date.now()
+      });
+      save(); render();
+      return true;
+    }
+  });
+}
+
+function openTargetModal(pid) {
+  var p = getProject(pid);
+  if (!p) return;
+  var cur = (typeof p.targetMinutes === "number" && p.targetMinutes > 0) ? p.targetMinutes : 0;
+  var h = Math.floor(cur / 60), m = cur % 60;
+  var panel =
+    '<div class="modal-title">修改目标时长</div>' +
+    '<div class="modal-desc">' + esc(p.name) + ' · 合计为 0 分钟视为「未设置目标」，不计入目标总时长</div>' +
+    '<div class="target-inputs">' +
+      '<div class="target-field"><label for="modal-input">小时（0~23）</label>' +
+        '<input id="modal-input" class="modal-input" type="number" inputmode="numeric" min="0" max="23" step="1" value="' + h + '"></div>' +
+      '<div class="target-field"><label for="modal-minutes">分钟（0~59）</label>' +
+        '<input id="modal-minutes" class="modal-input" type="number" inputmode="numeric" min="0" max="59" step="1" value="' + m + '"></div>' +
+    '</div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+    '</div>';
+  openModalShell(panel, {
+    kind: "target",
+    onConfirm: function (v) {
+      var hv = parseNonNegInt(v.hours), mv = parseNonNegInt(v.minutes);
+      if (hv === null || mv === null) { showModalError("请输入有效的整数"); return false; }
+      if (hv < 0 || hv > 23) { showModalError("小时需在 0~23 之间"); return false; }
+      if (mv < 0 || mv > 59) { showModalError("分钟需在 0~59 之间"); return false; }
+      var total = hv * 60 + mv;
+      p.targetMinutes = total > 0 ? total : null;
+      save(); render();
+      return true;
+    }
+  });
+}
+
+function openDeleteProjectModal(pid) {
+  var p = getProject(pid);
+  if (!p) return;
+  openConfirmModal({
+    title: "删除项目",
+    message: "确定删除《" + p.name + "》吗？该项目的所有记录也会一并删除，且无法恢复。",
+    confirmText: "删除",
+    danger: true,
+    onConfirm: function () { deleteProjectById(pid); }
+  });
+}
+
+function openDeleteRecordModal(segId) {
+  openConfirmModal({
+    title: "撤销这段记录",
+    message: "删除后，这段时长会从项目合计、今日总时长、圆环与百分比中同步扣除。",
+    confirmText: "删除记录",
+    danger: true,
+    onConfirm: function () { deleteRecordById(segId); }
+  });
+}
+
+function toggleProjMenu(pid, anchorEl) {
+  var existing = document.querySelector(".proj-menu");
+  if (existing) {
+    var wasSame = existing.getAttribute("data-project") === pid;
+    existing.remove();
+    if (wasSame) return;
+  }
+  var card = anchorEl.closest(".project-card");
+  if (!card) return;
+  var menu = document.createElement("div");
+  menu.className = "proj-menu";
+  menu.setAttribute("data-project", pid);
+  menu.innerHTML =
+    '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">修改目标时长</button>' +
+    '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>';
+  card.appendChild(menu);
+}
+
+function closeProjMenu() {
+  var m = document.querySelector(".proj-menu");
+  if (m) m.remove();
+}
+
+function showToast(text) {
+  var el = document.getElementById("toast");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.add("show");
+  if (toastTimer !== null) { clearTimeout(toastTimer); toastTimer = null; }
+  toastTimer = setTimeout(function () {
+    el.classList.remove("show");
+    toastTimer = null;
+  }, 2800);
+}
+
+/* -------------------- 七、今日记录卡 canvas -------------------- */
+
+function roundRect(ctx, x, y, w, h, r) {
+  var rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.lineTo(x + w - rr, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+  ctx.lineTo(x + w, y + h - rr);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+  ctx.lineTo(x + rr, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+  ctx.lineTo(x, y + rr);
+  ctx.quadraticCurveTo(x, y, x + rr, y);
+  ctx.closePath();
+}
+
+/** canvas 文本按最大宽度截断加省略号，避免长项目名溢出卡片 */
+function fitText(ctx, text, maxWidth) {
+  var t = String(text === null || text === undefined ? "" : text);
+  if (ctx.measureText(t).width <= maxWidth) return t;
+  var arr = Array.from(t);
+  while (arr.length > 1 && ctx.measureText(arr.join("") + "…").width > maxWidth) arr.pop();
+  return arr.join("") + "…";
+}
+
+/** 用系统字体栈纯绘制（不引入任何跨域图片，保证 toDataURL 不被污染） */
+function drawCardCanvas(canvas, stats, now) {
+  var W = 750;
+  var n = stats.perProject.length;
+  var H = Math.max(1000, 700 + n * 96);
+  canvas.width = W * 2;
+  canvas.height = H * 2;
+  canvas.style.width = "100%";
+  canvas.style.height = "auto";
+  canvas.style.display = "block";
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.scale(2, 2); /* 2 倍位图，逻辑坐标仍按 750×H 绘制 */
+
+  var left = 76, right = 674;
+
+  ctx.fillStyle = "#EDF3FC";
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.shadowColor = "rgba(35, 75, 140, 0.14)";
+  ctx.shadowBlur = 28;
+  ctx.shadowOffsetY = 10;
+  ctx.fillStyle = "#FFFFFF";
+  roundRect(ctx, 36, 36, W - 72, H - 72, 30);
+  ctx.fill();
+  ctx.restore();
+
+  /* 头像 + 「时」 */
+  ctx.fillStyle = "#2F7DF6";
+  ctx.beginPath(); ctx.arc(left + 42, 132, 42, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "bold 36px " + FONT_STACK;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("时", left + 42, 134);
+
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "#1F2A44";
+  ctx.font = "bold 36px " + FONT_STACK;
+  ctx.fillText(fitText(ctx, state.nickname, right - 200), 184, 126);
+  ctx.fillStyle = "#8A94A6";
+  ctx.font = "24px " + FONT_STACK;
+  var d = new Date(now);
+  var dateText = d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日 " + WEEK_NAMES[d.getDay()];
+  ctx.fillText(dateText, 184, 170);
+
+  ctx.strokeStyle = "#EEF1F7"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(left, 214); ctx.lineTo(right, 214); ctx.stroke();
+
+  ctx.fillStyle = "#8A94A6"; ctx.font = "24px " + FONT_STACK;
+  ctx.fillText("今日总时长", left, 268);
+  ctx.fillText("目标完成", 410, 268);
+  ctx.fillStyle = "#2F7DF6"; ctx.font = "bold 68px " + FONT_STACK;
+  ctx.fillText(formatMinutes(stats.totalMinutes), left, 344);
+  ctx.fillText(stats.percent + "%", 410, 344);
+
+  var barY = 382, barW = right - left, barH = 14;
+  ctx.fillStyle = "#E8EDF5";
+  roundRect(ctx, left, barY, barW, barH, 7); ctx.fill();
+  var ratio = stats.hasTarget ? Math.min(Math.max(stats.ratio, 0), 1) : 0;
+  if (ratio > 0) {
+    var bw = Math.max(2, barW * ratio);
+    ctx.fillStyle = "#2F7DF6";
+    roundRect(ctx, left, barY, bw, barH, Math.min(7, bw / 2)); ctx.fill();
+  }
+
+  ctx.fillStyle = "#1F2A44"; ctx.font = "bold 30px " + FONT_STACK;
+  ctx.fillText("今日各项目小计", left, 460);
+
+  var listStart = 492;
+  if (n === 0) {
+    ctx.fillStyle = "#A6AFC0"; ctx.font = "26px " + FONT_STACK;
+    ctx.fillText("今天还没有记录", left, listStart + 46);
+  } else {
+    for (var i = 0; i < n; i++) {
+      var item = stats.perProject[i];
+      var y = listStart + i * 96;
+      ctx.fillStyle = "#F7FAFF";
+      roundRect(ctx, left, y, right - left, 80, 16); ctx.fill();
+      ctx.fillStyle = colorOf(item.colorIndex);
+      roundRect(ctx, left + 16, y + 18, 8, 44, 4); ctx.fill();
+      ctx.fillStyle = "#1F2A44"; ctx.font = "30px " + FONT_STACK;
+      ctx.textAlign = "left";
+      ctx.fillText(fitText(ctx, item.name, 330), left + 40, y + 50);
+      ctx.fillStyle = "#2F7DF6"; ctx.font = "bold 30px " + FONT_STACK;
+      ctx.textAlign = "right";
+      ctx.fillText(formatMinutes(item.minutes), right - 20, y + 50);
+      ctx.textAlign = "left";
+    }
+  }
+
+  ctx.fillStyle = "#B4BDCB"; ctx.font = "22px " + FONT_STACK;
+  ctx.textAlign = "center";
+  ctx.fillText("我的时间记录 · 数据仅保存在本机", W / 2, H - 68);
+  ctx.textAlign = "left";
+}
+
+function openCardPreview() {
+  var now = Date.now();
+  var stats = computeDayStats(state, dayKeyOf(now), now);
+  var panel =
+    '<div class="modal-title preview-title">今日记录卡</div>' +
+    '<div class="preview-scroll"><div id="card-preview" class="card-preview"></div></div>' +
+    '<div class="card-hint" id="card-hint">点击下方按钮生成可保存的图片</div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions preview-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">关闭</button>' +
+      '<button class="btn btn-primary" id="btn-save-image" data-action="save-image">保存图片</button>' +
+    '</div>';
+  openModalShell(panel, { kind: "preview", onConfirm: null });
+  var holder = document.getElementById("card-preview");
+  var canvas = document.createElement("canvas");
+  canvas.id = "card-canvas";
+  drawCardCanvas(canvas, stats, now);
+  if (holder) holder.appendChild(canvas);
+}
+
+/** 预览与保存同一张位图：直接把 canvas.toDataURL 的 PNG 放进 img 元素，逐像素一致 */
+function saveCardImage() {
+  var canvas = document.getElementById("card-canvas");
+  if (!canvas) return;
+  var url = "";
+  try { url = canvas.toDataURL("image/png"); }
+  catch (e) { showModalError("图片生成失败，请重试"); return; }
+  var holder = document.getElementById("card-preview");
+  if (holder) {
+    var img = document.createElement("img");
+    img.src = url;
+    img.alt = "我的今日记录卡";
+    img.className = "card-image";
+    holder.innerHTML = "";
+    holder.appendChild(img);
+  }
+  var hint = document.getElementById("card-hint");
+  if (hint) hint.textContent = "长按图片保存到相册";
+  var btn = document.getElementById("btn-save-image");
+  if (btn) { btn.textContent = "已生成图片"; btn.disabled = true; btn.classList.add("btn-disabled"); }
+  try {
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "我的时间记录-" + dayKeyOf(Date.now()) + ".png";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (e) { /* 桌面自动下载失败不影响移动端长按保存 */ }
+}
+
+/* -------------------- 八、初始化 -------------------- */
+
+function init() {
+  state = load();
+  var now = Date.now();
+  var k = dayKeyOf(now);
+  if (state.currentDayKey !== k) {
+    normalizeDayRollover(k);
+    save();
+  }
+  render();
+  /* 事件委托：只在 document 上绑定一次，render 重建 DOM 不重复绑定 */
+  document.addEventListener("click", onDocumentClick);
+  document.addEventListener("keydown", onDocumentKeydown);
+  /* 约 30 秒轮询，仅检测是否跨天，不刷新任何数字 */
+  window.setInterval(checkDayAndRefresh, 30000);
+}
+
+init();
+
+/* QA 本地自测接口：不影响界面 */
+window.TTR = {
+  getState: function () { return state; },
+  setStateForTest: function (s) { state = s; save(); render(); },
+  render: render,
+  computeDayStats: computeDayStats,
+  dayKeyOf: dayKeyOf,
+  minutesOfSegment: minutesOfSegment,
+  formatMinutes: formatMinutes,
+  splitSegmentByMidnight: splitSegmentByMidnight,
+  PALETTE: PALETTE,
+  STORAGE_KEY: STORAGE_KEY,
+  openCardPreview: openCardPreview
+};
+</script>
+</body>
+</html>
