@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html data-page-node-id="qZMGX7bwHhJy64BG2uS6at" lang="zh-CN">
 <head data-page-node-id="xRGU9rl6WqBVWB0OP0dxFA">
-<script data-page-node-id="aGEZMNFBOng6uyNkACGvAZ" src="/page/page_comm/inject.js"></script>
 <meta data-page-node-id="4D6Wu8acBPLlMvdAMEqo2Z" charset="UTF-8">
 <meta data-page-node-id="jISJw8h4PNgqTAV5uYIBbC" content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
 <meta data-page-node-id="h5pokf1yGfqNfkwkMQBC9V" content="#F5F7FA" name="theme-color">
@@ -74,51 +73,42 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .status-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600;color:var(--blue);}
 .status-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 4px rgba(47,125,246,.10);}
 
-/* ========== 总览 ========== */
-.ov-block{margin-bottom:12px;}
-.ov-label{font-size:14px;color:var(--muted);margin-bottom:8px;}
-.stat-row{display:flex;align-items:center;gap:8px;min-height:34px;}
+/* ========== 今日概览：单一焦点 40px 今日累计 + 8px 细进度条 ========== */
+.ov-label{font-size:13px;color:var(--muted);}
 .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px;display:inline-block;}
-.stat-name{flex:1 1 auto;min-width:0;font-size:14px;}
-.stat-value{flex:0 0 auto;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;}
-.ov-total{padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.ov-numbers{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;}
-#stat-total{color:var(--blue);}
-.slash{color:#C9D2E0;font-weight:400;}
-#stat-target{color:var(--text);font-size:20px;}
-.ov-progress-text{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:12px 0 4px;}
-#stat-percent-text{font-size:15px;font-weight:700;}
-#stat-remaining{font-size:14px;color:var(--muted);}
-.ov-ring{display:flex;justify-content:center;padding-top:6px;}
+.ov-total{padding:2px 0 14px;}
+.ov-headline{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+#stat-target{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.ov-numbers{display:flex;align-items:baseline;font-size:40px;line-height:1.15;font-weight:700;font-variant-numeric:tabular-nums;}
+#stat-total{color:var(--text);}
+.ov-progress-track{height:8px;border-radius:8px;background:var(--soft);overflow:hidden;}
+.ov-progress-fill{height:100%;width:0;border-radius:8px;background:var(--blue);transition:width .25s ease;}
+.ov-progress-text{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 0 0;}
+#stat-percent-text{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;background:#EAF2FF;color:var(--blue);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
+#stat-remaining{font-size:13px;color:var(--muted);}
 
 /* ========== 项目卡片 ========== */
+/* 外层 .card 是唯一白底容器；内部项目行只留 1px 细分隔线与色条，不再套白卡 */
 .project-card{
-  position:relative;overflow:visible;background:#fff;border-radius:16px;
-  box-shadow:0 2px 12px rgba(30,60,110,.06);
-  padding:10px 12px 10px 16px;margin-bottom:10px;
+  position:relative;background:#fff;
+  padding:0 0 0 10px;min-height:48px;display:flex;align-items:center;
 }
+.project-card:not(:last-child){border-bottom:1px solid var(--line);}
 /* 新建项目：一次短暂的浅蓝底高亮，约 1 秒后淡出 */
 .project-card.flash-new{animation:flash-new 1s ease-out;}
 @keyframes flash-new{
-  0%{background-color:#DCEBFF;box-shadow:0 0 0 3px rgba(47,125,246,.28),0 2px 12px rgba(30,60,110,.06);}
-  55%{background-color:#DCEBFF;box-shadow:0 0 0 3px rgba(47,125,246,.28),0 2px 12px rgba(30,60,110,.06);}
-  100%{background-color:#FFFFFF;box-shadow:0 2px 12px rgba(30,60,110,.06);}
+  0%,55%{background-color:#DCEBFF;}
+  100%{background-color:#FFFFFF;}
 }
-.proj-stripe{position:absolute;left:0;top:10px;bottom:10px;width:5px;border-radius:4px;background:var(--accent,#5B8FF9);}
-.proj-body{min-width:0;}
-.proj-top{display:flex;align-items:center;gap:8px;min-width:0;}
-.proj-left{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:2px;}
-.proj-name{flex:1 1 auto;min-width:0;font-size:16px;font-weight:700;}
-.proj-today{flex:0 0 auto;white-space:nowrap;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;}
-.menu-btn{font-size:22px;color:#9AA6B8;}
-.target-chip{
-  display:inline-flex;align-items:center;max-width:100%;min-height:44px;
-  margin:8px 0 2px;padding:0 12px;border-radius:10px;
-  background:#F2F7FF;border:1px solid #E3EDFF;color:var(--blue);font-size:14px;
-}
-.target-chip:active{background:#E7F0FF;}
-.interrupt-note{font-size:14px;color:#A0A9B8;padding:2px 0 0;}
-.proj-actions{margin-top:10px;}
+.proj-stripe{position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:0 4px 4px 0;background:var(--accent,#5B8FF9);}
+.proj-body{flex:1 1 auto;min-width:0;}
+.proj-top{display:flex;align-items:center;gap:8px;min-width:0;min-height:48px;}
+.proj-name{flex:0 1 auto;min-width:0;font-size:14px;font-weight:700;}
+.proj-spacer{flex:1 1 auto;min-width:4px;}
+.proj-today{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:1px;white-space:nowrap;font-size:12px;color:var(--muted);line-height:1.25;}
+.interrupt-note{font-size:11px;color:#AEB7C6;}
+.menu-btn{font-size:22px;color:#9AA6B8;flex:0 0 44px;}
+/* 目标胶囊、按钮独占行已移除；.proj-actions 新样式见文件末尾重构块 */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;
   height:48px;min-height:48px;padding:0 12px;border-radius:12px;
@@ -132,7 +122,6 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .btn-disabled{opacity:.6;}
 .btn-row{display:flex;gap:10px;}
 .btn-row .btn{flex:1 1 0;min-width:0;}
-.proj-actions>.btn{width:100%;}
 .proj-menu{
   position:absolute;right:8px;top:50px;z-index:30;
   width:176px;max-width:calc(100% - 16px);
@@ -156,13 +145,13 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .rec-del{flex:0 0 44px;color:#B4BDCB;font-size:24px;}
 .rec-del:active{color:#E0453B;background:#FFF1F0;}
 
-/* ========== 底部生成按钮 ========== */
+/* ========== 底部生成按钮：44px 描边次按钮（低频动作降级） ========== */
 .generate-btn{
-  width:100%;height:52px;border-radius:14px;
-  background:linear-gradient(135deg,#4B93FF,#2F7DF6);color:#fff;
-  font-size:16px;font-weight:700;box-shadow:0 8px 20px rgba(47,125,246,.24);margin-top:4px;
+  width:100%;height:44px;border-radius:12px;
+  background:#fff;color:var(--blue);border:1.5px solid #BFD6FB;
+  font-size:15px;font-weight:700;margin-top:4px;box-shadow:none;
 }
-.generate-btn:active{transform:scale(.99);}
+.generate-btn:active{transform:scale(.99);background:#F7FAFF;}
 .footer-note{text-align:center;font-size:14px;color:#A6AFC0;margin-top:14px;}
 
 /* ========== Toast ========== */
@@ -216,9 +205,6 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 /* ========== 总览「其中杂事」小灰字 ========== */
 .ov-chore{font-size:13px;color:var(--muted);margin-top:8px;}
 
-/* ========== 系统项目静态目标标签 ========== */
-.target-chip-static{display:inline-flex;color:var(--muted);background:#F5F7FA;border-color:#E8EDF5;cursor:default;}
-
 /* ========== 记录列表：备注 / 来源 / 折叠 ========== */
 .rec-from{flex:0 0 auto;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#5B76A8;background:#EEF4FF;border-radius:6px;padding:1px 6px;}
 .rec-note{display:inline-block;max-width:100%;font-size:12px;color:#8A94A6;background:#F2F5FA;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;overflow-wrap:anywhere;}
@@ -266,54 +252,44 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   box-shadow:0 2px 10px rgba(30,60,110,.05);margin-top:10px;
 }
 .export-btn:active{transform:scale(.99);background:#F2F7FF;}
-/* ========== 第四轮：圆形目标图标 + 紧凑胶囊按钮 + 卡片收紧 ========== */
-/* 圆形目标图标：外层 44×44 点击区（透明 padding 2px 撑开），视觉圆 40px */
-.target-hit{
-  position:relative;flex:0 0 44px;width:44px;height:44px;
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:2px;box-sizing:border-box;background:none;border:0;
-  -webkit-tap-highlight-color:transparent;
-}
-.target-hit-static{cursor:default;}
-.target-circle{
-  width:40px;height:40px;box-sizing:border-box;border-radius:50%;
-  border:1.5px solid var(--accent,#5B8FF9);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:1px;line-height:1;overflow:hidden;
-}
-.tc-num{font-size:13px;font-weight:700;line-height:1;max-width:100%;white-space:nowrap;}
-.tc-unit{font-size:9px;color:#A0A9B8;line-height:1;}
-.target-circle-empty{border:1.5px dashed #C7CEDA;background:#FAFBFD;}
-.target-circle-static{border:1.5px dashed #D5DBE4;background:#F7F8FA;}
-.tc-plus{font-size:14px;line-height:1;font-weight:400;color:#AEB7C6;}
-/* 计时中：右下角低调呼吸点，仅 opacity 变化，不做跳动 */
-.target-hit.is-running::after{
-  content:"";position:absolute;right:2px;top:2px;
-  width:7px;height:7px;border-radius:50%;
-  background:var(--accent,#5B8FF9);box-shadow:0 0 0 2px #fff;
-  animation:tc-breath 2s ease-in-out infinite;
-}
-@keyframes tc-breath{0%,100%{opacity:.85;}50%{opacity:.3;}}
-/* 卡片底部行：左侧「上次中断」灰字留白，右侧按钮靠右 */
-.proj-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;min-height:44px;}
-.proj-bottom-hint{flex:1 1 auto;min-width:0;font-size:14px;color:#A0A9B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.proj-actions{margin-top:0;display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto;}
-/* 透明 padding 把按钮点击区补到 44px 高，视觉仍是 38px */
-.btn-hit{display:inline-flex;align-items:center;gap:10px;padding:3px 0;box-sizing:border-box;}
-/* 紧凑胶囊按钮：仅作用于项目卡片内，弹窗按钮保持原样 */
+/* ========== 版式重构：单行项目行 / 前置开始胶囊 / 活动卡 / 低频按钮 ========== */
+/* 开始胶囊：54×28px，紧跟项目名 8px，放进 .proj-top 行内 */
+.proj-actions{flex:0 0 auto;display:inline-flex;align-items:center;}
 .proj-actions .btn{
-  height:38px;min-height:38px;min-width:84px;width:auto;flex:0 0 auto;
-  padding:0 20px;border-radius:19px;box-sizing:border-box;
-  font-size:14px;font-weight:600;
+  width:54px;min-width:54px;height:28px;min-height:28px;
+  padding:0;border-radius:8px;font-size:12px;font-weight:600;box-shadow:none;
 }
-.proj-actions .btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,125,246,.22);}
-.proj-actions .btn-outline{background:#fff;color:var(--blue);border:1px solid var(--blue);}
-/* 「杂事」系统项目：单行紧凑横条 —— 开始按钮移到「杂事」文字右侧、删掉按钮独占行、右下角不留空白 */
-.project-card-chore{padding-top:13px;padding-bottom:13px;}
-.project-card-chore .proj-stripe{top:13px;bottom:13px;}
-.chore-left{display:flex;align-items:center;gap:12px;flex:1 1 auto;min-width:0;}
-.chore-left .proj-name{flex:0 0 auto;}
-.chore-left .proj-actions{margin-top:0;justify-content:flex-start;}
+.proj-actions .btn-primary{background:var(--blue);color:#fff;box-shadow:none;}
+/* 菜单相对单行卡片定位 */
+.proj-menu{top:44px;}
+/* 状态条：方案 A —— 计时中升级为高亮活动卡 */
+#status-bar.status-active{
+  flex-direction:column;align-items:stretch;gap:8px;
+  padding:10px 14px;min-height:0;
+  background:#EAF2FF;border:1px solid #CFE2FF;
+  box-shadow:0 4px 14px rgba(47,125,246,.10);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.status-line1{display:flex;align-items:center;gap:8px;min-width:0;}
+.status-name{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:700;color:var(--text);}
+.status-tag{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--blue);white-space:nowrap;}
+.status-elapsed{margin-left:auto;flex:0 0 auto;font-size:13px;font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums;}
+.status-line2{display:flex;justify-content:flex-end;gap:10px;}
+.status-btn{height:36px;min-height:36px;min-width:72px;padding:0 18px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:none;}
+.status-btn.btn-primary{background:var(--blue);color:#fff;box-shadow:none;}
+.status-btn.btn-outline{background:#fff;color:var(--blue);border:1px solid var(--blue);}
+/* 区块标题行右侧轻量文字入口 */
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px;}
+.section-head .section-title{margin-bottom:0;}
+.head-action{flex:0 0 auto;padding:4px 0 4px 8px;font-size:13px;font-weight:600;color:var(--blue);background:none;border:0;}
+.head-action:active{opacity:.6;}
+/* 空状态：提示 + 可点动作 */
+.empty-action{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:8px 16px;border-radius:10px;background:var(--blue);color:#fff;font-size:14px;font-weight:600;}
+.empty-hint{display:block;font-size:12px;color:var(--muted);margin-top:4px;}
+/* 概览「其中杂事」小字（覆盖早期 13px 定义） */
+.ov-chore{font-size:12px;color:var(--muted);margin-top:2px;}
+/* 所有时长数字等宽 */
+.ov-numbers,#stat-total,#stat-target,.proj-today,.proj-today-main,.rec-time,#status-elapsed{font-variant-numeric:tabular-nums;}
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -321,40 +297,37 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   <header data-page-node-id="UDOlncxaWheaJ2hNm8FTBq" id="app-header"></header>
   <div data-page-node-id="ZuJqvnEOuQ2S9LEKNxX23n" class="wrap">
     <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card">
-      <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
+      <div class="section-head">
+        <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
+        <button class="head-action" data-action="add-project">＋ 新建项目</button>
+      </div>
       <div data-page-node-id="0AZjBDLAkQjL4TOI2yQDXz" id="project-list"></div>
     </section>
 
     <section data-page-node-id="Zt3xRikFXQhN4meWgK0mTf" class="card">
-      <div data-page-node-id="CBrYJPhpGfOEZJ9NqtjFFD" class="section-title"><!--pnid:mprXCi0SR6kdCNeUth98Qv-->今日记录</div>
+      <div class="section-head">
+        <div data-page-node-id="CBrYJPhpGfOEZJ9NqtjFFD" class="section-title"><!--pnid:mprXCi0SR6kdCNeUth98Qv-->今日记录</div>
+        <span id="records-head-action"></span>
+      </div>
       <div data-page-node-id="kCHpM4iiguhm2UD7FKqYzy" id="record-list"></div>
     </section>
 
     <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
       <div data-page-node-id="kSz1dUhH1pjGOxkEFF9jhu" class="section-title"><!--pnid:s2PycIDVRAD5xzuwV5xdDh-->今日概览</div>
-      <div data-page-node-id="LmF7wRZXz0iUeUAlOiMnL8" class="ov-block">
-        <div data-page-node-id="djEpQOtrANRvLbHgi6LFY7" class="ov-label"><!--pnid:t30tXG45pvaIbUtnGG9PCY-->今日各项目小计</div>
-        <div data-page-node-id="hM2jWz08h8MfYYYoanDc7r" id="stat-project-list"></div>
-      </div>
       <div data-page-node-id="IGAyYQ37TCh05JvIkQ3OQe" class="ov-total">
-        <div data-page-node-id="V85fHqp21CSaj9gwAXk57u" class="ov-label"><!--pnid:6NZMVODttlqI7JoangJeLX-->今日合计总时长 / 目标总时长</div>
+        <div class="ov-headline">
+          <span class="ov-label">今日累计</span>
+          <span data-page-node-id="5L685nf7t7XOcU1e7oyrvh" id="stat-target"><!--pnid:jPSuWA5eIC1mSAeb69DYsP-->未设置目标</span>
+        </div>
         <div data-page-node-id="Od4TGvuzesIpnWyQ7vztTD" class="ov-numbers">
           <span data-page-node-id="oailLwJB02s8D87PmpmJ5F" id="stat-total"><!--pnid:Kepr8xD6ws4L4fem31yLjr-->00:00</span>
-          <span data-page-node-id="SuTPh9PbxvzWELWfTKHdu3" class="slash"><!--pnid:zPk49IF2InfZRtrT6L6t7Z-->/</span>
-          <span data-page-node-id="5L685nf7t7XOcU1e7oyrvh" id="stat-target"><!--pnid:jPSuWA5eIC1mSAeb69DYsP-->未设置目标</span>
         </div>
         <div data-page-node-id="MnpSPs9JoGLbVjE7zK6QU9" class="ov-chore" id="stat-chore-line" style="display:none"></div>
       </div>
+      <div class="ov-progress-track"><div class="ov-progress-fill" id="stat-progress-fill"></div></div>
       <div data-page-node-id="WoWi2yn2k2CSOFRwmcT5gm" class="ov-progress-text">
         <span data-page-node-id="FnunyhpxeSmjgpDaEjJvMt" id="stat-percent-text"><!--pnid:7QFcjcKcc6g1I370063ZdZ-->完成 0%</span>
         <span data-page-node-id="AK0AcCs3xdLQuLKFDJlpID" id="stat-remaining"><!--pnid:N8sriVcbSQjJbPhDmL6zUZ-->设置目标后查看完成情况</span>
-      </div>
-      <div data-page-node-id="xv6OTiLRIyLLXAOB5c4rig" class="ov-ring">
-        <svg data-page-node-id="QY6XLKhx3CFztEpvDATYbj" aria-label="目标完成度圆环" height="160" role="img" viewBox="0 0 160 160" width="160">
-          <circle data-page-node-id="7gx4wHSsEQ8XDmQv1YaNE2" cx="80" cy="80" fill="none" r="66" stroke="#E8EDF5" stroke-width="12"></circle>
-          <circle data-page-node-id="hf3HRx5YbU9vxyFi8muiNu" cx="80" cy="80" fill="none" id="ring-progress" r="66" stroke="#2F7DF6" stroke-dasharray="414.6902654139173" stroke-dashoffset="414.6902654139173" stroke-linecap="round" stroke-width="12" transform="rotate(-90 80 80)" style="opacity:0"></circle>
-          <text data-page-node-id="ZdO6eKFoxpDkFegryLyZq7" dy=".35em" fill="#1F2A44" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="700" id="ring-label" text-anchor="middle" x="80" y="80"><!--pnid:1rojq6CRi9uJW5lEheEtCL-->0%</text>
-        </svg>
       </div>
     </section>
 
@@ -387,7 +360,6 @@ var CHORE_COLOR = "#9CA3AF";
 var STORAGE_KEY = "my-time-records:v1";
 var FONT_STACK = '-apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif';
 var WEEK_NAMES = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-var RING_CIRCUMFERENCE = 2 * Math.PI * 66;
 var PENCIL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
 
 /** HTML 转义：所有用户输入进入 innerHTML 前必须经过这里，防 XSS 与布局崩坏 */
@@ -1274,17 +1246,42 @@ function renderHeader() {
     '<button class="icon-btn plus" data-action="add-project" aria-label="新建项目">＋</button>';
 }
 
+/* 把分钟差格式化为「X 小时 Y 分」，仅用于概览剩余文案，不改判断分支 */
+function remainingText(mins) {
+  var h = Math.floor(mins / 60), m = mins % 60;
+  return h > 0 ? (h + " 小时" + (m > 0 ? " " + m + " 分" : "")) : (m + " 分");
+}
+
+/* 1s 定时器：只更新状态条上的已计时数字，绝不调用 render()（避免打断菜单/弹层/输入焦点） */
+function tickRunningElapsed() {
+  var el = document.getElementById("status-elapsed");
+  if (!el) return;
+  var running = findRunningSegment(state);
+  if (!running) return;
+  el.textContent = "已计时 " + formatMinutes(minutesOfSegment(running.seg, Date.now()));
+}
+
 /** 状态条作为 #app 的直接子元素（包含块足够高，sticky 才能持续生效）；无计时完全不渲染 */
 function renderStatusBar(running) {
   var old = document.getElementById("status-bar");
   if (old) old.remove();
   if (!running && !choreNoticeText) return;
-  var html = '<div id="status-bar">';
+  /* 方案 A：计时中升级为高亮活动卡；无计时仅剩提示时保持轻量文字条，不新增第二个状态条 */
+  var html = '<div id="status-bar"' + (running ? ' class="status-active"' : '') + '>';
   if (running) {
     var p = getProject(running.projectId);
     if (p) {
-      html += '<span class="status-text">' + esc(p.name) + ' · 计时中，' + formatTime(running.seg.start) + ' 开始</span>' +
-        '<span class="status-dot" style="background:' + projectColor(p) + '"></span>';
+      var id = esc(p.id);
+      html += '<div class="status-line1">' +
+          '<span class="status-dot" style="background:' + projectColor(p) + '"></span>' +
+          '<span class="status-name">' + esc(p.name) + '</span>' +
+          '<span class="status-tag">· 计时中</span>' +
+          '<span class="status-elapsed" id="status-elapsed">已计时 ' + formatMinutes(minutesOfSegment(running.seg, Date.now())) + '</span>' +
+        '</div>' +
+        '<div class="status-line2">' +
+          '<button class="btn btn-outline status-btn" data-action="interrupt" data-id="' + id + '">中断</button>' +
+          '<button class="btn btn-primary status-btn" data-action="finish" data-id="' + id + '">结束</button>' +
+        '</div>';
     }
   }
   if (choreNoticeText) html += '<span class="status-notice">' + esc(choreNoticeText) + '</span>';
@@ -1292,48 +1289,23 @@ function renderStatusBar(running) {
   document.getElementById("app-header").insertAdjacentHTML("afterend", html);
 }
 
-function renderRing(stats) {
-  var ring = document.getElementById("ring-progress");
-  var label = document.getElementById("ring-label");
-  var ratio = stats.hasTarget ? Math.max(0, stats.ratio) : 0;
-  var clamped = Math.min(ratio, 1);
-  ring.setAttribute("stroke-dasharray", String(RING_CIRCUMFERENCE));
-  ring.setAttribute("stroke-dashoffset", String(RING_CIRCUMFERENCE * (1 - clamped)));
-  ring.style.opacity = ratio > 0 ? "1" : "0"; /* 0% 时弧长严格为 0，也不留圆头小点 */
-  label.textContent = stats.percent + "%"; /* 超过 100% 数字照实显示，如 120% */
-}
-
 function renderOverview(stats) {
   /* 两边都为 0（今日合计 0 分钟、完成度 0%）时整块隐藏，下方按钮自然上移、不留空洞 */
   var ovCard = document.getElementById("overview-card");
   if (ovCard) ovCard.style.display = (stats.totalMinutes === 0 && stats.percent === 0) ? "none" : "";
-  var list = document.getElementById("stat-project-list");
-  if (stats.perProject.length === 0) {
-    list.innerHTML = '<div class="empty-line">今天还没有记录</div>';
-  } else {
-    var html = "";
-    for (var i = 0; i < stats.perProject.length; i++) {
-      var item = stats.perProject[i];
-      html += '<div class="stat-row">' +
-        '<span class="dot" style="background:' + (item.colorHex || colorOf(item.colorIndex)) + '"></span>' +
-        '<span class="stat-name ellipsis">' + esc(item.name) + '</span>' +
-        '<span class="stat-value">' + formatMinutes(item.minutes) + '</span>' +
-      '</div>';
-    }
-    list.innerHTML = html;
-  }
   document.getElementById("stat-total").textContent = formatMinutes(stats.totalMinutes);
-  document.getElementById("stat-target").textContent = stats.hasTarget ? formatMinutes(stats.targetMinutes) : "未设置目标";
+  document.getElementById("stat-target").textContent = stats.hasTarget ? "目标 " + formatMinutes(stats.targetMinutes) : "未设置目标";
   document.getElementById("stat-percent-text").textContent = "完成 " + stats.percent + "%";
 
+  /* 沿用原有三个判断分支（无目标 / 已完成 / 已超出），仅把「N 分钟」改成「X 小时 Y 分」 */
   var remaining;
   if (!stats.hasTarget) {
     remaining = "设置目标后查看完成情况";
   } else {
     var diff = stats.targetMinutes - stats.goalMinutes;
-    if (diff > 0) remaining = "还差 " + diff + " 分钟";
+    if (diff > 0) remaining = "还差 " + remainingText(diff);
     else if (diff === 0) remaining = "已完成目标";
-    else remaining = "已超出 " + (-diff) + " 分钟";
+    else remaining = "已超出 " + remainingText(-diff);
   }
   document.getElementById("stat-remaining").textContent = remaining;
   /* 其中杂事 XX 分钟：没有杂事记录时不显示 */
@@ -1347,69 +1319,32 @@ function renderOverview(stats) {
       choreLine.style.display = "none";
     }
   }
-  renderRing(stats);
+  /* 8px 细进度条：宽度 = min(ratio,1)*100%；超额按满格显示，百分比数字照实（如 120%） */
+  var fill = document.getElementById("stat-progress-fill");
+  if (fill) fill.style.width = (Math.min(Math.max(0, stats.ratio), 1) * 100) + "%";
 }
 
-/** 目标分钟数 → 圆形图标内的数字与单位：<60 显示分 / 整小时显示时 / 其余一位小数时 */
-function targetCircleValue(mins) {
-  var m = Math.max(0, Math.floor(Number(mins) || 0));
-  if (m < 60) return { num: String(m), unit: "分" };
-  if (m % 60 === 0) return { num: String(m / 60), unit: "时" };
-  return { num: (m / 60).toFixed(1), unit: "时" };
-}
-
-/** 6 位 hex → 该色 8% 透明度的 rgba（仅用于圆形图标填充，不改任何颜色常量） */
-function hexToRgba8(hex) {
-  var h = String(hex || "").replace(/^#/, "");
-  if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
-  if (!/^[0-9a-fA-F]{6}$/.test(h)) return "rgba(91,143,249,0.08)";
-  return "rgba(" + parseInt(h.slice(0, 2), 16) + "," + parseInt(h.slice(2, 4), 16) + "," +
-    parseInt(h.slice(4, 6), 16) + ",0.08)";
-}
-
-/** 标题行右侧圆形目标图标：有目标=实线双行数字，无目标=虚线＋（点击复用改目标），杂事=静态圆 */
-function targetCircleHTML(p, pid, isChoreCard, isRunningCard) {
-  var hitCls = "target-hit" + (isRunningCard ? " is-running" : "");
-  if (isChoreCard) {
-    return '<span class="target-hit target-hit-static"><span class="target-circle target-circle-static"><span class="tc-plus">—</span></span></span>';
-  }
-  if (typeof p.targetMinutes === "number" && p.targetMinutes > 0) {
-    var v = targetCircleValue(p.targetMinutes);
-    var color = projectColor(p);
-    return '<button class="' + hitCls + '" data-action="target" data-id="' + pid + '" aria-label="修改目标时长">' +
-      '<span class="target-circle" style="border-color:' + color + ';background:' + hexToRgba8(color) + '">' +
-        '<span class="tc-num" style="color:' + color + '">' + v.num + '</span>' +
-        '<span class="tc-unit">' + v.unit + '</span>' +
-      '</span></button>';
-  }
-  return '<button class="' + hitCls + '" data-action="target" data-id="' + pid + '" aria-label="设置目标时长">' +
-    '<span class="target-circle target-circle-empty"><span class="tc-plus">＋</span></span></button>';
-}
-
+/* 项目行内只放「开始 / 继续」小胶囊；计时中的「中断 / 结束」上浮到状态条活动卡（方案 A） */
 function actionsHTML(pid, isRunning, hasSegments) {
-  var id = esc(pid);
-  var btns;
-  if (isRunning) {
-    btns = '<button class="btn btn-outline" data-action="interrupt" data-id="' + id + '">中断</button>' +
-      '<button class="btn btn-primary" data-action="finish" data-id="' + id + '">结束</button>';
-  } else {
-    btns = '<button class="btn btn-primary" data-action="start" data-id="' + id + '">' +
-      (hasSegments ? "继续" : "开始") + '</button>';
-  }
-  return '<span class="btn-hit">' + btns + '</span>';
+  if (isRunning) return "";
+  return '<button class="btn btn-primary" data-action="start" data-id="' + esc(pid) + '">' +
+    (hasSegments ? "继续" : "开始") + '</button>';
 }
 
 function renderProjectList(stats, running, dayKey) {
   var host = document.getElementById("project-list");
   var projects = orderedProjectsForDisplay();
   if (projects.length === 0) {
-    host.innerHTML = '<div class="empty-block">还没有项目，点击右上角 ＋ 新建一个吧</div>';
+    host.innerHTML = '<div class="empty-block">还没有项目' +
+      '<span class="empty-hint">先建一个项目，就能开始记录时间了</span>' +
+      '<button class="empty-action" data-action="add-project">＋ 新建项目</button></div>';
     return;
   }
   var bucket = (state.days && state.days[dayKey]) || {};
   var minutesByPid = {};
   for (var m = 0; m < stats.perProject.length; m++) minutesByPid[stats.perProject[m].projectId] = stats.perProject[m].minutes;
 
+  /* 所有项目（含系统「杂事」）统一单行：色条 → 名称 → 开始胶囊 → 弹性空白 → 今日时长 → ⋯ */
   var html = "";
   for (var i = 0; i < projects.length; i++) {
     var p = projects[i];
@@ -1418,36 +1353,18 @@ function renderProjectList(stats, running, dayKey) {
     var isRunning = !!running && running.projectId === p.id;
     var lastInt = lastInterruptionFor(state, dayKey, p.id);
     var pid = esc(p.id);
-    var isChoreCard = isSystemChore(p);
-    if (isChoreCard) {
-      html += '<div class="project-card project-card-chore" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
-        '<div class="proj-stripe"></div>' +
-        '<div class="proj-body">' +
-          '<div class="proj-top chore-line">' +
-            '<span class="chore-left">' +
-              '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
-              '<span class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</span>' +
-            '</span>' +
-            '<span class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
-            targetCircleHTML(p, pid, true, isRunning) +
-            '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-      continue;
-    }
     html += '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
       '<div class="proj-stripe"></div>' +
       '<div class="proj-body">' +
         '<div class="proj-top">' +
           '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
-          '<span class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
-          targetCircleHTML(p, pid, isChoreCard, isRunning) +
+          '<span class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</span>' +
+          '<span class="proj-spacer"></span>' +
+          '<span class="proj-today">' +
+            '<span class="proj-today-main">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
+            (lastInt ? '<span class="interrupt-note">上次中断 ' + formatTime(lastInt.end) + '</span>' : "") +
+          '</span>' +
           '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
-        '</div>' +
-        '<div class="proj-bottom">' +
-          '<span class="proj-bottom-hint">' + (lastInt ? "上次中断 " + formatTime(lastInt.end) : "") + '</span>' +
-          '<div class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</div>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -1457,8 +1374,11 @@ function renderProjectList(stats, running, dayKey) {
 
 function renderRecordList(stats) {
   var host = document.getElementById("record-list");
+  var head = document.getElementById("records-head-action");
+  if (head) head.innerHTML = "";
   if (stats.records.length === 0) {
-    host.innerHTML = '<div class="empty-block">今天还没有记录</div>';
+    host.innerHTML = '<div class="empty-block">今天还没有记录' +
+      '<span class="empty-hint">去上方「我的项目」点「开始」就能记下第一段时间</span></div>';
     return;
   }
   var total = stats.records.length;
@@ -1500,6 +1420,8 @@ function renderRecordList(stats) {
     '</div>';
   }
   if (total > RECORDS_PAGE_SIZE) {
+    if (head) head.innerHTML = '<button class="head-action" data-action="toggle-records">' +
+      (recordsExpanded ? "收起" : "查看全部") + '</button>';
     html += '<button class="records-toggle" data-action="toggle-records">' +
       (recordsExpanded ? "收起" : "展开全部（共 " + total + " 条）") + '</button>';
   }
@@ -2075,6 +1997,8 @@ function init() {
   document.addEventListener("keydown", onDocumentKeydown);
   /* 约 30 秒轮询，仅检测是否跨天，不刷新任何数字 */
   window.setInterval(checkDayAndRefresh, 30000);
+  /* 1s 只更新状态条上的「已计时」数字，绝不整页 render（避免打断菜单/弹层/输入焦点） */
+  window.setInterval(tickRunningElapsed, 1000);
 }
 
 init();
