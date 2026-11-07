@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F5F7FA">
-<title>我的时间记录</title>
-<style>
+<html data-page-node-id="qZMGX7bwHhJy64BG2uS6at" lang="zh-CN">
+<head data-page-node-id="xRGU9rl6WqBVWB0OP0dxFA">
+<script data-page-node-id="aGEZMNFBOng6uyNkACGvAZ" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="4D6Wu8acBPLlMvdAMEqo2Z" charset="UTF-8">
+<meta data-page-node-id="jISJw8h4PNgqTAV5uYIBbC" content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport">
+<meta data-page-node-id="h5pokf1yGfqNfkwkMQBC9V" content="#F5F7FA" name="theme-color">
+<title data-page-node-id="qoORJv4i6kXpSMSRNhitqH" data-pnid-children="KZ6JgRMF8CvaoguyWDXiZM">我的时间记录</title>
+<style data-page-node-id="LusZLafZCgpDd8yNNvtYZt" data-pnid-children="8Sz9vrsys7CxeXlzll3Zoo">
 /* ========== 基础与移动端适配 ========== */
 :root{
   --blue:#2F7DF6;
@@ -94,9 +95,16 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .project-card{
   position:relative;overflow:visible;background:#fff;border-radius:16px;
   box-shadow:0 2px 12px rgba(30,60,110,.06);
-  padding:14px 14px 14px 18px;margin-bottom:12px;
+  padding:10px 12px 10px 16px;margin-bottom:10px;
 }
-.proj-stripe{position:absolute;left:0;top:14px;bottom:14px;width:5px;border-radius:4px;background:var(--accent,#5B8FF9);}
+/* 新建项目：一次短暂的浅蓝底高亮，约 1 秒后淡出 */
+.project-card.flash-new{animation:flash-new 1s ease-out;}
+@keyframes flash-new{
+  0%{background-color:#DCEBFF;box-shadow:0 0 0 3px rgba(47,125,246,.28),0 2px 12px rgba(30,60,110,.06);}
+  55%{background-color:#DCEBFF;box-shadow:0 0 0 3px rgba(47,125,246,.28),0 2px 12px rgba(30,60,110,.06);}
+  100%{background-color:#FFFFFF;box-shadow:0 2px 12px rgba(30,60,110,.06);}
+}
+.proj-stripe{position:absolute;left:0;top:10px;bottom:10px;width:5px;border-radius:4px;background:var(--accent,#5B8FF9);}
 .proj-body{min-width:0;}
 .proj-top{display:flex;align-items:center;gap:8px;min-width:0;}
 .proj-left{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:2px;}
@@ -201,62 +209,165 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .card-preview{width:100%;}
 #card-canvas,.card-image{width:100%;height:auto;display:block;border-radius:8px;}
 .card-hint{font-size:14px;color:var(--muted);text-align:center;margin-top:10px;}
+/* ========== 状态条提示行（杂事已记录） ========== */
+#status-bar{flex-wrap:wrap;}
+.status-notice{flex:0 0 100%;font-size:12px;color:var(--muted);font-weight:400;line-height:1.3;padding-bottom:2px;}
+
+/* ========== 总览「其中杂事」小灰字 ========== */
+.ov-chore{font-size:13px;color:var(--muted);margin-top:8px;}
+
+/* ========== 系统项目静态目标标签 ========== */
+.target-chip-static{display:inline-flex;color:var(--muted);background:#F5F7FA;border-color:#E8EDF5;cursor:default;}
+
+/* ========== 记录列表：备注 / 来源 / 折叠 ========== */
+.rec-from{flex:0 0 auto;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:#5B76A8;background:#EEF4FF;border-radius:6px;padding:1px 6px;}
+.rec-note{display:inline-block;max-width:100%;font-size:12px;color:#8A94A6;background:#F2F5FA;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;overflow-wrap:anywhere;}
+.rec-note-hint{color:var(--blue);margin-left:2px;white-space:nowrap;}
+.record-row.rec-expandable{cursor:pointer;}
+
+/* ========== 中断原因底部面板 ========== */
+#sheet-root{position:fixed;inset:0;z-index:120;}
+.sheet-backdrop{position:absolute;inset:0;background:rgba(20,35,60,.42);}
+.sheet-panel{
+  position:absolute;left:0;right:0;bottom:0;z-index:1;
+  max-width:480px;margin:0 auto;
+  background:#fff;border-radius:18px 18px 0 0;
+  padding:8px 16px calc(20px + env(safe-area-inset-bottom,0px));
+  box-shadow:0 -12px 40px rgba(20,40,80,.22);
+  animation:sheet-up .22s ease-out;
+  will-change:transform;
+}
+@keyframes sheet-up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.sheet-handle{width:40px;height:4px;border-radius:2px;background:#D8DFEA;margin:4px auto 12px;touch-action:none;}
+.sheet-title{font-size:16px;font-weight:700;margin-bottom:12px;}
+.sheet-reasons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px;}
+.sheet-reason{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  min-height:44px;padding:6px 2px;border-radius:10px;
+  background:#F2F6FD;border:1px solid #E1EAF7;color:#3A4A66;
+  font-size:12px;line-height:1.25;word-break:break-all;
+}
+.sheet-reason.active{background:#E3EDFF;border-color:var(--blue);color:var(--blue);}
+.sheet-input{width:100%;height:46px;padding:0 12px;border:1px solid #DCE5F2;border-radius:12px;background:#F9FBFF;color:var(--text);font-size:16px;outline:none;}
+.sheet-input:focus{border-color:var(--blue);background:#fff;}
+.sheet-actions{display:flex;gap:10px;margin-top:14px;}
+.sheet-actions .btn{flex:1 1 0;min-width:0;padding:0 8px;font-size:14px;}
+@media (max-width:360px){.sheet-reason{font-size:11px;padding:6px 1px;}.sheet-actions .btn{font-size:13px;}}
+/* ========== 模块顺序调整：记录列表展开/收起 + 导出记录按钮 ========== */
+.records-toggle{
+  display:block;width:100%;margin-top:10px;padding:10px 0 2px;
+  border-top:1px solid var(--line);background:none;
+  font-size:14px;color:var(--blue);font-weight:600;text-align:center;
+}
+.records-toggle:active{opacity:.65;}
+.export-btn{
+  width:100%;height:48px;border:1px solid #C9DBFB;border-radius:14px;
+  background:#fff;color:var(--blue);font-size:15px;font-weight:700;
+  box-shadow:0 2px 10px rgba(30,60,110,.05);margin-top:10px;
+}
+.export-btn:active{transform:scale(.99);background:#F2F7FF;}
+/* ========== 第四轮：圆形目标图标 + 紧凑胶囊按钮 + 卡片收紧 ========== */
+/* 圆形目标图标：外层 44×44 点击区（透明 padding 2px 撑开），视觉圆 40px */
+.target-hit{
+  position:relative;flex:0 0 44px;width:44px;height:44px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:2px;box-sizing:border-box;background:none;border:0;
+  -webkit-tap-highlight-color:transparent;
+}
+.target-hit-static{cursor:default;}
+.target-circle{
+  width:40px;height:40px;box-sizing:border-box;border-radius:50%;
+  border:1.5px solid var(--accent,#5B8FF9);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;line-height:1;overflow:hidden;
+}
+.tc-num{font-size:13px;font-weight:700;line-height:1;max-width:100%;white-space:nowrap;}
+.tc-unit{font-size:9px;color:#A0A9B8;line-height:1;}
+.target-circle-empty{border:1.5px dashed #C7CEDA;background:#FAFBFD;}
+.target-circle-static{border:1.5px dashed #D5DBE4;background:#F7F8FA;}
+.tc-plus{font-size:14px;line-height:1;font-weight:400;color:#AEB7C6;}
+/* 计时中：右下角低调呼吸点，仅 opacity 变化，不做跳动 */
+.target-hit.is-running::after{
+  content:"";position:absolute;right:2px;top:2px;
+  width:7px;height:7px;border-radius:50%;
+  background:var(--accent,#5B8FF9);box-shadow:0 0 0 2px #fff;
+  animation:tc-breath 2s ease-in-out infinite;
+}
+@keyframes tc-breath{0%,100%{opacity:.85;}50%{opacity:.3;}}
+/* 卡片底部行：左侧「上次中断」灰字留白，右侧按钮靠右 */
+.proj-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;min-height:44px;}
+.proj-bottom-hint{flex:1 1 auto;min-width:0;font-size:14px;color:#A0A9B8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.proj-actions{margin-top:0;display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto;}
+/* 透明 padding 把按钮点击区补到 44px 高，视觉仍是 38px */
+.btn-hit{display:inline-flex;align-items:center;gap:10px;padding:3px 0;box-sizing:border-box;}
+/* 紧凑胶囊按钮：仅作用于项目卡片内，弹窗按钮保持原样 */
+.proj-actions .btn{
+  height:38px;min-height:38px;min-width:84px;width:auto;flex:0 0 auto;
+  padding:0 20px;border-radius:19px;box-sizing:border-box;
+  font-size:14px;font-weight:600;
+}
+.proj-actions .btn-primary{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(47,125,246,.22);}
+.proj-actions .btn-outline{background:#fff;color:var(--blue);border:1px solid var(--blue);}
+/* 「杂事」系统项目：单行紧凑横条 —— 开始按钮移到「杂事」文字右侧、删掉按钮独占行、右下角不留空白 */
+.project-card-chore{padding-top:13px;padding-bottom:13px;}
+.project-card-chore .proj-stripe{top:13px;bottom:13px;}
+.chore-left{display:flex;align-items:center;gap:12px;flex:1 1 auto;min-width:0;}
+.chore-left .proj-name{flex:0 0 auto;}
+.chore-left .proj-actions{margin-top:0;justify-content:flex-start;}
 </style>
 </head>
-<body>
-<div id="app">
-  <header id="app-header"></header>
-  <div class="wrap">
-    <section class="card" id="overview-card">
-      <div class="section-title">今日概览</div>
-      <div class="ov-block">
-        <div class="ov-label">今日各项目小计</div>
-        <div id="stat-project-list"></div>
+<body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
+<div data-page-node-id="PxD6YnMqZiSJB92k1X2TUS" id="app">
+  <header data-page-node-id="UDOlncxaWheaJ2hNm8FTBq" id="app-header"></header>
+  <div data-page-node-id="ZuJqvnEOuQ2S9LEKNxX23n" class="wrap">
+    <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card">
+      <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
+      <div data-page-node-id="0AZjBDLAkQjL4TOI2yQDXz" id="project-list"></div>
+    </section>
+
+    <section data-page-node-id="Zt3xRikFXQhN4meWgK0mTf" class="card">
+      <div data-page-node-id="CBrYJPhpGfOEZJ9NqtjFFD" class="section-title"><!--pnid:mprXCi0SR6kdCNeUth98Qv-->今日记录</div>
+      <div data-page-node-id="kCHpM4iiguhm2UD7FKqYzy" id="record-list"></div>
+    </section>
+
+    <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
+      <div data-page-node-id="kSz1dUhH1pjGOxkEFF9jhu" class="section-title"><!--pnid:s2PycIDVRAD5xzuwV5xdDh-->今日概览</div>
+      <div data-page-node-id="LmF7wRZXz0iUeUAlOiMnL8" class="ov-block">
+        <div data-page-node-id="djEpQOtrANRvLbHgi6LFY7" class="ov-label"><!--pnid:t30tXG45pvaIbUtnGG9PCY-->今日各项目小计</div>
+        <div data-page-node-id="hM2jWz08h8MfYYYoanDc7r" id="stat-project-list"></div>
       </div>
-      <div class="ov-total">
-        <div class="ov-label">今日合计总时长 / 目标总时长</div>
-        <div class="ov-numbers">
-          <span id="stat-total">00:00</span>
-          <span class="slash">/</span>
-          <span id="stat-target">未设置目标</span>
+      <div data-page-node-id="IGAyYQ37TCh05JvIkQ3OQe" class="ov-total">
+        <div data-page-node-id="V85fHqp21CSaj9gwAXk57u" class="ov-label"><!--pnid:6NZMVODttlqI7JoangJeLX-->今日合计总时长 / 目标总时长</div>
+        <div data-page-node-id="Od4TGvuzesIpnWyQ7vztTD" class="ov-numbers">
+          <span data-page-node-id="oailLwJB02s8D87PmpmJ5F" id="stat-total"><!--pnid:Kepr8xD6ws4L4fem31yLjr-->00:00</span>
+          <span data-page-node-id="SuTPh9PbxvzWELWfTKHdu3" class="slash"><!--pnid:zPk49IF2InfZRtrT6L6t7Z-->/</span>
+          <span data-page-node-id="5L685nf7t7XOcU1e7oyrvh" id="stat-target"><!--pnid:jPSuWA5eIC1mSAeb69DYsP-->未设置目标</span>
         </div>
+        <div data-page-node-id="MnpSPs9JoGLbVjE7zK6QU9" class="ov-chore" id="stat-chore-line" style="display:none"></div>
       </div>
-      <div class="ov-progress-text">
-        <span id="stat-percent-text">完成 0%</span>
-        <span id="stat-remaining">设置目标后查看完成情况</span>
+      <div data-page-node-id="WoWi2yn2k2CSOFRwmcT5gm" class="ov-progress-text">
+        <span data-page-node-id="FnunyhpxeSmjgpDaEjJvMt" id="stat-percent-text"><!--pnid:7QFcjcKcc6g1I370063ZdZ-->完成 0%</span>
+        <span data-page-node-id="AK0AcCs3xdLQuLKFDJlpID" id="stat-remaining"><!--pnid:N8sriVcbSQjJbPhDmL6zUZ-->设置目标后查看完成情况</span>
       </div>
-      <div class="ov-ring">
-        <svg width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="目标完成度圆环">
-          <circle cx="80" cy="80" r="66" fill="none" stroke="#E8EDF5" stroke-width="12"></circle>
-          <circle id="ring-progress" cx="80" cy="80" r="66" fill="none" stroke="#2F7DF6" stroke-width="12"
-                  stroke-linecap="round" transform="rotate(-90 80 80)"
-                  stroke-dasharray="414.6902654139173" stroke-dashoffset="414.6902654139173" style="opacity:0"></circle>
-          <text id="ring-label" x="80" y="80" dy=".35em" text-anchor="middle"
-                font-size="34" font-weight="700" fill="#1F2A44"
-                font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif">0%</text>
+      <div data-page-node-id="xv6OTiLRIyLLXAOB5c4rig" class="ov-ring">
+        <svg data-page-node-id="QY6XLKhx3CFztEpvDATYbj" aria-label="目标完成度圆环" height="160" role="img" viewBox="0 0 160 160" width="160">
+          <circle data-page-node-id="7gx4wHSsEQ8XDmQv1YaNE2" cx="80" cy="80" fill="none" r="66" stroke="#E8EDF5" stroke-width="12"></circle>
+          <circle data-page-node-id="hf3HRx5YbU9vxyFi8muiNu" cx="80" cy="80" fill="none" id="ring-progress" r="66" stroke="#2F7DF6" stroke-dasharray="414.6902654139173" stroke-dashoffset="414.6902654139173" stroke-linecap="round" stroke-width="12" transform="rotate(-90 80 80)" style="opacity:0"></circle>
+          <text data-page-node-id="ZdO6eKFoxpDkFegryLyZq7" dy=".35em" fill="#1F2A44" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="700" id="ring-label" text-anchor="middle" x="80" y="80"><!--pnid:1rojq6CRi9uJW5lEheEtCL-->0%</text>
         </svg>
       </div>
     </section>
 
-    <section class="card">
-      <div class="section-title">我的项目</div>
-      <div id="project-list"></div>
-    </section>
-
-    <section class="card">
-      <div class="section-title">今日记录</div>
-      <div id="record-list"></div>
-    </section>
-
-    <button class="generate-btn" id="btn-generate-card" data-action="generate-card">生成今日记录卡</button>
-    <div class="footer-note">数据仅保存在本机浏览器 · 不上传</div>
+    <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
+    <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e-->数据仅保存在本机浏览器 · 不上传</div>
   </div>
 </div>
 
-<div id="toast" role="status" aria-live="polite"></div>
-<div id="modal-root"></div>
+<div data-page-node-id="Str5uGcSoFtb8NaOHEGk5t" aria-live="polite" id="toast" role="status"></div>
+<div data-page-node-id="ekXAOKdY404zh0PU8ZSNQg" id="modal-root"></div>
 
-<script>
+<script data-page-node-id="ot7o1KJgy8KCToEdkQsZtu" data-pnid-children="ncJ5n4glj0Dr4r5Sitx4V6">
 /* =====================================================================
  * 我的时间记录 · 单文件版
  * 分段：常量与工具函数 / 状态与存储 / 跨天规范化 / 渲染 /
@@ -269,6 +380,10 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 
 /** 项目标识色：固定 8 色，按 nextColorIndex 取模分配，删除不回收、不重排 */
 var PALETTE = ["#5B8FF9", "#61DDAA", "#65789B", "#F6BD16", "#7262FD", "#78D3F8", "#F08BB4", "#FF9D4D"];
+/** 系统项目「杂事」：固定 id、固定中性灰、不参与排序、永远固定在列表最底部 */
+var CHORE_NAME = "杂事";
+var CHORE_ID = "sys_chore";
+var CHORE_COLOR = "#9CA3AF";
 var STORAGE_KEY = "my-time-records:v1";
 var FONT_STACK = '-apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif';
 var WEEK_NAMES = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
@@ -400,27 +515,40 @@ function computeDayStats(state, dayKey, now) {
       var seg = segs[j];
       var m = minutesOfSegment(seg, now);
       sum += m;
-      records.push({ segment: seg, project: p, minutes: m, colorIndex: p.colorIndex, projectName: p.name });
+      records.push({ segment: seg, project: p, minutes: m, colorIndex: p.colorIndex, projectName: p.name, colorHex: projectColor(p) });
     }
-    perProject.push({ projectId: p.id, name: p.name, colorIndex: p.colorIndex, minutes: sum });
+    perProject.push({ projectId: p.id, name: p.name, colorIndex: p.colorIndex, minutes: sum,
+      colorHex: projectColor(p), isChore: isChoreProject(p) });
   }
   records.sort(function (a, b) { return b.segment.start - a.segment.start; });
-  var totalMinutes = 0;
-  for (var a = 0; a < perProject.length; a++) totalMinutes += perProject[a].minutes;
+  var totalMinutes = 0, choreMinutes = 0;
+  for (var a = 0; a < perProject.length; a++) {
+    totalMinutes += perProject[a].minutes;
+    if (perProject[a].isChore) choreMinutes += perProject[a].minutes;
+  }
 
-  var targetMinutes = 0, hasTarget = false;
+  /* 完成度口径：只统计「设置了每日目标」的非杂事项目；
+     分子 = 这些项目今天已投入之和，分母 = 它们的目标时长之和。 */
+  var targetMinutes = 0, hasTarget = false, goalMinutes = 0;
   for (var k = 0; k < projects.length; k++) {
-    var tm = projects[k].targetMinutes;
+    var pk = projects[k];
+    if (isChoreProject(pk)) continue;
+    var tm = pk.targetMinutes;
     if (typeof tm === "number" && Number.isFinite(tm) && tm > 0) {
       targetMinutes += tm;
       hasTarget = true;
+      for (var g = 0; g < perProject.length; g++) {
+        if (perProject[g].projectId === pk.id) { goalMinutes += perProject[g].minutes; break; }
+      }
     }
   }
-  var ratio = (hasTarget && targetMinutes > 0) ? (totalMinutes / targetMinutes) : 0;
-  var percent = (hasTarget && targetMinutes > 0) ? Math.round(ratio * 100) : 0;
+  var ratio = (hasTarget && targetMinutes > 0) ? (goalMinutes / targetMinutes) : 0;
+  /* 保留一位小数：16.7% 这类分数百分比可正确显示，整数仍显示 50%（不出现 50.0） */
+  var percent = (hasTarget && targetMinutes > 0) ? Math.round(goalMinutes / targetMinutes * 1000) / 10 : 0;
   return {
     dayKey: dayKey, now: now, perProject: perProject, records: records,
     totalMinutes: totalMinutes, targetMinutes: targetMinutes,
+    choreMinutes: choreMinutes, goalMinutes: goalMinutes,
     hasTarget: hasTarget, ratio: ratio, percent: percent
   };
 }
@@ -453,13 +581,16 @@ function sanitizeSegment(raw, fallbackIndex) {
   var start = raw.start;
   if (typeof start !== "number" || !Number.isFinite(start) || start <= 0) return null;
   var id = (typeof raw.id === "string" && raw.id) ? raw.id : ("s_" + Math.floor(start) + "_" + fallbackIndex);
+  /* 兼容旧记录：note / sourceProject 缺失一律按空值处理，不改变时长与合计 */
+  var note = (typeof raw.note === "string") ? Array.from(raw.note).slice(0, 50).join("") : "";
+  var sourceProject = (typeof raw.sourceProject === "string") ? Array.from(raw.sourceProject).slice(0, 10).join("") : "";
   var endType = raw.endType;
   if (endType === "running") {
-    return { id: id, start: start, end: null, endType: "running" };
+    return { id: id, start: start, end: null, endType: "running", note: note, sourceProject: sourceProject };
   }
   if (endType === "interrupted" || endType === "finished") {
     if (typeof raw.end !== "number" || !Number.isFinite(raw.end) || raw.end < start) return null;
-    return { id: id, start: start, end: raw.end, endType: endType };
+    return { id: id, start: start, end: raw.end, endType: endType, note: note, sourceProject: sourceProject };
   }
   return null;
 }
@@ -500,10 +631,17 @@ function sanitizeState(obj) {
         tm = Math.floor(raw.targetMinutes);
       }
       var createdAt = (typeof raw.createdAt === "number" && Number.isFinite(raw.createdAt)) ? raw.createdAt : now;
-      base.projects.push({
+      /* 保留排序字段：缺失或非法时记为 undefined，交给一次性迁移重编号 */
+      var si = (typeof raw.sortIndex === "number" && Number.isFinite(raw.sortIndex)) ? raw.sortIndex : undefined;
+      var proj = {
         id: id, name: Array.from(name).slice(0, 10).join(""),
-        colorIndex: ci, targetMinutes: tm, createdAt: createdAt
-      });
+        colorIndex: ci, targetMinutes: tm, createdAt: createdAt, sortIndex: si
+      };
+      /* 系统项目「杂事」：读取旧数据时也规整为固定名称 / 灰色 / 无目标，并打上系统标记 */
+      var isChore = (raw.isSystem === true || raw.isSystemChore === true || raw.system === true ||
+        raw.kind === "system" || id === CHORE_ID || String(name).trim() === CHORE_NAME);
+      if (isChore) { proj.name = CHORE_NAME; proj.targetMinutes = null; proj.isSystem = true; }
+      base.projects.push(proj);
       trackId(id);
     }
   }
@@ -536,6 +674,428 @@ function sanitizeState(obj) {
   }
   base.nextId = Math.max(base.nextId, maxIdNumber + 1);
   return base;
+}
+
+/* -------------------- 排序 / 旧数据迁移 / 新建置顶高亮（增量新增） -------------------- */
+
+/** 取排序值；缺失或非法按 0 处理，保证比较不产生 NaN、不报错、不丢项目 */
+function sortIndexOf(p) {
+  var v = p && p.sortIndex;
+  return (typeof v === "number" && Number.isFinite(v)) ? v : 0;
+}
+
+/** 新项目排序值：取当前时间戳，并严格大于现有最大值，保证一定置顶 */
+function nextSortIndex() {
+  var max = 0;
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  for (var i = 0; i < ps.length; i++) {
+    var v = ps[i] && ps[i].sortIndex;
+    if (typeof v === "number" && Number.isFinite(v) && v > max) max = v;
+  }
+  var ts = Date.now();
+  return ts > max ? ts : Math.floor(max) + 1;
+}
+
+/**
+ * 兼容旧数据：仅当存在缺 sortIndex 的项目时，按当前数组顺序（= 升级前显示顺序）
+ * 整体重新编号，第一个最大、依次递减 100；返回是否需要写回 localStorage。
+ * 升级后所有项目都有 sortIndex，之后打开直接读取，不再重新推算。
+ */
+function ensureSortIndexes(st) {
+  var ps = (st && Array.isArray(st.projects)) ? st.projects : [];
+  var need = false;
+  for (var i = 0; i < ps.length; i++) {
+    var v = ps[i] && ps[i].sortIndex;
+    if (typeof v !== "number" || !Number.isFinite(v)) { need = true; break; }
+  }
+  if (!need) return false;
+  var n = ps.length;
+  for (var j = 0; j < n; j++) ps[j].sortIndex = (n - j) * 100;
+  return true;
+}
+
+/** 系统项目「杂事」：不参与排序，永远固定在列表最底部 */
+function isChoreProject(p) {
+  if (!p) return false;
+  if (p.isSystem === true || p.system === true || p.kind === "system") return true;
+  return String(p.name === null || p.name === undefined ? "" : p.name).trim() === CHORE_NAME;
+}
+
+/** 列表显示顺序：普通项目按 sortIndex 降序；重复值按原数组先后（索引小者靠前）；
+ *  杂事固定追加到末尾。返回副本，不改动 state.projects 原数组。 */
+function orderedProjectsForDisplay() {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var normal = [], chore = [];
+  for (var i = 0; i < ps.length; i++) {
+    var entry = { p: ps[i], idx: i };
+    if (isChoreProject(ps[i])) chore.push(entry);
+    else normal.push(entry);
+  }
+  normal.sort(function (a, b) {
+    var d = sortIndexOf(b.p) - sortIndexOf(a.p);
+    return d !== 0 ? d : (a.idx - b.idx);
+  });
+  var out = [];
+  for (var k = 0; k < normal.length; k++) out.push(normal[k].p);
+  for (var c = 0; c < chore.length; c++) out.push(chore[c].p);
+  return out;
+}
+
+/* 新建后置顶可见：记录待高亮项目 id，render 重建 DOM 后仍能重新触发一次 */
+var revealPid = null, revealTimer = null, revealScrolled = false;
+function markReveal(pid) {
+  revealPid = pid;
+  revealScrolled = false;
+  if (revealTimer !== null) { clearTimeout(revealTimer); revealTimer = null; }
+  revealTimer = setTimeout(function () { revealPid = null; revealTimer = null; }, 1300);
+}
+/** 每次 render 末尾调用：给新卡片一次浅蓝高亮，并（仅首次）滚动到它 */
+function applyReveal() {
+  if (!revealPid) return;
+  var host = document.getElementById("project-list");
+  if (!host) return;
+  var cards = host.querySelectorAll(".project-card");
+  for (var i = 0; i < cards.length; i++) {
+    var card = cards[i];
+    if (card.getAttribute("data-project-id") !== revealPid) continue;
+    card.classList.add("flash-new");
+    if (!revealScrolled) {
+      revealScrolled = true;
+      if (typeof card.scrollIntoView === "function") {
+        try { card.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        catch (e) { try { card.scrollIntoView(); } catch (e2) {} }
+      }
+    }
+    break;
+  }
+}
+
+/* -------------------- 系统项目「杂事」/ 备注 / 中断面板（增量新增） -------------------- */
+
+/** 是否系统项目：显式标记或固定 id 判定，用于「不可删/改名/设目标」的权限判断 */
+function isSystemChore(p) {
+  if (!p) return false;
+  return p.isSystem === true || p.isSystemChore === true || p.system === true || p.kind === "system" || p.id === CHORE_ID;
+}
+
+/** 项目显示色：系统「杂事」固定中性灰，其余按 colorIndex 取调色板 */
+function projectColor(p) {
+  if (p && (isSystemChore(p) || isChoreProject(p))) return CHORE_COLOR;
+  return colorOf(p && p.colorIndex);
+}
+
+function getChoreProject() {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  for (var i = 0; i < ps.length; i++) if (isSystemChore(ps[i])) return ps[i];
+  for (var j = 0; j < ps.length; j++) if (isChoreProject(ps[j])) return ps[j];
+  return null;
+}
+
+/** 把 fromPid 的所有记录段并入 toPid，规整杂事项目时不丢记录 */
+function mergeChoreRecords(st, fromPid, toPid) {
+  var days = st.days || {};
+  var keys = Object.keys(days);
+  for (var i = 0; i < keys.length; i++) {
+    var b = days[keys[i]];
+    if (!b || !Array.isArray(b[fromPid])) continue;
+    if (!Array.isArray(b[toPid])) b[toPid] = [];
+    for (var j = 0; j < b[fromPid].length; j++) b[toPid].push(b[fromPid][j]);
+    delete b[fromPid];
+  }
+}
+
+/**
+ * 保证系统项目「杂事」唯一存在（首次打开 / 旧数据都自动补齐），并规整属性：
+ * 固定中性灰、无每日目标、isSystem 标记。已有同名普通项目原地升级（不改 id，记录不丢）。
+ * 返回是否发生变更，供 init 决定是否写回 localStorage。
+ */
+function ensureChoreProject(st) {
+  var ps = Array.isArray(st.projects) ? st.projects : (st.projects = []);
+  var chore = null, extras = [];
+  for (var i = 0; i < ps.length; i++) {
+    var p = ps[i];
+    if (!p) continue;
+    var byName = String(p.name === null || p.name === undefined ? "" : p.name).trim() === CHORE_NAME;
+    if (isSystemChore(p) || byName) { if (!chore) chore = p; else extras.push(p); }
+  }
+  var changed = false;
+  if (!chore) {
+    chore = { id: CHORE_ID, name: CHORE_NAME, colorIndex: 0,
+      targetMinutes: null, createdAt: Date.now(), sortIndex: 0, isSystem: true };
+    ps.push(chore);
+    changed = true;
+  }
+  function force(k, v) { if (chore[k] !== v) { chore[k] = v; changed = true; } }
+  force("isSystem", true);
+  force("name", CHORE_NAME);
+  force("targetMinutes", null);
+  if (typeof chore.sortIndex !== "number" || !Number.isFinite(chore.sortIndex)) { chore.sortIndex = 0; changed = true; }
+  if (extras.length > 0) {
+    for (var e = 0; e < extras.length; e++) {
+      if (extras[e].id !== chore.id) mergeChoreRecords(st, extras[e].id, chore.id);
+    }
+    st.projects = ps.filter(function (x) { return x === chore || extras.indexOf(x) < 0; });
+    changed = true;
+  }
+  return changed;
+}
+
+/* ---- 备注折叠：>8 字折叠，点整行展开/收起 ---- */
+var expandedNoteIds = {};
+function noteChars(text) { return Array.from(String(text === null || text === undefined ? "" : text)); }
+function noteShort(text) { return noteChars(text).slice(0, 8).join("") + "…"; }
+function toggleNote(segId) {
+  if (expandedNoteIds[segId]) delete expandedNoteIds[segId];
+  else expandedNoteIds[segId] = true;
+  var now = Date.now();
+  renderRecordList(computeDayStats(state, dayKeyOf(now), now));
+}
+
+/* ---- 顶部状态条「杂事已记录 XX 分钟」浮现提示 ---- */
+var choreNoticeText = "", choreNoticeTimer = null;
+function showChoreNotice(text) {
+  choreNoticeText = text;
+  if (choreNoticeTimer !== null) { clearTimeout(choreNoticeTimer); choreNoticeTimer = null; }
+  choreNoticeTimer = setTimeout(function () {
+    choreNoticeText = ""; choreNoticeTimer = null;
+    renderStatusBar(findRunningSegment(state));
+  }, 3000);
+}
+
+/* ---- 中断原因底部面板 ---- */
+var CHORE_REASONS = ["喝咖啡休息", "接电话", "临时被叫走", "处理杂事"];
+var sheetState = null;
+
+function closeSheet() {
+  sheetState = null;
+  var root = document.getElementById("sheet-root");
+  if (root && root.parentNode) root.parentNode.removeChild(root);
+}
+
+function readSheetNote() {
+  var input = document.getElementById("sheet-note");
+  if (!input) return "";
+  return noteChars(input.value).slice(0, 20).join("").trim();
+}
+
+function toggleSheetReason(el) {
+  if (!sheetState) return;
+  var r = el.getAttribute("data-reason") || "";
+  var input = document.getElementById("sheet-note");
+  var all = document.querySelectorAll(".sheet-reason");
+  for (var i = 0; i < all.length; i++) all[i].classList.remove("active");
+  if (sheetState.selected === r) {
+    sheetState.selected = "";
+    if (input) input.value = "";
+  } else {
+    sheetState.selected = r;
+    if (input) input.value = r;
+    el.classList.add("active");
+  }
+}
+
+function onSheetClick(e) {
+  var t = (e.target && typeof e.target.closest === "function") ? e.target : null;
+  if (!t) return;
+  var el = t.closest("[data-sheet-action]");
+  if (!el) return;
+  var act = el.getAttribute("data-sheet-action");
+  if (act === "reason") { toggleSheetReason(el); return; }
+  var pid = sheetState ? sheetState.pid : null;
+  var note = (act === "only" || act === "chore") ? readSheetNote() : "";
+  closeSheet();
+  if (!pid) return;
+  if (act === "chore") doInterrupt(pid, "chore", note);
+  else if (act === "only") doInterrupt(pid, "only", note);
+  else if (act === "backdrop") doInterrupt(pid, "only", "");
+}
+
+function bindSheetSwipe(panel) {
+  if (!panel) return;
+  var startY = null, dy = 0;
+  panel.addEventListener("touchstart", function (e) {
+    if (e.touches && e.touches.length === 1) { startY = e.touches[0].clientY; dy = 0; }
+  }, { passive: true });
+  panel.addEventListener("touchmove", function (e) {
+    if (startY === null || !e.touches || !e.touches.length) return;
+    dy = e.touches[0].clientY - startY;
+    if (dy > 0) panel.style.transform = "translateY(" + dy + "px)";
+  }, { passive: true });
+  panel.addEventListener("touchend", function () {
+    if (startY === null) return;
+    var shouldClose = dy > 60;
+    startY = null; dy = 0;
+    panel.style.transform = "";
+    if (shouldClose) {
+      var pid = sheetState ? sheetState.pid : null;
+      closeSheet();
+      if (pid) doInterrupt(pid, "only", "");
+    }
+  }, { passive: true });
+}
+
+function openInterruptSheet(pid) {
+  closeSheet();
+  var p = getProject(pid);
+  if (!p) return;
+  sheetState = { pid: pid, selected: "" };
+  var reasons = "";
+  for (var i = 0; i < CHORE_REASONS.length; i++) {
+    reasons += '<button class="sheet-reason" data-sheet-action="reason" data-reason="' + esc(CHORE_REASONS[i]) + '">' + esc(CHORE_REASONS[i]) + '</button>';
+  }
+  var root = document.createElement("div");
+  root.id = "sheet-root";
+  root.innerHTML =
+    '<div class="sheet-backdrop" data-sheet-action="backdrop"></div>' +
+    '<div class="sheet-panel">' +
+      '<div class="sheet-handle"></div>' +
+      '<div class="sheet-title">中断《' + esc(p.name) + '》</div>' +
+      '<div class="sheet-reasons">' + reasons + '</div>' +
+      '<input id="sheet-note" class="sheet-input" type="text" maxlength="20" placeholder="补充说明" autocomplete="off">' +
+      '<div class="sheet-actions">' +
+        '<button class="btn btn-primary" data-sheet-action="chore">中断并开始记杂事</button>' +
+        '<button class="btn btn-outline" data-sheet-action="only">只中断</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(root);
+  root.addEventListener("click", onSheetClick);
+  var input = document.getElementById("sheet-note");
+  if (input) input.addEventListener("input", function () {
+    if (!sheetState) return;
+    sheetState.selected = "";
+    var all = root.querySelectorAll(".sheet-reason");
+    for (var j = 0; j < all.length; j++) all[j].classList.remove("active");
+  });
+  bindSheetSwipe(root.querySelector(".sheet-panel"));
+}
+
+/** 立刻开始一段「杂事」：承接来源项目 + 自动备注 */
+function startChoreSegment(now, sourceName, extraNote) {
+  var chore = getChoreProject();
+  if (!chore) return;
+  var note = "因《" + sourceName + "》中断" + (extraNote ? " " + extraNote : "");
+  var b = ensureBucket(state.days, dayKeyOf(now), chore.id);
+  b.push({
+    id: newId("s"), start: now, end: null, endType: "running",
+    note: noteChars(note).slice(0, 50).join(""),
+    sourceProject: noteChars(sourceName).slice(0, 10).join("")
+  });
+  state.currentDayKey = dayKeyOf(now);
+}
+
+/**
+ * 执行中断：闭合当前项目进行中段（interrupted）并写入备注；
+ * mode=chore 时紧接着开始一段杂事，sourceProject 记为来源项目名。
+ */
+function doInterrupt(pid, mode, noteText) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var p = getProject(pid);
+  var pname = p ? p.name : "";
+  var note = noteChars(noteText).slice(0, 50).join("");
+  var running = findRunningSegment(state);
+  if (running && running.projectId === pid) {
+    closeRunningAt(running, now, "interrupted", { note: note });
+  }
+  if (mode === "chore") {
+    var chore = getChoreProject();
+    var still = findRunningSegment(state);
+    if (chore && (!still || still.projectId !== chore.id)) startChoreSegment(now, pname, note);
+  }
+  state.currentDayKey = dayKeyOf(now);
+  save();
+  render();
+}
+
+/** 「清空今日记录」：只删除系统杂事今天的记录段 */
+function clearChoreToday() {
+  var chore = getChoreProject();
+  if (!chore) return;
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  if (state.days && state.days[dayKey]) {
+    delete state.days[dayKey][chore.id];
+    if (Object.keys(state.days[dayKey]).length === 0) delete state.days[dayKey];
+  }
+  state.currentDayKey = dayKey;
+  save();
+  render();
+  showToast("已清空「杂事」今日记录");
+}
+
+/* -------------------- 模块顺序 / 记录列表折叠 / 导出 / 滚动（增量新增） -------------------- */
+
+/** 「今日记录」展开状态：纯 UI 状态，不写入 state / localStorage，展开收起不改任何数据 */
+var RECORDS_PAGE_SIZE = 5;
+var recordsExpanded = false;
+
+function toggleRecordsExpanded() {
+  recordsExpanded = !recordsExpanded;
+  /* 只重绘记录列表这一块，不整页 render，其他模块位置完全不动 */
+  var now = Date.now();
+  renderRecordList(computeDayStats(state, dayKeyOf(now), now));
+}
+
+/** 导出记录：只读现有 state 生成 CSV 下载，不改动任何数据与统计口径 */
+function exportRecords() {
+  var now = Date.now();
+  var days = (state && state.days) || {};
+  var dayKeys = Object.keys(days).sort();
+  var rows = [];
+  for (var d = 0; d < dayKeys.length; d++) {
+    var dk = dayKeys[d];
+    var bucket = days[dk] || {};
+    var pids = Object.keys(bucket);
+    for (var pi = 0; pi < pids.length; pi++) {
+      var pid = pids[pi];
+      var p = getProject(pid);
+      var pname = p ? p.name : pid;
+      var arr = Array.isArray(bucket[pid]) ? bucket[pid] : [];
+      for (var j = 0; j < arr.length; j++) {
+        var seg = arr[j];
+        if (!seg) continue;
+        var running = (seg.endType === "running" || seg.end === null || seg.end === undefined);
+        var status = running ? "计时中" : (seg.endType === "interrupted" ? "中断" : "完成");
+        rows.push([
+          dk, pname,
+          formatTime(seg.start),
+          running ? "进行中" : formatTime(seg.end),
+          String(minutesOfSegment(seg, now)),
+          status,
+          (typeof seg.note === "string") ? seg.note : "",
+          (typeof seg.sourceProject === "string") ? seg.sourceProject : ""
+        ]);
+      }
+    }
+  }
+  if (rows.length === 0) { showToast("暂无记录可导出"); return; }
+  var lines = [["日期", "项目", "开始", "结束", "时长(分钟)", "状态", "备注", "来源项目"]];
+  for (var r = 0; r < rows.length; r++) lines.push(rows[r]);
+  var csv = "";
+  for (var i = 0; i < lines.length; i++) {
+    var cells = [];
+    for (var c = 0; c < lines[i].length; c++) {
+      var v = lines[i][c];
+      cells.push('"' + String(v === null || v === undefined ? "" : v).replace(/"/g, '""') + '"');
+    }
+    csv += (i > 0 ? "\r\n" : "") + cells.join(",");
+  }
+  try {
+    var blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "我的时间记录-" + dayKeyOf(now) + ".csv";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) {} }, 0);
+    showToast("已导出 " + rows.length + " 条记录");
+  } catch (e) {
+    showToast("导出失败，请重试");
+  }
 }
 
 function load() {
@@ -649,10 +1209,12 @@ function normalizeDayRollover(newDayKey) {
     for (var j = 0; j < parts.length; j++) {
       var part = parts[j];
       var b = ensureBucket(state.days, part.dayKey, r.projectId);
-      b.push({ id: newId("s"), start: part.start, end: part.end, endType: part.endType });
+      b.push({ id: newId("s"), start: part.start, end: part.end, endType: part.endType,
+        note: r.seg.note || "", sourceProject: r.seg.sourceProject || "" });
     }
     var b2 = ensureBucket(state.days, newDayKey, r.projectId);
-    b2.push({ id: newId("s"), start: todayMidnight, end: null, endType: "running" });
+    b2.push({ id: newId("s"), start: todayMidnight, end: null, endType: "running",
+      note: r.seg.note || "", sourceProject: r.seg.sourceProject || "" });
     changed = true;
   }
   state.currentDayKey = newDayKey;
@@ -680,17 +1242,23 @@ function checkDayAndRefresh() {
  * 同一天内：原地写 end/endType，不拆分、不换 id；
  * 跨零点：按零点切分，零点前段 finished，最后一段保留操作类型，各段新生成 id。
  */
-function closeRunningAt(running, endTs, endType) {
+function closeRunningAt(running, endTs, endType, extra) {
+  var extraNote = (extra && typeof extra.note === "string") ? extra.note : null;
   var parts = splitSegmentByMidnight(running.seg.start, endTs, endType);
   if (parts.length === 1 && parts[0].dayKey === running.dayKey) {
     running.seg.end = parts[0].end;
     running.seg.endType = parts[0].endType;
+    if (extraNote !== null) running.seg.note = extraNote;
+    if (typeof running.seg.note !== "string") running.seg.note = "";
+    if (typeof running.seg.sourceProject !== "string") running.seg.sourceProject = "";
     return;
   }
   removeSegmentRaw(state, running.dayKey, running.projectId, running.seg);
   for (var i = 0; i < parts.length; i++) {
     var b = ensureBucket(state.days, parts[i].dayKey, running.projectId);
-    b.push({ id: newId("s"), start: parts[i].start, end: parts[i].end, endType: parts[i].endType });
+    b.push({ id: newId("s"), start: parts[i].start, end: parts[i].end, endType: parts[i].endType,
+      note: (extraNote !== null ? extraNote : (running.seg.note || "")),
+      sourceProject: running.seg.sourceProject || "" });
   }
 }
 
@@ -710,13 +1278,17 @@ function renderHeader() {
 function renderStatusBar(running) {
   var old = document.getElementById("status-bar");
   if (old) old.remove();
-  if (!running) return;
-  var p = getProject(running.projectId);
-  if (!p) return;
-  var html = '<div id="status-bar">' +
-    '<span class="status-text">' + esc(p.name) + ' · 计时中，' + formatTime(running.seg.start) + ' 开始</span>' +
-    '<span class="status-dot" style="background:' + colorOf(p.colorIndex) + '"></span>' +
-  '</div>';
+  if (!running && !choreNoticeText) return;
+  var html = '<div id="status-bar">';
+  if (running) {
+    var p = getProject(running.projectId);
+    if (p) {
+      html += '<span class="status-text">' + esc(p.name) + ' · 计时中，' + formatTime(running.seg.start) + ' 开始</span>' +
+        '<span class="status-dot" style="background:' + projectColor(p) + '"></span>';
+    }
+  }
+  if (choreNoticeText) html += '<span class="status-notice">' + esc(choreNoticeText) + '</span>';
+  html += '</div>';
   document.getElementById("app-header").insertAdjacentHTML("afterend", html);
 }
 
@@ -732,6 +1304,9 @@ function renderRing(stats) {
 }
 
 function renderOverview(stats) {
+  /* 两边都为 0（今日合计 0 分钟、完成度 0%）时整块隐藏，下方按钮自然上移、不留空洞 */
+  var ovCard = document.getElementById("overview-card");
+  if (ovCard) ovCard.style.display = (stats.totalMinutes === 0 && stats.percent === 0) ? "none" : "";
   var list = document.getElementById("stat-project-list");
   if (stats.perProject.length === 0) {
     list.innerHTML = '<div class="empty-line">今天还没有记录</div>';
@@ -740,7 +1315,7 @@ function renderOverview(stats) {
     for (var i = 0; i < stats.perProject.length; i++) {
       var item = stats.perProject[i];
       html += '<div class="stat-row">' +
-        '<span class="dot" style="background:' + colorOf(item.colorIndex) + '"></span>' +
+        '<span class="dot" style="background:' + (item.colorHex || colorOf(item.colorIndex)) + '"></span>' +
         '<span class="stat-name ellipsis">' + esc(item.name) + '</span>' +
         '<span class="stat-value">' + formatMinutes(item.minutes) + '</span>' +
       '</div>';
@@ -755,30 +1330,78 @@ function renderOverview(stats) {
   if (!stats.hasTarget) {
     remaining = "设置目标后查看完成情况";
   } else {
-    var diff = stats.targetMinutes - stats.totalMinutes;
+    var diff = stats.targetMinutes - stats.goalMinutes;
     if (diff > 0) remaining = "还差 " + diff + " 分钟";
     else if (diff === 0) remaining = "已完成目标";
     else remaining = "已超出 " + (-diff) + " 分钟";
   }
   document.getElementById("stat-remaining").textContent = remaining;
+  /* 其中杂事 XX 分钟：没有杂事记录时不显示 */
+  var choreLine = document.getElementById("stat-chore-line");
+  if (choreLine) {
+    if (stats.choreMinutes > 0) {
+      choreLine.textContent = "其中杂事 " + stats.choreMinutes + " 分钟";
+      choreLine.style.display = "";
+    } else {
+      choreLine.textContent = "";
+      choreLine.style.display = "none";
+    }
+  }
   renderRing(stats);
+}
+
+/** 目标分钟数 → 圆形图标内的数字与单位：<60 显示分 / 整小时显示时 / 其余一位小数时 */
+function targetCircleValue(mins) {
+  var m = Math.max(0, Math.floor(Number(mins) || 0));
+  if (m < 60) return { num: String(m), unit: "分" };
+  if (m % 60 === 0) return { num: String(m / 60), unit: "时" };
+  return { num: (m / 60).toFixed(1), unit: "时" };
+}
+
+/** 6 位 hex → 该色 8% 透明度的 rgba（仅用于圆形图标填充，不改任何颜色常量） */
+function hexToRgba8(hex) {
+  var h = String(hex || "").replace(/^#/, "");
+  if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+  if (!/^[0-9a-fA-F]{6}$/.test(h)) return "rgba(91,143,249,0.08)";
+  return "rgba(" + parseInt(h.slice(0, 2), 16) + "," + parseInt(h.slice(2, 4), 16) + "," +
+    parseInt(h.slice(4, 6), 16) + ",0.08)";
+}
+
+/** 标题行右侧圆形目标图标：有目标=实线双行数字，无目标=虚线＋（点击复用改目标），杂事=静态圆 */
+function targetCircleHTML(p, pid, isChoreCard, isRunningCard) {
+  var hitCls = "target-hit" + (isRunningCard ? " is-running" : "");
+  if (isChoreCard) {
+    return '<span class="target-hit target-hit-static"><span class="target-circle target-circle-static"><span class="tc-plus">—</span></span></span>';
+  }
+  if (typeof p.targetMinutes === "number" && p.targetMinutes > 0) {
+    var v = targetCircleValue(p.targetMinutes);
+    var color = projectColor(p);
+    return '<button class="' + hitCls + '" data-action="target" data-id="' + pid + '" aria-label="修改目标时长">' +
+      '<span class="target-circle" style="border-color:' + color + ';background:' + hexToRgba8(color) + '">' +
+        '<span class="tc-num" style="color:' + color + '">' + v.num + '</span>' +
+        '<span class="tc-unit">' + v.unit + '</span>' +
+      '</span></button>';
+  }
+  return '<button class="' + hitCls + '" data-action="target" data-id="' + pid + '" aria-label="设置目标时长">' +
+    '<span class="target-circle target-circle-empty"><span class="tc-plus">＋</span></span></button>';
 }
 
 function actionsHTML(pid, isRunning, hasSegments) {
   var id = esc(pid);
+  var btns;
   if (isRunning) {
-    return '<div class="btn-row">' +
-      '<button class="btn btn-outline" data-action="interrupt" data-id="' + id + '">中断</button>' +
-      '<button class="btn btn-primary" data-action="finish" data-id="' + id + '">结束</button>' +
-    '</div>';
+    btns = '<button class="btn btn-outline" data-action="interrupt" data-id="' + id + '">中断</button>' +
+      '<button class="btn btn-primary" data-action="finish" data-id="' + id + '">结束</button>';
+  } else {
+    btns = '<button class="btn btn-primary" data-action="start" data-id="' + id + '">' +
+      (hasSegments ? "继续" : "开始") + '</button>';
   }
-  return '<button class="btn btn-primary" data-action="start" data-id="' + id + '">' +
-    (hasSegments ? "继续" : "开始") + '</button>';
+  return '<span class="btn-hit">' + btns + '</span>';
 }
 
 function renderProjectList(stats, running, dayKey) {
   var host = document.getElementById("project-list");
-  var projects = Array.isArray(state.projects) ? state.projects : [];
+  var projects = orderedProjectsForDisplay();
   if (projects.length === 0) {
     host.innerHTML = '<div class="empty-block">还没有项目，点击右上角 ＋ 新建一个吧</div>';
     return;
@@ -795,21 +1418,37 @@ function renderProjectList(stats, running, dayKey) {
     var isRunning = !!running && running.projectId === p.id;
     var lastInt = lastInterruptionFor(state, dayKey, p.id);
     var pid = esc(p.id);
-    var targetText = (typeof p.targetMinutes === "number" && p.targetMinutes > 0)
-      ? "每日目标 " + formatTarget(p.targetMinutes) : "未设置目标";
-    html += '<div class="project-card" style="--accent:' + colorOf(p.colorIndex) + '">' +
+    var isChoreCard = isSystemChore(p);
+    if (isChoreCard) {
+      html += '<div class="project-card project-card-chore" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
+        '<div class="proj-stripe"></div>' +
+        '<div class="proj-body">' +
+          '<div class="proj-top chore-line">' +
+            '<span class="chore-left">' +
+              '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
+              '<span class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</span>' +
+            '</span>' +
+            '<span class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
+            targetCircleHTML(p, pid, true, isRunning) +
+            '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+      continue;
+    }
+    html += '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
       '<div class="proj-stripe"></div>' +
       '<div class="proj-body">' +
         '<div class="proj-top">' +
-          '<div class="proj-left">' +
-            '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
-            '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
-          '</div>' +
-          '<div class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</div>' +
+          '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
+          '<span class="proj-today">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
+          targetCircleHTML(p, pid, isChoreCard, isRunning) +
+          '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
         '</div>' +
-        '<button class="target-chip" data-action="target" data-id="' + pid + '">' + targetText + '</button>' +
-        (lastInt ? '<div class="interrupt-note">上次中断 ' + formatTime(lastInt.end) + '</div>' : "") +
-        '<div class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</div>' +
+        '<div class="proj-bottom">' +
+          '<span class="proj-bottom-hint">' + (lastInt ? "上次中断 " + formatTime(lastInt.end) : "") + '</span>' +
+          '<div class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</div>' +
+        '</div>' +
       '</div>' +
     '</div>';
   }
@@ -819,28 +1458,50 @@ function renderProjectList(stats, running, dayKey) {
 function renderRecordList(stats) {
   var host = document.getElementById("record-list");
   if (stats.records.length === 0) {
-    host.innerHTML = '<div class="empty-block">今天还没有记录，点「开始」记一段吧</div>';
+    host.innerHTML = '<div class="empty-block">今天还没有记录</div>';
     return;
   }
+  var total = stats.records.length;
+  /* 默认只显示最近 5 条（computeDayStats 已按 start 从新到旧排序）；展开/收起不改任何数据 */
+  var visible = (recordsExpanded || total <= RECORDS_PAGE_SIZE) ? total : RECORDS_PAGE_SIZE;
   var html = "";
-  for (var i = 0; i < stats.records.length; i++) {
+  for (var i = 0; i < visible; i++) {
     var rec = stats.records[i];
     var seg = rec.segment;
     var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
     var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
     var tag = isRunning ? '<span class="tag tag-running">计时中</span>'
       : (seg.endType === "interrupted" ? '<span class="tag">中断</span>' : "");
-    html += '<div class="record-row">' +
-      '<span class="dot" style="background:' + colorOf(rec.project.colorIndex) + '"></span>' +
+    /* 备注小灰字标签 + 承接来源标记 + 超 8 字折叠 */
+    var note = (typeof seg.note === "string") ? seg.note : "";
+    var src = (typeof seg.sourceProject === "string") ? seg.sourceProject : "";
+    var longNote = noteChars(note).length > 8;
+    var expanded = !!expandedNoteIds[seg.id];
+    var noteLabel = (longNote && !expanded) ? noteShort(note) : note;
+    var noteHTML = note
+      ? '<span class="rec-note">' + esc(noteLabel) +
+        (longNote ? '<span class="rec-note-hint">' + (expanded ? " 收起" : " 展开") + '</span>' : "") +
+        '</span>'
+      : "";
+    var fromHTML = src ? '<span class="rec-from">← ' + esc(src) + '</span>' : "";
+    var rowAttrs = longNote
+      ? ' class="record-row rec-expandable" data-action="toggle-note" data-id="' + esc(seg.id) + '"'
+      : ' class="record-row"';
+    html += '<div' + rowAttrs + '>' +
+      '<span class="dot" style="background:' + (rec.colorHex || colorOf(rec.project.colorIndex)) + '"></span>' +
       '<div class="rec-main">' +
         '<div class="rec-line1">' +
           '<span class="rec-name ellipsis">' + esc(rec.project.name) + '</span>' +
           '<span class="rec-time">' + timeText + '</span>' +
         '</div>' +
-        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + '</div>' +
+        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
       '</div>' +
       '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + esc(seg.id) + '" aria-label="删除本段">×</button>' +
     '</div>';
+  }
+  if (total > RECORDS_PAGE_SIZE) {
+    html += '<button class="records-toggle" data-action="toggle-records">' +
+      (recordsExpanded ? "收起" : "展开全部（共 " + total + " 条）") + '</button>';
   }
   host.innerHTML = html;
 }
@@ -856,6 +1517,7 @@ function render() {
   renderOverview(stats);
   renderProjectList(stats, running, dayKey);
   renderRecordList(stats);
+  applyReveal();
 }
 
 /* -------------------- 五、事件与业务流程 -------------------- */
@@ -873,13 +1535,18 @@ function startTimer(pid) {
     if (!running || running.projectId === pid) break;
     var closedProject = getProject(running.projectId);
     var mins = minutesOfSegment(running.seg, now);
-    if (!toastText && closedProject) toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
+    if (isChoreProject(closedProject)) {
+      /* 杂事被代关：不弹窗，顶部状态条浮现一行「杂事已记录 XX 分钟」 */
+      showChoreNotice("杂事已记录 " + mins + " 分钟");
+    } else if (!toastText && closedProject) {
+      toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
+    }
     closeRunningAt(running, now, "finished");
   }
   var still = findRunningSegment(state);
   if (still && still.projectId === pid) { save(); render(); return; } /* 防御：不重复开段 */
   var b = ensureBucket(state.days, dayKey, pid);
-  b.push({ id: newId("s"), start: now, end: null, endType: "running" });
+  b.push({ id: newId("s"), start: now, end: null, endType: "running", note: "", sourceProject: "" });
   state.currentDayKey = dayKey;
   save();
   render();
@@ -920,6 +1587,7 @@ function deleteRecordById(segId) {
 }
 
 function deleteProjectById(pid) {
+  if (isSystemChore(getProject(pid))) return; /* 系统项目「杂事」不可删除 */
   var now = Date.now();
   syncRolloverForNow(now);
   state.projects = (Array.isArray(state.projects) ? state.projects : []).filter(function (p) { return p.id !== pid; });
@@ -949,14 +1617,26 @@ function onDocumentClick(e) {
     case "edit-nickname": openNicknameModal(); break;
     case "add-project": openProjectModal(); break;
     case "start": startTimer(id); break;
-    case "interrupt": stopTimer(id, "interrupted"); break;
+    case "interrupt": openInterruptSheet(id); break;
     case "finish": stopTimer(id, "finished"); break;
     case "menu": toggleProjMenu(id, el); break;
     case "menu-target": closeProjMenu(); openTargetModal(id); break;
     case "menu-delete": closeProjMenu(); openDeleteProjectModal(id); break;
+    case "menu-clear-chore":
+      closeProjMenu();
+      openConfirmModal({
+        title: "清空今日记录",
+        message: "确定清空「杂事」今天的所有记录吗？其他项目不受影响，且无法恢复。",
+        confirmText: "清空", danger: true,
+        onConfirm: function () { clearChoreToday(); }
+      });
+      break;
     case "target": openTargetModal(id); break;
     case "delete-record": openDeleteRecordModal(id); break;
+    case "toggle-note": toggleNote(id); break;
+    case "toggle-records": toggleRecordsExpanded(); break;
     case "generate-card": openCardPreview(); break;
+    case "export-records": exportRecords(); break;
     case "modal-cancel": closeModal(); break;
     case "modal-confirm": handleModalConfirm(); break;
     case "modal-backdrop": closeModal(); break;
@@ -966,7 +1646,11 @@ function onDocumentClick(e) {
 }
 
 function onDocumentKeydown(e) {
-  if (e.key === "Escape") { closeProjMenu(); if (modalState) closeModal(); }
+  if (e.key === "Escape") {
+    closeProjMenu();
+    if (sheetState) { var sp = sheetState.pid; closeSheet(); doInterrupt(sp, "only", ""); }
+    else if (modalState) closeModal();
+  }
   if (e.key === "Enter" && modalState && modalState.kind !== "preview") {
     var t = e.target;
     if (t && t.tagName === "INPUT") { e.preventDefault(); handleModalConfirm(); }
@@ -1078,19 +1762,25 @@ function openProjectModal() {
       if (dup) { showModalError("已存在同名项目"); return false; }
       var idx = state.nextColorIndex % PALETTE.length;
       state.nextColorIndex = idx + 1;
+      var pid = newId("p");
       state.projects.push({
-        id: newId("p"), name: name, colorIndex: idx,
-        targetMinutes: null, createdAt: Date.now()
+        id: pid, name: name, colorIndex: idx,
+        targetMinutes: null, createdAt: Date.now(),
+        sortIndex: nextSortIndex()
       });
+      markReveal(pid);
       save(); render();
+      /* 紧接着弹出目标时长设置面板；延后到本次弹层被 closeModal 关闭之后，避免被清掉 */
+      window.setTimeout(function () { openTargetModal(pid, { cancelText: "暂不设置" }); }, 0);
       return true;
     }
   });
 }
 
-function openTargetModal(pid) {
+function openTargetModal(pid, opts) {
+  opts = opts || {};
   var p = getProject(pid);
-  if (!p) return;
+  if (!p || isSystemChore(p)) return; /* 系统项目「杂事」不设每日目标 */
   var cur = (typeof p.targetMinutes === "number" && p.targetMinutes > 0) ? p.targetMinutes : 0;
   var h = Math.floor(cur / 60), m = cur % 60;
   var panel =
@@ -1104,7 +1794,7 @@ function openTargetModal(pid) {
     '</div>' +
     '<div class="modal-error" id="modal-error"></div>' +
     '<div class="modal-actions">' +
-      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-outline" data-action="modal-cancel">' + esc((opts && opts.cancelText) || "取消") + '</button>' +
       '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
     '</div>';
   openModalShell(panel, {
@@ -1124,7 +1814,7 @@ function openTargetModal(pid) {
 
 function openDeleteProjectModal(pid) {
   var p = getProject(pid);
-  if (!p) return;
+  if (!p || isSystemChore(p)) return;
   openConfirmModal({
     title: "删除项目",
     message: "确定删除《" + p.name + "》吗？该项目的所有记录也会一并删除，且无法恢复。",
@@ -1156,9 +1846,10 @@ function toggleProjMenu(pid, anchorEl) {
   var menu = document.createElement("div");
   menu.className = "proj-menu";
   menu.setAttribute("data-project", pid);
-  menu.innerHTML =
-    '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">修改目标时长</button>' +
-    '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>';
+  menu.innerHTML = isSystemChore(getProject(pid))
+    ? '<button class="menu-item" data-action="menu-clear-chore" data-id="' + esc(pid) + '">清空今日记录</button>'
+    : '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">修改目标时长</button>' +
+      '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>';
   card.appendChild(menu);
 }
 
@@ -1271,10 +1962,17 @@ function drawCardCanvas(canvas, stats, now) {
     roundRect(ctx, left, barY, bw, barH, Math.min(7, bw / 2)); ctx.fill();
   }
 
-  ctx.fillStyle = "#1F2A44"; ctx.font = "bold 30px " + FONT_STACK;
-  ctx.fillText("今日各项目小计", left, 460);
+  /* 其中杂事 XX 分钟：位置在今日总时长下面，无杂事记录时不显示。
+     杂事行/小节标题/列表统一下移，给这行灰字留出不与标题相挤的间距（画布高度 H 无需改动）。 */
+  if (stats.choreMinutes > 0) {
+    ctx.fillStyle = "#8A94A6"; ctx.font = "22px " + FONT_STACK;
+    ctx.fillText("其中杂事 " + stats.choreMinutes + " 分钟", left, 430);
+  }
 
-  var listStart = 492;
+  ctx.fillStyle = "#1F2A44"; ctx.font = "bold 30px " + FONT_STACK;
+  ctx.fillText("今日各项目小计", left, 478);
+
+  var listStart = 510;
   if (n === 0) {
     ctx.fillStyle = "#A6AFC0"; ctx.font = "26px " + FONT_STACK;
     ctx.fillText("今天还没有记录", left, listStart + 46);
@@ -1284,7 +1982,7 @@ function drawCardCanvas(canvas, stats, now) {
       var y = listStart + i * 96;
       ctx.fillStyle = "#F7FAFF";
       roundRect(ctx, left, y, right - left, 80, 16); ctx.fill();
-      ctx.fillStyle = colorOf(item.colorIndex);
+      ctx.fillStyle = item.colorHex || colorOf(item.colorIndex);
       roundRect(ctx, left + 16, y + 18, 8, 44, 4); ctx.fill();
       ctx.fillStyle = "#1F2A44"; ctx.font = "30px " + FONT_STACK;
       ctx.textAlign = "left";
@@ -1356,7 +2054,15 @@ function saveCardImage() {
 /* -------------------- 八、初始化 -------------------- */
 
 function init() {
+  /* 刷新 / 重新打开一律回到最顶部（「我的项目」），不恢复上次的滚动位置 */
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
+  try { window.scrollTo(0, 0); } catch (e) {}
   state = load();
+  /* 兼容旧数据：仅在存在缺 sortIndex 的项目时按当前顺序重编号 */
+  var needSave = ensureSortIndexes(state);
+  /* 系统项目「杂事」：首次打开 / 读取旧数据时自动补齐并规整 */
+  if (ensureChoreProject(state)) needSave = true;
+  if (needSave) save();
   var now = Date.now();
   var k = dayKeyOf(now);
   if (state.currentDayKey !== k) {
