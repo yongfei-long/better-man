@@ -42,18 +42,14 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   box-shadow:0 4px 10px rgba(47,125,246,.25);
 }
 .header-name{flex:1 1 auto;min-width:0;}
-.header-name-inner{display:flex;align-items:center;min-width:0;}
-.header-name-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px;font-weight:700;}
+.header-name-inner{display:flex;align-items:center;min-width:0;gap:4px;}
+.header-name-text{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px;font-weight:700;}
 .icon-btn{
   width:44px;height:44px;flex:0 0 44px;display:inline-flex;align-items:center;justify-content:center;
   border-radius:12px;color:var(--muted);font-size:22px;line-height:1;
 }
 .icon-btn:active{background:#EEF3FB;}
-.icon-btn.edit-btn{color:#6E7C93;}
-.icon-btn.plus{
-  background:var(--blue);color:#fff;border-radius:14px;font-size:26px;font-weight:400;
-  box-shadow:0 4px 10px rgba(47,125,246,.25);
-}
+.icon-btn.edit-btn{width:32px;height:32px;flex:0 0 32px;border-radius:9px;color:#6E7C93;}
 .wrap{max-width:480px;margin:0 auto;padding:0 12px;}
 .card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,60,110,.06);padding:16px;margin-bottom:12px;}
 .section-title{font-size:16px;font-weight:700;margin-bottom:12px;}
@@ -86,6 +82,38 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .ov-progress-text{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 0 0;}
 #stat-percent-text{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;background:#EAF2FF;color:var(--blue);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
 #stat-remaining{font-size:13px;color:var(--muted);}
+
+/* ========== 今日时间分布：24 格 × 1 小时，格内按比例填充 ========== */
+.tl-wrap{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
+.tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.tl-title{font-size:13px;font-weight:700;}
+.tl-hint{font-size:11px;color:var(--muted);}
+.tl-ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;margin:0 1px 5px;}
+.tl-track{display:flex;gap:2px;height:34px;}
+.tl-cell{position:relative;display:block;flex:1 1 0;min-width:0;padding:0;border:1px solid var(--line);border-radius:3px;background:var(--soft);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tl-cell:hover,.tl-cell.is-open{outline:2px solid var(--blue);outline-offset:1px;z-index:2;}
+.tl-blk,.tl-gap{position:absolute;top:0;bottom:0;border-radius:2px;pointer-events:none;}
+.tl-gap{background:repeating-linear-gradient(45deg,#F4F6FA,#F4F6FA 4px,#E4E9F1 4px,#E4E9F1 8px);}
+.tl-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:11px;color:var(--muted);}
+.tl-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px;border:1px solid var(--line);}
+.tl-legend i.tl-gap-mark{background:repeating-linear-gradient(45deg,#F4F6FA,#F4F6FA 3px,#E4E9F1 3px,#E4E9F1 6px);}
+.tl-blank{margin-top:8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.tl-detail{margin-top:10px;padding:10px 12px;border-radius:10px;background:#F7F9FC;}
+.tl-detail-title{font-size:12px;font-weight:700;margin-bottom:6px;font-variant-numeric:tabular-nums;}
+.tl-detail-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:12px;}
+.tl-detail-row:last-of-type{border-bottom:0;}
+.tl-detail-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tl-detail-time,.tl-detail-min{flex:0 0 auto;color:var(--muted);font-variant-numeric:tabular-nums;}
+.tl-detail-gap{color:var(--muted);}
+.tl-gap-dot{background:repeating-linear-gradient(45deg,#F4F6FA,#F4F6FA 3px,#E4E9F1 3px,#E4E9F1 6px);border:1px solid var(--line);}
+.tl-empty{font-size:12px;color:var(--muted);padding:4px 0;}
+.tl-detail-close{display:block;margin:8px 0 0;padding:4px 0;font-size:12px;color:var(--blue);}
+/* 第十六轮：明细框底部「收起 / ＋ 补记一段时间」并排；所有格子都显示 */
+.tl-detail-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;}
+.tl-detail-foot .tl-detail-close{margin:0;}
+.tl-add-btn{flex:0 0 auto;border:0;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;white-space:nowrap;}
+.tl-add-btn:active{background:#1E6BE0;}
+.modal-select{text-align:left;padding-right:10px;}
 
 /* ========== 项目卡片 ========== */
 /* 外层 .card 是唯一白底容器；内部项目行只留 1px 细分隔线与色条，不再套白卡 */
@@ -198,11 +226,11 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .card-preview{width:100%;}
 #card-canvas,.card-image{width:100%;height:auto;display:block;border-radius:8px;}
 .card-hint{font-size:14px;color:var(--muted);text-align:center;margin-top:10px;}
-/* ========== 状态条提示行（杂事已记录） ========== */
+/* ========== 状态条提示行（事来则应已记录） ========== */
 #status-bar{flex-wrap:wrap;}
 .status-notice{flex:0 0 100%;font-size:12px;color:var(--muted);font-weight:400;line-height:1.3;padding-bottom:2px;}
 
-/* ========== 总览「其中杂事」小灰字 ========== */
+/* ========== 总览「其中事来则应」小灰字 ========== */
 .ov-chore{font-size:13px;color:var(--muted);margin-top:8px;}
 
 /* ========== 记录列表：备注 / 来源 / 折叠 ========== */
@@ -210,6 +238,18 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .rec-note{display:inline-block;max-width:100%;font-size:12px;color:#8A94A6;background:#F2F5FA;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle;overflow-wrap:anywhere;}
 .rec-note-hint{color:var(--blue);margin-left:2px;white-space:nowrap;}
 .record-row.rec-expandable{cursor:pointer;}
+/* ========== 编辑记录时间（方案 A 增量）：记录行双按钮 + 编辑弹窗 ========== */
+.rec-btns{display:flex;align-items:center;gap:2px;flex:0 0 auto;}
+.rec-btns .icon-btn{width:32px;height:32px;flex:0 0 32px;border-radius:9px;font-size:20px;}
+.rec-edit{color:#6E7C93;}
+.rec-edit:active{color:var(--blue);background:#EEF3FB;}
+.edit-time-row{display:flex;gap:10px;}
+.edit-time-field{flex:1 1 0;min-width:0;}
+.edit-time-field label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px;}
+.edit-time-field .modal-input{height:48px;text-align:center;}
+.edit-note-label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px;}
+.edit-preview{font-size:14px;color:var(--blue);margin-top:10px;line-height:1.4;min-height:20px;}
+.edit-preview.invalid{color:#E0453B;}
 
 /* ========== 中断原因底部面板 ========== */
 #sheet-root{position:fixed;inset:0;z-index:120;}
@@ -286,10 +326,114 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 /* 空状态：提示 + 可点动作 */
 .empty-action{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:8px 16px;border-radius:10px;background:var(--blue);color:#fff;font-size:14px;font-weight:600;}
 .empty-hint{display:block;font-size:12px;color:var(--muted);margin-top:4px;}
-/* 概览「其中杂事」小字（覆盖早期 13px 定义） */
+/* 概览「其中事来则应」小字（覆盖早期 13px 定义） */
 .ov-chore{font-size:12px;color:var(--muted);margin-top:2px;}
 /* 所有时长数字等宽 */
 .ov-numbers,#stat-total,#stat-target,.proj-today,.proj-today-main,.rec-time,#status-elapsed{font-variant-numeric:tabular-nums;}
+
+/* ===== 每日上限 dailyLimit（第七轮增量）===== */
+.limit-note{font-size:11px;color:var(--muted);line-height:1.25;}
+.limit-note.over{color:#E0453B;font-weight:700;}
+.modal-hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4;}
+.limit-field{margin-top:12px;}
+.limit-field label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px;}
+.limit-field .modal-input{text-align:center;}
+#limit-notice{
+  position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:50%;
+  transform:translate(-50%,-12px);z-index:120;
+  max-width:calc(100% - 24px);padding:10px 16px;border-radius:12px;
+  background:#FFF3E0;color:#B45309;border:1px solid #FCD9A6;
+  font-size:13px;font-weight:700;line-height:1.45;text-align:center;
+  box-shadow:0 6px 20px rgba(160,100,20,.18);
+  opacity:0;pointer-events:none;word-break:break-word;
+  transition:opacity .3s ease,transform .3s ease;
+}
+#limit-notice.show{opacity:1;transform:translate(-50%,0);}
+#ov-limit-summary{margin-top:12px;}
+.ov-limit-head{display:block;width:100%;text-align:left;padding:8px 0;color:#E0453B;font-size:13px;font-weight:700;}
+.ov-limit-list{border-top:1px solid var(--line);padding-top:6px;margin-top:2px;}
+.ov-limit-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--text);padding:4px 0;}
+.ov-limit-row span:last-child{color:#E0453B;font-weight:700;flex:0 0 auto;}
+
+/* ===== 分组：多多益善 / 适可而止（第八轮增量）===== */
+.group-block{margin-bottom:14px;}
+.group-head{display:flex;align-items:center;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--line);margin-bottom:2px;}
+.group-name{flex:0 0 auto;font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;}
+.group-summary{flex:1 1 auto;min-width:0;text-align:right;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.group-add{flex:0 0 30px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;background:#EAF2FF;color:var(--blue);font-size:20px;font-weight:600;line-height:1;}
+.group-add:active{background:#D6E6FF;}
+.group-empty{font-size:13px;color:#B4BDCB;padding:10px 2px;}
+.chore-cards{margin-top:6px;border-top:1px solid var(--line);padding-top:2px;}
+@media (max-width:360px){.group-summary{font-size:11px;}.group-add{flex-basis:28px;width:28px;height:28px;font-size:18px;}}
+
+/* 圆形图标：两组统一为环形进度；未设目标/上限时显示虚线加号 */
+.goal-orb{
+  flex:0 0 42px;width:42px;height:42px;border-radius:50%;
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--orb,#5B8FF9);color:#fff;border:0;padding:0;overflow:hidden;
+  white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.goal-orb.orb-empty{background:transparent;border:1.5px dashed #C7D2E3;color:#AEB7C6;font-size:20px;font-weight:400;}
+.goal-orb.orb-over{background:#E0453B;}
+.goal-orb .orb-num{font-size:15px;font-weight:700;line-height:1.05;}
+.goal-orb .orb-sub{font-size:10px;font-weight:600;line-height:1.05;opacity:.92;}
+.goal-orb .orb-label{font-size:11px;font-weight:700;line-height:1.1;}
+@media (max-width:360px){.goal-orb{flex-basis:36px;width:36px;height:36px;}.goal-orb .orb-num{font-size:13px;}.goal-orb .orb-label{font-size:10px;}}
+/* ===== 方案 C：环形进度（第九轮 less，第十轮扩展至 more）===== */
+/* 环色沿用项目色（与色条同源）；less 超额时整环变红并填满 */
+.goal-orb.orb-ring{background:transparent;position:relative;color:var(--text);}
+.goal-orb.orb-ring::before{
+  content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--orb,#5B8FF9) var(--ring-deg,0deg),#E9EEF7 0);
+}
+.goal-orb.orb-ring::after{content:"";position:absolute;inset:5px;border-radius:50%;background:#fff;}
+.goal-orb.orb-ring.orb-over::before{background:conic-gradient(#E0453B var(--ring-deg,360deg),#FDE3E0 0);}
+.goal-orb.orb-ring .ring-core{
+  position:relative;z-index:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;line-height:1.05;
+}
+.goal-orb.orb-ring .ring-num{font-size:14px;font-weight:700;color:var(--orb,#5B8FF9);}
+.goal-orb.orb-ring .ring-sub{font-size:9px;font-weight:600;color:#9AA6B8;}
+.goal-orb.orb-ring.orb-over .ring-num{color:#E0453B;}
+@media (max-width:360px){
+  .goal-orb.orb-ring .ring-num{font-size:12px;}
+  .goal-orb.orb-ring .ring-sub{font-size:8px;}
+}
+/* 右侧信息区固定两行高度：无记录时首行留空，卡片仍上下对齐、不跳动 */
+.proj-today-main,.today-sub{display:block;min-height:15px;text-align:right;}
+
+/* 统一设置弹窗：与旧弹窗同尺寸（实测 407px 高 / 18px 圆角 / 20px 内边距 / 48px 按钮） */
+.modal-panel.target-modal{min-height:407px;display:flex;flex-direction:column;}
+.target-modal .modal-actions{margin-top:auto;}
+.target-unit-row{display:flex;gap:10px;margin-top:14px;align-items:stretch;}
+.target-num{flex:1 1 auto;min-width:0;height:48px;padding:0 12px;border:1px solid #DCE5F2;border-radius:12px;background:#F9FBFF;color:var(--text);font-size:16px;outline:none;text-align:center;font-variant-numeric:tabular-nums;}
+.target-num:focus{border-color:var(--blue);background:#fff;}
+.target-units{flex:0 0 auto;display:flex;gap:6px;}
+.unit-btn{width:56px;height:48px;border-radius:12px;background:#F2F6FD;border:1px solid #E1EAF7;color:#3A4A66;font-size:14px;font-weight:600;}
+.unit-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+.target-hint-line{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;}
+.quick-row{display:flex;gap:8px;margin-top:16px;}
+.quick-chip{flex:1 1 0;min-width:0;height:36px;border-radius:18px;background:#F2F6FD;border:1px solid #E1EAF7;color:#3A4A66;font-size:13px;font-weight:600;}
+.quick-chip:active{background:#E3EDFF;border-color:var(--blue);color:var(--blue);}
+.target-modal .btn[disabled]{opacity:.45;cursor:not-allowed;}
+@media (max-width:360px){.unit-btn{width:50px;}.quick-chip{font-size:12px;}}
+
+/* 全局＋：极简分组二选一 */
+.modal-panel.choice-modal{min-height:212px;display:flex;flex-direction:column;}
+.group-choice-row{display:flex;gap:12px;margin-top:18px;}
+.group-choice-btn{flex:1 1 0;min-width:0;height:96px;border-radius:16px;background:#F2F6FD;border:1.5px solid #E1EAF7;color:var(--text);font-size:16px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+.group-choice-btn .gc-sub{font-size:12px;font-weight:400;color:var(--muted);}
+.group-choice-btn:active{background:#E3EDFF;border-color:var(--blue);}
+/* 三选一弹窗窄屏适配：三个并排按钮在 320px 下仍可点、不换行、不横向滚动 */
+@media (max-width:360px){
+  .group-choice-row{gap:8px;}
+  .group-choice-btn{height:88px;border-radius:12px;font-size:14px;}
+  .group-choice-btn .gc-sub{font-size:10px;}
+}
+/* 概览「适可而止」行：紧跟「其中事来则应」，与现有小灰字一致 */
+#ov-limit-summary{margin-top:6px;}
+.ov-limit-head{display:block;width:100%;text-align:left;padding:6px 0;color:var(--muted);font-size:12px;font-weight:600;}
+.ov-limit-head .ov-less-over{color:#E0453B;font-weight:700;}
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -323,11 +467,20 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
           <span data-page-node-id="oailLwJB02s8D87PmpmJ5F" id="stat-total"><!--pnid:Kepr8xD6ws4L4fem31yLjr-->00:00</span>
         </div>
         <div data-page-node-id="MnpSPs9JoGLbVjE7zK6QU9" class="ov-chore" id="stat-chore-line" style="display:none"></div>
+        <div id="ov-limit-summary"></div>
       </div>
       <div class="ov-progress-track"><div class="ov-progress-fill" id="stat-progress-fill"></div></div>
       <div data-page-node-id="WoWi2yn2k2CSOFRwmcT5gm" class="ov-progress-text">
         <span data-page-node-id="FnunyhpxeSmjgpDaEjJvMt" id="stat-percent-text"><!--pnid:7QFcjcKcc6g1I370063ZdZ-->完成 0%</span>
         <span data-page-node-id="AK0AcCs3xdLQuLKFDJlpID" id="stat-remaining"><!--pnid:N8sriVcbSQjJbPhDmL6zUZ-->设置目标后查看完成情况</span>
+      </div>
+      <div class="tl-wrap" id="timeline-wrap">
+        <div class="tl-head"><span class="tl-title">今日时间分布</span><span class="tl-hint" id="timeline-hint">点格子看这一小时</span></div>
+        <div class="tl-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+        <div class="tl-track" id="timeline-track"></div>
+        <div class="tl-legend" id="timeline-legend"></div>
+        <div class="tl-blank" id="timeline-blank"></div>
+        <div class="tl-detail" id="timeline-detail" style="display:none"></div>
       </div>
     </section>
 
@@ -338,6 +491,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 </div>
 
 <div data-page-node-id="Str5uGcSoFtb8NaOHEGk5t" aria-live="polite" id="toast" role="status"></div>
+<div id="limit-notice" role="status" aria-live="polite"></div>
 <div data-page-node-id="ekXAOKdY404zh0PU8ZSNQg" id="modal-root"></div>
 
 <script data-page-node-id="ot7o1KJgy8KCToEdkQsZtu" data-pnid-children="ncJ5n4glj0Dr4r5Sitx4V6">
@@ -353,8 +507,15 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 
 /** 项目标识色：固定 8 色，按 nextColorIndex 取模分配，删除不回收、不重排 */
 var PALETTE = ["#5B8FF9", "#61DDAA", "#65789B", "#F6BD16", "#7262FD", "#78D3F8", "#F08BB4", "#FF9D4D"];
-/** 系统项目「杂事」：固定 id、固定中性灰、不参与排序、永远固定在列表最底部 */
-var CHORE_NAME = "杂事";
+/** 系统项目「事来则应」：固定 id、固定中性灰、不参与排序、永远固定在列表最底部 */
+var CHORE_NAME = "事来则应";
+/* 兼容：旧版本系统项目名为「杂事」，读取历史 localStorage 时仍按旧名识别，避免旧记录丢失。
+   只用于内部判定，页面上不再显示旧名。 */
+var CHORE_NAME_LEGACY = "杂事";
+function isChoreName(n) {
+  var t = String(n === null || n === undefined ? "" : n).trim();
+  return t === CHORE_NAME || t === CHORE_NAME_LEGACY;
+}
 var CHORE_ID = "sys_chore";
 var CHORE_COLOR = "#9CA3AF";
 var STORAGE_KEY = "my-time-records:v1";
@@ -499,7 +660,7 @@ function computeDayStats(state, dayKey, now) {
     if (perProject[a].isChore) choreMinutes += perProject[a].minutes;
   }
 
-  /* 完成度口径：只统计「设置了每日目标」的非杂事项目；
+  /* 完成度口径：只统计「设置了每日目标」的非事来则应项目；
      分子 = 这些项目今天已投入之和，分母 = 它们的目标时长之和。 */
   var targetMinutes = 0, hasTarget = false, goalMinutes = 0;
   for (var k = 0; k < projects.length; k++) {
@@ -517,11 +678,32 @@ function computeDayStats(state, dayKey, now) {
   var ratio = (hasTarget && targetMinutes > 0) ? (goalMinutes / targetMinutes) : 0;
   /* 保留一位小数：16.7% 这类分数百分比可正确显示，整数仍显示 50%（不出现 50.0） */
   var percent = (hasTarget && targetMinutes > 0) ? Math.round(goalMinutes / targetMinutes * 1000) / 10 : 0;
+
+  /* 第八轮：顶部「今日概览」的完成度只算「多多益善」组里设了目标的项目；
+     less 组、事来则应、未设目标项目完全不参与。原有字段一律保留（CSV / 记录卡沿用原口径）。*/
+  var moreTargetMinutes = 0, moreGoalMinutes = 0, moreHasTarget = false;
+  for (var mk = 0; mk < projects.length; mk++) {
+    var mp = projects[mk];
+    if (isChoreProject(mp) || groupOf(mp) !== GROUP_MORE) continue;
+    var mtm = mp.targetMinutes;
+    if (typeof mtm === "number" && Number.isFinite(mtm) && mtm > 0) {
+      moreTargetMinutes += mtm;
+      moreHasTarget = true;
+      for (var mg = 0; mg < perProject.length; mg++) {
+        if (perProject[mg].projectId === mp.id) { moreGoalMinutes += perProject[mg].minutes; break; }
+      }
+    }
+  }
+  var moreRatio = (moreHasTarget && moreTargetMinutes > 0) ? (moreGoalMinutes / moreTargetMinutes) : 0;
+  var morePercent = (moreHasTarget && moreTargetMinutes > 0)
+    ? Math.round(moreGoalMinutes / moreTargetMinutes * 1000) / 10 : 0;
   return {
     dayKey: dayKey, now: now, perProject: perProject, records: records,
     totalMinutes: totalMinutes, targetMinutes: targetMinutes,
     choreMinutes: choreMinutes, goalMinutes: goalMinutes,
-    hasTarget: hasTarget, ratio: ratio, percent: percent
+    hasTarget: hasTarget, ratio: ratio, percent: percent,
+    moreTargetMinutes: moreTargetMinutes, moreGoalMinutes: moreGoalMinutes,
+    moreHasTarget: moreHasTarget, moreRatio: moreRatio, morePercent: morePercent
   };
 }
 
@@ -605,14 +787,25 @@ function sanitizeState(obj) {
       var createdAt = (typeof raw.createdAt === "number" && Number.isFinite(raw.createdAt)) ? raw.createdAt : now;
       /* 保留排序字段：缺失或非法时记为 undefined，交给一次性迁移重编号 */
       var si = (typeof raw.sortIndex === "number" && Number.isFinite(raw.sortIndex)) ? raw.sortIndex : undefined;
+      /* 每日上限：旧数据缺失或非法一律按不限制（null）处理 */
+      var dl = null;
+      if (typeof raw.dailyLimit === "number" && Number.isFinite(raw.dailyLimit) && raw.dailyLimit > 0) {
+        dl = Math.floor(raw.dailyLimit);
+      }
+      /* 分组字段：旧数据缺 group / 非法值一律归「多多益善」，不改任何记录、合计与顺序；
+         「如实知见」组只记流水，恒不设目标与上限 */
+      var grp = (raw.group === GROUP_LESS) ? GROUP_LESS
+        : (raw.group === GROUP_FLOW) ? GROUP_FLOW : GROUP_MORE;
+      if (grp === GROUP_FLOW) { tm = null; dl = null; }
       var proj = {
         id: id, name: Array.from(name).slice(0, 10).join(""),
-        colorIndex: ci, targetMinutes: tm, createdAt: createdAt, sortIndex: si
+        colorIndex: ci, targetMinutes: tm, createdAt: createdAt, sortIndex: si,
+        dailyLimit: dl, group: grp
       };
-      /* 系统项目「杂事」：读取旧数据时也规整为固定名称 / 灰色 / 无目标，并打上系统标记 */
+      /* 系统项目「事来则应」：读取旧数据时也规整为固定名称 / 灰色 / 无目标，并打上系统标记 */
       var isChore = (raw.isSystem === true || raw.isSystemChore === true || raw.system === true ||
-        raw.kind === "system" || id === CHORE_ID || String(name).trim() === CHORE_NAME);
-      if (isChore) { proj.name = CHORE_NAME; proj.targetMinutes = null; proj.isSystem = true; }
+        raw.kind === "system" || id === CHORE_ID || isChoreName(name));
+      if (isChore) { proj.name = CHORE_NAME; proj.targetMinutes = null; proj.isSystem = true; proj.group = null; }
       base.projects.push(proj);
       trackId(id);
     }
@@ -686,15 +879,41 @@ function ensureSortIndexes(st) {
   return true;
 }
 
-/** 系统项目「杂事」：不参与排序，永远固定在列表最底部 */
+/** 系统项目「事来则应」：不参与排序，永远固定在列表最底部 */
 function isChoreProject(p) {
   if (!p) return false;
   if (p.isSystem === true || p.system === true || p.kind === "system") return true;
-  return String(p.name === null || p.name === undefined ? "" : p.name).trim() === CHORE_NAME;
+  return isChoreName(p.name);
+}
+
+/* -------------------- 分组字段（第八轮增量；第十五轮扩展第三组） -------------------- */
+var GROUP_MORE = "more", GROUP_LESS = "less", GROUP_FLOW = "flow";
+var GROUP_LABEL = { more: "多多益善", less: "适可而止", flow: "如实知见" };
+
+/** 取项目分组：旧数据缺 group / 非法值一律归「多多益善」；系统「事来则应」不属于任何组，返回 null。
+    单字段保证一个项目只属于一个组。 */
+function groupOf(p) {
+  if (!p || isSystemChore(p) || isChoreProject(p)) return null;
+  if (p.group === GROUP_LESS) return GROUP_LESS;
+  if (p.group === GROUP_FLOW) return GROUP_FLOW;
+  return GROUP_MORE;
+}
+/** CSV / 记录卡用的中文标签 */
+function groupLabelOf(p) {
+  if (!p) return "";
+  if (isSystemChore(p) || isChoreProject(p)) return CHORE_NAME;
+  return GROUP_LABEL[groupOf(p)];
+}
+/** 圆形图标里的紧凑目标文案：30 分 / 1.5 时 / 2 时 */
+function formatOrbTarget(mins) {
+  var n = Math.max(0, Math.floor(Number(mins) || 0));
+  if (n < 60) return n + " 分";
+  var h = n / 60;
+  return (Number.isInteger(h) ? String(h) : h.toFixed(1)) + " 时";
 }
 
 /** 列表显示顺序：普通项目按 sortIndex 降序；重复值按原数组先后（索引小者靠前）；
- *  杂事固定追加到末尾。返回副本，不改动 state.projects 原数组。 */
+ *  事来则应固定追加到末尾。返回副本，不改动 state.projects 原数组。 */
 function orderedProjectsForDisplay() {
   var ps = Array.isArray(state.projects) ? state.projects : [];
   var normal = [], chore = [];
@@ -742,7 +961,7 @@ function applyReveal() {
   }
 }
 
-/* -------------------- 系统项目「杂事」/ 备注 / 中断面板（增量新增） -------------------- */
+/* -------------------- 系统项目「事来则应」/ 备注 / 中断面板（增量新增） -------------------- */
 
 /** 是否系统项目：显式标记或固定 id 判定，用于「不可删/改名/设目标」的权限判断 */
 function isSystemChore(p) {
@@ -750,7 +969,7 @@ function isSystemChore(p) {
   return p.isSystem === true || p.isSystemChore === true || p.system === true || p.kind === "system" || p.id === CHORE_ID;
 }
 
-/** 项目显示色：系统「杂事」固定中性灰，其余按 colorIndex 取调色板 */
+/** 项目显示色：系统「事来则应」固定中性灰，其余按 colorIndex 取调色板 */
 function projectColor(p) {
   if (p && (isSystemChore(p) || isChoreProject(p))) return CHORE_COLOR;
   return colorOf(p && p.colorIndex);
@@ -763,7 +982,7 @@ function getChoreProject() {
   return null;
 }
 
-/** 把 fromPid 的所有记录段并入 toPid，规整杂事项目时不丢记录 */
+/** 把 fromPid 的所有记录段并入 toPid，规整事来则应项目时不丢记录 */
 function mergeChoreRecords(st, fromPid, toPid) {
   var days = st.days || {};
   var keys = Object.keys(days);
@@ -777,7 +996,7 @@ function mergeChoreRecords(st, fromPid, toPid) {
 }
 
 /**
- * 保证系统项目「杂事」唯一存在（首次打开 / 旧数据都自动补齐），并规整属性：
+ * 保证系统项目「事来则应」唯一存在（首次打开 / 旧数据都自动补齐），并规整属性：
  * 固定中性灰、无每日目标、isSystem 标记。已有同名普通项目原地升级（不改 id，记录不丢）。
  * 返回是否发生变更，供 init 决定是否写回 localStorage。
  */
@@ -787,13 +1006,13 @@ function ensureChoreProject(st) {
   for (var i = 0; i < ps.length; i++) {
     var p = ps[i];
     if (!p) continue;
-    var byName = String(p.name === null || p.name === undefined ? "" : p.name).trim() === CHORE_NAME;
+    var byName = isChoreName(p.name);
     if (isSystemChore(p) || byName) { if (!chore) chore = p; else extras.push(p); }
   }
   var changed = false;
   if (!chore) {
     chore = { id: CHORE_ID, name: CHORE_NAME, colorIndex: 0,
-      targetMinutes: null, createdAt: Date.now(), sortIndex: 0, isSystem: true };
+      targetMinutes: null, createdAt: Date.now(), sortIndex: 0, isSystem: true, group: null };
     ps.push(chore);
     changed = true;
   }
@@ -801,6 +1020,7 @@ function ensureChoreProject(st) {
   force("isSystem", true);
   force("name", CHORE_NAME);
   force("targetMinutes", null);
+  force("group", null);
   if (typeof chore.sortIndex !== "number" || !Number.isFinite(chore.sortIndex)) { chore.sortIndex = 0; changed = true; }
   if (extras.length > 0) {
     for (var e = 0; e < extras.length; e++) {
@@ -823,7 +1043,7 @@ function toggleNote(segId) {
   renderRecordList(computeDayStats(state, dayKeyOf(now), now));
 }
 
-/* ---- 顶部状态条「杂事已记录 XX 分钟」浮现提示 ---- */
+/* ---- 顶部状态条「事来则应已记录 XX 分钟」浮现提示 ---- */
 var choreNoticeText = "", choreNoticeTimer = null;
 function showChoreNotice(text) {
   choreNoticeText = text;
@@ -835,7 +1055,7 @@ function showChoreNotice(text) {
 }
 
 /* ---- 中断原因底部面板 ---- */
-var CHORE_REASONS = ["喝咖啡休息", "接电话", "临时被叫走", "处理杂事"];
+var CHORE_REASONS = ["喝咖啡休息", "接电话", "临时被叫走", "事来则应"];
 var sheetState = null;
 
 function closeSheet() {
@@ -925,7 +1145,7 @@ function openInterruptSheet(pid) {
       '<div class="sheet-reasons">' + reasons + '</div>' +
       '<input id="sheet-note" class="sheet-input" type="text" maxlength="20" placeholder="补充说明" autocomplete="off">' +
       '<div class="sheet-actions">' +
-        '<button class="btn btn-primary" data-sheet-action="chore">中断并开始记杂事</button>' +
+        '<button class="btn btn-primary" data-sheet-action="chore">中断并开始记事来则应</button>' +
         '<button class="btn btn-outline" data-sheet-action="only">只中断</button>' +
       '</div>' +
     '</div>';
@@ -941,7 +1161,7 @@ function openInterruptSheet(pid) {
   bindSheetSwipe(root.querySelector(".sheet-panel"));
 }
 
-/** 立刻开始一段「杂事」：承接来源项目 + 自动备注 */
+/** 立刻开始一段「事来则应」：承接来源项目 + 自动备注 */
 function startChoreSegment(now, sourceName, extraNote) {
   var chore = getChoreProject();
   if (!chore) return;
@@ -957,7 +1177,7 @@ function startChoreSegment(now, sourceName, extraNote) {
 
 /**
  * 执行中断：闭合当前项目进行中段（interrupted）并写入备注；
- * mode=chore 时紧接着开始一段杂事，sourceProject 记为来源项目名。
+ * mode=chore 时紧接着开始一段事来则应，sourceProject 记为来源项目名。
  */
 function doInterrupt(pid, mode, noteText) {
   var now = Date.now();
@@ -977,9 +1197,11 @@ function doInterrupt(pid, mode, noteText) {
   state.currentDayKey = dayKeyOf(now);
   save();
   render();
+  /* 中断那一刻同样检查超额（只提示，不阻断） */
+  checkLimitNotice(pid, dayKeyOf(now), now, true);
 }
 
-/** 「清空今日记录」：只删除系统杂事今天的记录段 */
+/** 「清空今日记录」：只删除系统事来则应今天的记录段 */
 function clearChoreToday() {
   var chore = getChoreProject();
   if (!chore) return;
@@ -993,7 +1215,7 @@ function clearChoreToday() {
   state.currentDayKey = dayKey;
   save();
   render();
-  showToast("已清空「杂事」今日记录");
+  showToast("已清空「事来则应」今日记录");
 }
 
 /* -------------------- 模块顺序 / 记录列表折叠 / 导出 / 滚动（增量新增） -------------------- */
@@ -1001,6 +1223,8 @@ function clearChoreToday() {
 /** 「今日记录」展开状态：纯 UI 状态，不写入 state / localStorage，展开收起不改任何数据 */
 var RECORDS_PAGE_SIZE = 5;
 var recordsExpanded = false;
+/** 时间分布：当前展开的小时（0–23），null = 收起；纯 UI 状态，不写入 state / localStorage */
+var timelineHour = null;
 
 function toggleRecordsExpanded() {
   recordsExpanded = !recordsExpanded;
@@ -1009,41 +1233,215 @@ function toggleRecordsExpanded() {
   renderRecordList(computeDayStats(state, dayKeyOf(now), now));
 }
 
+/** 点某个小时格：展开/收起该小时明细；沿用「只重绘单块」范式，不整页 render */
+function toggleTimelineHour(hour) {
+  var h = Number(hour);
+  if (!Number.isInteger(h) || h < 0 || h > 23) return;
+  timelineHour = (timelineHour === h) ? null : h;
+  var now = Date.now();
+  var dk = dayKeyOf(now);
+  renderTimeline(computeDayStats(state, dk, now), dk, now);
+}
+
+
+/* -------------------- 每日上限（dailyLimit）-------------------- */
+/** 只读计算某天每个项目的「今日累计 / 上限 / 超额分钟数」。
+    完全独立于 computeDayStats，不参与目标完成率，不改动任何统计口径。
+    已用时间 = 该项目今天所有时段累计（minutesOfSegment 对进行中段算到 now）。*/
+function limitRowsForDay(dayKey, now) {
+  var bucket = (state && state.days && state.days[dayKey]) || {};
+  var projects = (state && Array.isArray(state.projects)) ? state.projects : [];
+  var out = [];
+  for (var i = 0; i < projects.length; i++) {
+    var p = projects[i];
+    if (!p) continue;
+    var limit = (typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0)
+      ? Math.floor(p.dailyLimit) : null;
+    var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
+    var used = 0;
+    for (var j = 0; j < segs.length; j++) if (segs[j]) used += minutesOfSegment(segs[j], now);
+    out.push({ projectId: p.id, name: p.name, limit: limit, used: used,
+      over: (limit && used > limit) ? (used - limit) : 0 });
+  }
+  return out;
+}
+
+function limitExceededProjects(dayKey, now) {
+  var rows = limitRowsForDay(dayKey, now), out = [];
+  for (var i = 0; i < rows.length; i++) if (rows[i].limit && rows[i].over > 0) out.push(rows[i]);
+  return out;
+}
+
+/** 卡片上的上限小字：与「上次中断」占用同一位置，二者都有时上限优先 */
+function limitNoteHTML(row, lastInt) {
+  if (row && row.limit) {
+    if (row.over > 0) return '<span class="limit-note over">已超 ' + row.over + ' 分钟 · 限制 ' + row.limit + ' 分</span>';
+    return '<span class="limit-note">上限 ' + row.limit + ' 分 · 已用 ' + row.used + ' 分</span>';
+  }
+  return lastInt ? '<span class="interrupt-note">上次中断 ' + formatTime(lastInt.end) + '</span>' : "";
+}
+
+/** 「设置目标与上限」面板：上限小于目标时的小灰字提醒（输入时实时刷新） */
+function updateTargetHint() {
+  var root = document.getElementById("modal-root");
+  if (!root) return false;
+  var hint = root.querySelector("#modal-limit-hint");
+  var limEl = root.querySelector("#modal-limit");
+  var hEl = root.querySelector("#modal-input");
+  var mEl = root.querySelector("#modal-minutes");
+  if (!hint || !limEl || !hEl || !mEl) return false;
+  var raw = String(limEl.value === undefined || limEl.value === null ? "" : limEl.value).trim();
+  var lv = raw === "" ? null : parseNonNegInt(raw);
+  var hv = parseNonNegInt(hEl.value), mv = parseNonNegInt(mEl.value);
+  var target = (hv === null || mv === null) ? 0 : hv * 60 + mv;
+  var show = (lv !== null && lv > 0 && target > 0 && lv < target);
+  hint.style.display = show ? "" : "none";
+  return show;
+}
+
+/* ---- 页面顶部橙色提示条：5 秒自动淡出，不弹窗、不阻断操作 ---- */
+var limitNoticeTimer = null, limitNotified = {};
+function showLimitNotice(text) {
+  var el = document.getElementById("limit-notice");
+  if (!el) return;
+  el.textContent = text;
+  el.classList.remove("show");
+  void el.offsetWidth; /* 重启动画 */
+  el.classList.add("show");
+  if (limitNoticeTimer !== null) { clearTimeout(limitNoticeTimer); limitNoticeTimer = null; }
+  limitNoticeTimer = setTimeout(function () {
+    var cur = document.getElementById("limit-notice");
+    if (cur) cur.classList.remove("show");
+    limitNoticeTimer = null;
+  }, 5000);
+}
+
+/** 超额只做提示，绝不自动结束计时、不禁止开始。
+    force=true：结束/中断时按需求提示一次；
+    force=false：计时途中越线，按 (dayKey|pid) 去重，只在越线那一刻提示一次。*/
+function checkLimitNotice(pid, dayKey, now, force) {
+  var p = getProject(pid);
+  /* 上限只属于「适可而止」组，more 组互不串 */
+  if (!p || groupOf(p) !== GROUP_LESS ||
+      !(typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0)) return;
+  var rows = limitRowsForDay(dayKey, now), row = null;
+  for (var i = 0; i < rows.length; i++) if (rows[i].projectId === pid) { row = rows[i]; break; }
+  if (!row || !row.limit || row.over <= 0) return;
+  var key = dayKey + "|" + pid;
+  if (!force && limitNotified[key]) return;
+  limitNotified[key] = true;
+  showLimitNotice("《" + row.name + "》今天已超 " + row.over + " 分钟");
+}
+
+/* ---- 概览最下方「N 个项目超出上限」可展开汇总（纯 UI 状态，不写入 state）---- */
+var limitsExpanded = false;
+/** 概览「适可而止：N 个项目，M 个超额」：只统计 less 组，点击展开超额项目名与分钟数 */
+function renderLimitSummary(dayKey, now) {
+  var host = document.getElementById("ov-limit-summary");
+  if (!host) return;
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var lessTotal = 0;
+  for (var i = 0; i < ps.length; i++) if (groupOf(ps[i]) === GROUP_LESS) lessTotal++;
+  if (lessTotal === 0) { host.innerHTML = ""; host.style.display = "none"; return; }
+  var all = limitRowsForDay(dayKey, now), byPid = {};
+  for (var a = 0; a < all.length; a++) byPid[all[a].projectId] = all[a];
+  var overRows = [];
+  for (var j = 0; j < ps.length; j++) {
+    var p = ps[j];
+    if (groupOf(p) !== GROUP_LESS) continue;
+    var r = byPid[p.id];
+    if (r && r.limit && r.over > 0) overRows.push(r);
+  }
+  host.style.display = "";
+  var html = '<button class="ov-limit-head" data-action="toggle-limit-summary">' +
+    '适可而止：' + lessTotal + ' 个项目，<span class="ov-less-over">' + overRows.length + ' 个超额</span>' +
+    (limitsExpanded ? ' ▴' : ' ▾') + '</button>';
+  if (limitsExpanded) {
+    html += '<div class="ov-limit-list">';
+    if (overRows.length === 0) html += '<div class="ov-limit-row"><span>暂无超额项目</span><span></span></div>';
+    for (var k = 0; k < overRows.length; k++) {
+      html += '<div class="ov-limit-row"><span>' + esc(overRows[k].name) + '</span>' +
+        '<span>超 ' + overRows[k].over + ' 分钟</span></div>';
+    }
+    html += '</div>';
+  }
+  host.innerHTML = html;
+}
+
 /** 导出记录：只读现有 state 生成 CSV 下载，不改动任何数据与统计口径 */
 function exportRecords() {
   var now = Date.now();
   var days = (state && state.days) || {};
   var dayKeys = Object.keys(days).sort();
   var rows = [];
+  /* 按日汇总预计算：明细每行复用同一份结果，避免逐行重算；
+     口径与文件末尾「按日汇总」区完全一致，不改动任何统计规则。 */
+  var daySummary = {};
+  for (var ds = 0; ds < dayKeys.length; ds++) {
+    var sk = dayKeys[ds];
+    var sst = computeDayStats(state, sk, now);
+    daySummary[sk] = {
+      total: String(sst.totalMinutes),
+      target: String(sst.targetMinutes),
+      percent: sst.percent + "%",
+      count: String(sst.records.length),
+      over: String(limitExceededProjects(sk, now).length)
+    };
+  }
   for (var d = 0; d < dayKeys.length; d++) {
     var dk = dayKeys[d];
     var bucket = days[dk] || {};
     var pids = Object.keys(bucket);
+    var limitByPid = {};
+    var lrows = limitRowsForDay(dk, now);
+    for (var li = 0; li < lrows.length; li++) limitByPid[lrows[li].projectId] = lrows[li];
     for (var pi = 0; pi < pids.length; pi++) {
       var pid = pids[pi];
       var p = getProject(pid);
       var pname = p ? p.name : pid;
       var arr = Array.isArray(bucket[pid]) ? bucket[pid] : [];
+      var lr = limitByPid[pid] || { limit: null, used: 0, over: 0 };
       for (var j = 0; j < arr.length; j++) {
         var seg = arr[j];
         if (!seg) continue;
         var running = (seg.endType === "running" || seg.end === null || seg.end === undefined);
         var status = running ? "计时中" : (seg.endType === "interrupted" ? "中断" : "完成");
         rows.push([
-          dk, pname,
+          dk, pname, groupLabelOf(p),
           formatTime(seg.start),
           running ? "进行中" : formatTime(seg.end),
           String(minutesOfSegment(seg, now)),
           status,
           (typeof seg.note === "string") ? seg.note : "",
-          (typeof seg.sourceProject === "string") ? seg.sourceProject : ""
+          (typeof seg.sourceProject === "string") ? seg.sourceProject : "",
+          (p && typeof p.targetMinutes === "number" && p.targetMinutes > 0) ? String(p.targetMinutes) : "",
+          lr.limit ? String(lr.limit) : "",
+          String(lr.used),
+          lr.limit ? (lr.over > 0 ? "是" : "否") : "",
+          lr.limit ? String(lr.over) : "",
+          daySummary[dk].total, daySummary[dk].target, daySummary[dk].percent,
+          daySummary[dk].count, daySummary[dk].over
         ]);
       }
     }
   }
   if (rows.length === 0) { showToast("暂无记录可导出"); return; }
-  var lines = [["日期", "项目", "开始", "结束", "时长(分钟)", "状态", "备注", "来源项目"]];
+  /* 「项目」后插入「分组」列，其余列相对位置与格式一律不变；
+     末尾 5 个「按日汇总_*」列保持不变。 */
+  var lines = [["日期", "项目", "分组", "开始", "结束", "时长(分钟)", "状态", "备注", "来源项目",
+    "每日目标_分钟", "每日上限_分钟", "当日已用_分钟", "是否超额", "超额_分钟",
+    "按日汇总_今日合计_分钟", "按日汇总_目标合计_分钟", "按日汇总_完成率", "按日汇总_记录段数", "按日汇总_超额项目数"]];
   for (var r = 0; r < rows.length; r++) lines.push(rows[r]);
+  /* 按日汇总区：空一行后追加，含「超额项目数」列；仍是同一个文件、同一个导出入口 */
+  lines.push([""]);
+  lines.push(["按日汇总", "日期", "今日合计_分钟", "目标合计_分钟", "完成率", "记录段数", "超额项目数", "多多益善完成率"]);
+  for (var dd = 0; dd < dayKeys.length; dd++) {
+    var k = dayKeys[dd];
+    var st = computeDayStats(state, k, now);
+    lines.push(["", k, String(st.totalMinutes), String(st.targetMinutes),
+      st.percent + "%", String(st.records.length), String(limitExceededProjects(k, now).length),
+      st.morePercent + "%"]);
+  }
   var csv = "";
   for (var i = 0; i < lines.length; i++) {
     var cells = [];
@@ -1242,8 +1640,7 @@ function renderHeader() {
     '<div class="header-name"><div class="header-name-inner">' +
       '<span class="header-name-text">' + esc(state.nickname) + '</span>' +
       '<button class="icon-btn edit-btn" data-action="edit-nickname" aria-label="编辑昵称">' + PENCIL_SVG + '</button>' +
-    '</div></div>' +
-    '<button class="icon-btn plus" data-action="add-project" aria-label="新建项目">＋</button>';
+    '</div></div>';
 }
 
 /* 把分钟差格式化为「X 小时 Y 分」，仅用于概览剩余文案，不改判断分支 */
@@ -1258,7 +1655,10 @@ function tickRunningElapsed() {
   if (!el) return;
   var running = findRunningSegment(state);
   if (!running) return;
-  el.textContent = "已计时 " + formatMinutes(minutesOfSegment(running.seg, Date.now()));
+  var t = Date.now();
+  el.textContent = "已计时 " + formatMinutes(minutesOfSegment(running.seg, t));
+  /* 只在越线那一刻提示一次（去重），绝不调用 render() */
+  checkLimitNotice(running.projectId, dayKeyOf(t), t, false);
 }
 
 /** 状态条作为 #app 的直接子元素（包含块足够高，sticky 才能持续生效）；无计时完全不渲染 */
@@ -1292,27 +1692,29 @@ function renderStatusBar(running) {
 function renderOverview(stats) {
   /* 两边都为 0（今日合计 0 分钟、完成度 0%）时整块隐藏，下方按钮自然上移、不留空洞 */
   var ovCard = document.getElementById("overview-card");
-  if (ovCard) ovCard.style.display = (stats.totalMinutes === 0 && stats.percent === 0) ? "none" : "";
+  /* 今日总计不变；完成度口径改为只算「多多益善」组里设了目标的项目 */
+  /* 第十六轮：全天无记录时也保留概览卡（内为全空白时间轴与补记入口），保证第一条记录也能补记 */
+  if (ovCard) ovCard.style.display = "";
   document.getElementById("stat-total").textContent = formatMinutes(stats.totalMinutes);
-  document.getElementById("stat-target").textContent = stats.hasTarget ? "目标 " + formatMinutes(stats.targetMinutes) : "未设置目标";
-  document.getElementById("stat-percent-text").textContent = "完成 " + stats.percent + "%";
+  document.getElementById("stat-target").textContent = stats.moreHasTarget ? "目标 " + formatMinutes(stats.moreTargetMinutes) : "未设置目标";
+  document.getElementById("stat-percent-text").textContent = "完成 " + stats.morePercent + "%";
 
   /* 沿用原有三个判断分支（无目标 / 已完成 / 已超出），仅把「N 分钟」改成「X 小时 Y 分」 */
   var remaining;
-  if (!stats.hasTarget) {
+  if (!stats.moreHasTarget) {
     remaining = "设置目标后查看完成情况";
   } else {
-    var diff = stats.targetMinutes - stats.goalMinutes;
+    var diff = stats.moreTargetMinutes - stats.moreGoalMinutes;
     if (diff > 0) remaining = "还差 " + remainingText(diff);
     else if (diff === 0) remaining = "已完成目标";
     else remaining = "已超出 " + remainingText(-diff);
   }
   document.getElementById("stat-remaining").textContent = remaining;
-  /* 其中杂事 XX 分钟：没有杂事记录时不显示 */
+  /* 其中事来则应 XX 分钟：没有事来则应记录时不显示 */
   var choreLine = document.getElementById("stat-chore-line");
   if (choreLine) {
     if (stats.choreMinutes > 0) {
-      choreLine.textContent = "其中杂事 " + stats.choreMinutes + " 分钟";
+      choreLine.textContent = "其中事来则应 " + stats.choreMinutes + " 分钟";
       choreLine.style.display = "";
     } else {
       choreLine.textContent = "";
@@ -1321,53 +1723,340 @@ function renderOverview(stats) {
   }
   /* 8px 细进度条：宽度 = min(ratio,1)*100%；超额按满格显示，百分比数字照实（如 120%） */
   var fill = document.getElementById("stat-progress-fill");
-  if (fill) fill.style.width = (Math.min(Math.max(0, stats.ratio), 1) * 100) + "%";
+  if (fill) fill.style.width = (Math.min(Math.max(0, stats.moreRatio), 1) * 100) + "%";
 }
 
-/* 项目行内只放「开始 / 继续」小胶囊；计时中的「中断 / 结束」上浮到状态条活动卡（方案 A） */
+/* -------------------- 今日时间分布（纯增量：只读 stats，不改任何统计口径） -------------------- */
+/** 当天分钟偏移 → HH:MM（1440 显示为 24:00） */
+function timelineClock(min) {
+  var m = Math.max(0, Math.min(1440, Math.round(min)));
+  return pad2(Math.floor(m / 60)) + ":" + pad2(m % 60);
+}
+/** 相对某格的宽度百分比（保留 1 位小数，避免浮点长串） */
+function tlPct(v) { return Math.round((v / 60) * 1000) / 10; }
+
+/**
+ * 把今天所有记录段裁剪到 [0,1440) 分钟偏移，并求「活动区间」内的空白。
+ * 活动区间 = 今天第一条记录的起点 → 最后一条记录的终点（clamp 到当天）；
+ * 空白 = 活动区间内未被任何记录覆盖的区间（重叠段先合并再求补集）。
+ * 纯函数：不改 state、不写存储、不参与完成率/合计/CSV/记录卡的任何计算。
+ */
+function computeTimeline(stats, dayKey, now) {
+  var midnight = midnightOf(dayKey);
+  var recs = (stats && Array.isArray(stats.records)) ? stats.records : [];
+  var segs = [];
+  for (var i = 0; i < recs.length; i++) {
+    var r = recs[i], s = r.segment;
+    if (!s) continue;
+    var endTs = (s.end === null || s.end === undefined) ? now : s.end;
+    var a = Math.max(0, (s.start - midnight) / 60000);
+    var b = Math.min(1440, (endTs - midnight) / 60000);
+    if (!(b > a)) continue;
+    segs.push({
+      start: a, end: b,
+      color: r.colorHex || colorOf(r.project && r.project.colorIndex),
+      name: r.projectName || (r.project && r.project.name) || "",
+      isRunning: (s.endType === "running" || s.end === null || s.end === undefined)
+    });
+  }
+  segs.sort(function (x, y) { return x.start - y.start; });
+  var activeStart = 1440, activeEnd = 0;
+  for (var k = 0; k < segs.length; k++) {
+    if (segs[k].start < activeStart) activeStart = segs[k].start;
+    if (segs[k].end > activeEnd) activeEnd = segs[k].end;
+  }
+  var hasActive = segs.length > 0 && activeEnd > activeStart;
+  /* 合并重叠的覆盖区间 */
+  var covered = [];
+  for (var m = 0; m < segs.length; m++) {
+    var cur = { start: segs[m].start, end: segs[m].end };
+    var last = covered.length ? covered[covered.length - 1] : null;
+    if (last && cur.start <= last.end) {
+      if (cur.end > last.end) last.end = cur.end;
+    } else covered.push(cur);
+  }
+  /* 只在活动区间内求补集：区间外（凌晨/深夜）不算「需要关注的空白」 */
+  var blanks = [], cursor = activeStart;
+  for (var n = 0; n < covered.length; n++) {
+    if (covered[n].start > cursor) blanks.push({ start: cursor, end: covered[n].start });
+    if (covered[n].end > cursor) cursor = covered[n].end;
+  }
+  if (hasActive && cursor < activeEnd) blanks.push({ start: cursor, end: activeEnd });
+  var blankTotal = 0, longest = null;
+  for (var q = 0; q < blanks.length; q++) {
+    var len = blanks[q].end - blanks[q].start;
+    blankTotal += len;
+    if (!longest || len > (longest.end - longest.start)) longest = blanks[q];
+  }
+  return {
+    segs: segs, blanks: blanks, activeStart: activeStart, activeEnd: activeEnd,
+    hasActive: hasActive, longestBlank: longest,
+    blankTotal: blanks.length ? Math.max(1, Math.round(blankTotal)) : 0
+  };
+}
+
+/** 渲染 24 格时间轴 + 图例 + 活动区间空白小字 + 点击展开的小时明细 */
+function renderTimeline(stats, dayKey, now) {
+  var track = document.getElementById("timeline-track");
+  if (!track) return;
+  var t = computeTimeline(stats, dayKey, now);
+  var html = "";
+  for (var h = 0; h < 24; h++) {
+    var lo = h * 60, hi = lo + 60, blocks = "";
+    /* 先铺活动区间内的空白斜纹，再铺记录色块（色块自然盖在斜纹之上） */
+    for (var b = 0; b < t.blanks.length; b++) {
+      var g0 = Math.max(t.blanks[b].start, lo), g1 = Math.min(t.blanks[b].end, hi);
+      if (g1 > g0) blocks += '<span class="tl-gap" style="left:' + tlPct(g0 - lo) +
+        '%;width:' + tlPct(g1 - g0) + '%"></span>';
+    }
+    var inHour = 0;
+    for (var i = 0; i < t.segs.length; i++) {
+      var sg = t.segs[i];
+      var s0 = Math.max(sg.start, lo), e0 = Math.min(sg.end, hi);
+      if (e0 > s0) {
+        inHour++;
+        blocks += '<span class="tl-blk" style="left:' + tlPct(s0 - lo) +
+          '%;width:' + tlPct(e0 - s0) + '%;background:' + esc(sg.color) + '"></span>';
+      }
+    }
+    var open = (timelineHour === h);
+    html += '<button type="button" class="tl-cell' + (open ? ' is-open' : '') + '"' +
+      ' data-action="toggle-hour" data-hour="' + h + '"' +
+      ' aria-expanded="' + (open ? 'true' : 'false') + '"' +
+      ' aria-label="' + timelineClock(lo) + '–' + timelineClock(hi) + '，' + inHour + ' 段记录，点击查看">' +
+      blocks + '</button>';
+  }
+  track.innerHTML = html;
+
+  /* 图例：今天出现过记录的项目（按名称+颜色去重）+ 空白 */
+  var legend = document.getElementById("timeline-legend");
+  if (legend) {
+    var seen = {}, items = "";
+    for (var g = 0; g < t.segs.length; g++) {
+      var key = t.segs[g].name + "|" + t.segs[g].color;
+      if (seen[key]) continue;
+      seen[key] = true;
+      items += '<span><i style="background:' + esc(t.segs[g].color) + '"></i>' + esc(t.segs[g].name) + '</span>';
+    }
+    if (t.blanks.length) items += '<span><i class="tl-gap-mark"></i>空白</span>';
+    legend.innerHTML = items;
+  }
+
+  /* 空白小字：活动区间口径，区间外时段不计入 */
+  var blankEl = document.getElementById("timeline-blank");
+  if (blankEl) {
+    if (!t.hasActive) {
+      blankEl.textContent = "";
+      blankEl.style.display = "none";
+    } else {
+      var txt = "活动区间 " + timelineClock(t.activeStart) + "–" + timelineClock(t.activeEnd);
+      if (t.blankTotal > 0) {
+        txt += " · 空白 " + remainingText(t.blankTotal);
+        if (t.longestBlank) txt += " · 最长 " + timelineClock(t.longestBlank.start) +
+          "–" + timelineClock(t.longestBlank.end);
+      } else txt += " · 没有空白";
+      blankEl.textContent = txt;
+      blankEl.style.display = "";
+    }
+  }
+
+  /* 点击展开的小时明细：该小时内的记录段 + 活动区间内的空白 */
+  var detail = document.getElementById("timeline-detail");
+  if (detail) {
+    if (timelineHour === null) {
+      detail.innerHTML = "";
+      detail.style.display = "none";
+    } else {
+      var h2 = timelineHour, lo2 = h2 * 60, hi2 = lo2 + 60, rows = "", count = 0;
+      for (var r2 = 0; r2 < t.segs.length; r2++) {
+        var sg2 = t.segs[r2];
+        var s2 = Math.max(sg2.start, lo2), e2 = Math.min(sg2.end, hi2);
+        if (!(e2 > s2)) continue;
+        count++;
+        rows += '<div class="tl-detail-row">' +
+          '<span class="dot" style="background:' + esc(sg2.color) + '"></span>' +
+          '<span class="tl-detail-name">' + esc(sg2.name) + '</span>' +
+          '<span class="tl-detail-time">' + timelineClock(s2) + '–' +
+            (sg2.isRunning ? "现在" : timelineClock(e2)) + '</span>' +
+          '<span class="tl-detail-min">' + Math.max(1, Math.round(e2 - s2)) + ' 分</span>' +
+          '</div>';
+      }
+      for (var b2 = 0; b2 < t.blanks.length; b2++) {
+        var s3 = Math.max(t.blanks[b2].start, lo2), e3 = Math.min(t.blanks[b2].end, hi2);
+        if (e3 > s3) rows += '<div class="tl-detail-row tl-detail-gap">' +
+          '<span class="dot tl-gap-dot"></span>' +
+          '<span class="tl-detail-name">空白</span>' +
+          '<span class="tl-detail-time">' + timelineClock(s3) + '–' + timelineClock(e3) + '</span>' +
+          '<span class="tl-detail-min">' + Math.max(1, Math.round(e3 - s3)) + ' 分</span>' +
+          '</div>';
+      }
+      detail.innerHTML = '<div class="tl-detail-title">' + timelineClock(lo2) + '–' +
+        timelineClock(hi2) + ' · ' + count + ' 段记录</div>' +
+        (rows || '<div class="tl-empty">这一小时没有记录</div>') +
+        '<div class="tl-detail-foot">' +
+          '<button class="tl-detail-close" data-action="toggle-hour" data-hour="' + h2 + '">收起</button>' +
+          '<button class="tl-add-btn" data-action="add-hour-record" data-hour="' + h2 + '">＋ 补记一段时间</button>' +
+        '</div>';
+      detail.style.display = "";
+    }
+  }
+  var hint = document.getElementById("timeline-hint");
+  if (hint) hint.textContent = (timelineHour === null) ? "点格子看这一小时" : "再点一次收起";
+}
+
+/* 项目行内只放「开始」小胶囊；计时中的「中断 / 结束」上浮到状态条活动卡（方案 A）。
+ * 按钮文案统一为「开始」：不再按当天是否已有记录切换，动作始终为 data-action="start"（新开一段）。 */
 function actionsHTML(pid, isRunning, hasSegments) {
   if (isRunning) return "";
-  return '<button class="btn btn-primary" data-action="start" data-id="' + esc(pid) + '">' +
-    (hasSegments ? "继续" : "开始") + '</button>';
+  return '<button class="btn btn-primary" data-action="start" data-id="' + esc(pid) + '">开始</button>';
+}
+
+/** 组标题右侧汇总小字：more「已投入 X / 目标 Y」，less「已用 X 分 / 上限 Y 分」，
+ *  flow「已记 X · N 项」（系统「事来则应」不并入组的汇总统计） */
+function groupSummaryText(group, minutesByPid, list) {
+  var used = 0, target = 0, limit = 0;
+  for (var i = 0; i < list.length; i++) {
+    var p = list[i];
+    used += minutesByPid[p.id] || 0;
+    if (group === GROUP_MORE) {
+      if (typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0) target += p.targetMinutes;
+    } else if (group === GROUP_LESS && typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0) {
+      limit += p.dailyLimit;
+    }
+  }
+  if (group === GROUP_FLOW) {
+    return "已记 " + remainingText(used) + " · " + list.length + " 项";
+  }
+  if (group === GROUP_MORE) {
+    return "已投入 " + remainingText(used) + " / 目标 " + (target > 0 ? remainingText(target) : "未设置");
+  }
+  return "已用 " + used + " 分 / 上限 " + (limit > 0 ? limit + " 分" : "未设置");
+}
+
+/** 圆形图标：more / less 两组统一环形进度；more 按「已投入/目标」填充（达标保持满环、不变红），
+ *  less 按「已用/上限」填充（超额红环填满）；未设目标/上限显示虚线加号；
+ *  事来则应与「如实知见」组不显示任何圆形图标 */
+function goalOrbHTML(p, limitByPid, minutesByPid) {
+  var g = groupOf(p);
+  if (g === null || g === GROUP_FLOW) return ""; /* 系统「事来则应」样式与规则全部不变；如实知见组不显示圆形图标 */
+  var pid = esc(p.id), color = projectColor(p);
+  if (g === GROUP_LESS) {
+    var lr = limitByPid[p.id] || { limit: null, used: 0, over: 0 };
+    if (!lr.limit) {
+      return '<button class="goal-orb orb-empty" data-action="target" data-id="' + pid +
+        '" aria-label="设置每日上限">＋</button>';
+    }
+    var over = lr.over > 0;
+    /* 环形进度：按 已用/上限 填充；超额时填满整环并变红 */
+    var deg = over ? 360 : Math.min(360, Math.round((lr.used / lr.limit) * 360));
+    return '<button class="goal-orb orb-ring' + (over ? " orb-over" : "") + '" data-action="target" data-id="' + pid +
+      '" style="--orb:' + color + ';--ring-deg:' + deg + 'deg" aria-label="设置每日上限">' +
+      '<span class="ring-core">' +
+        '<span class="ring-num">' + lr.used + '</span>' +
+        '<span class="ring-sub">/' + lr.limit + '</span>' +
+      '</span></button>';
+  }
+  var tm = (typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0) ? p.targetMinutes : 0;
+  if (tm <= 0) {
+    return '<button class="goal-orb orb-empty" data-action="target" data-id="' + pid +
+      '" aria-label="设置每日目标">＋</button>';
+  }
+  /* 环形进度：按 今日已投入/目标 填充；多多益善达标后保持满环，不变红 */
+  var used = Math.max(0, Math.floor(Number((minutesByPid && minutesByPid[p.id]) || 0)));
+  var deg = Math.min(360, Math.round((used / tm) * 360));
+  return '<button class="goal-orb orb-ring" data-action="target" data-id="' + pid +
+    '" style="--orb:' + color + ';--ring-deg:' + deg + 'deg" aria-label="设置每日目标 · 目标 ' + esc(formatOrbTarget(tm)) + '">' +
+    '<span class="ring-core">' +
+      '<span class="ring-num">' + used + '</span>' +
+      '<span class="ring-sub">/' + tm + '</span>' +
+    '</span></button>';
+}
+
+/** 单张项目卡片：沿用原有单行结构，只按组决定圆形图标与右侧小字；无记录时右侧首行留空 */
+function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey) {
+  var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
+  var hasSegments = segs.length > 0;
+  var isRunning = !!running && running.projectId === p.id;
+  var lastInt = lastInterruptionFor(state, dayKey, p.id);
+  var pid = esc(p.id);
+  /* more 组 / 事来则应不显示任何上限相关信息；「上次中断」位置规则不变 */
+  var limitRow = (groupOf(p) === GROUP_LESS) ? limitByPid[p.id] : null;
+  return '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
+    '<div class="proj-stripe"></div>' +
+    '<div class="proj-body">' +
+      '<div class="proj-top">' +
+        '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
+        '<span class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</span>' +
+        '<span class="proj-spacer"></span>' +
+        goalOrbHTML(p, limitByPid, minutesByPid) +
+        '<span class="proj-today">' +
+          '<span class="proj-today-main">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "") + '</span>' +
+          '<span class="today-sub">' + limitNoteHTML(limitRow, lastInt) + '</span>' +
+        '</span>' +
+        '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 }
 
 function renderProjectList(stats, running, dayKey) {
   var host = document.getElementById("project-list");
   var projects = orderedProjectsForDisplay();
-  if (projects.length === 0) {
-    host.innerHTML = '<div class="empty-block">还没有项目' +
-      '<span class="empty-hint">先建一个项目，就能开始记录时间了</span>' +
-      '<button class="empty-action" data-action="add-project">＋ 新建项目</button></div>';
-    return;
-  }
   var bucket = (state.days && state.days[dayKey]) || {};
   var minutesByPid = {};
   for (var m = 0; m < stats.perProject.length; m++) minutesByPid[stats.perProject[m].projectId] = stats.perProject[m].minutes;
+  var limitByPid = {};
+  var lrows = limitRowsForDay(dayKey, stats.now);
+  for (var li = 0; li < lrows.length; li++) limitByPid[lrows[li].projectId] = lrows[li];
 
-  /* 所有项目（含系统「杂事」）统一单行：色条 → 名称 → 开始胶囊 → 弹性空白 → 今日时长 → ⋯ */
-  var html = "";
+  /* 按现有显示顺序过滤分组：组内相对顺序与升级前完全一致，不重新排序 */
+  var more = [], less = [], flow = [], chore = [];
   for (var i = 0; i < projects.length; i++) {
-    var p = projects[i];
-    var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
-    var hasSegments = segs.length > 0;
-    var isRunning = !!running && running.projectId === p.id;
-    var lastInt = lastInterruptionFor(state, dayKey, p.id);
-    var pid = esc(p.id);
-    html += '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
-      '<div class="proj-stripe"></div>' +
-      '<div class="proj-body">' +
-        '<div class="proj-top">' +
-          '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
-          '<span class="proj-actions">' + actionsHTML(p.id, isRunning, hasSegments) + '</span>' +
-          '<span class="proj-spacer"></span>' +
-          '<span class="proj-today">' +
-            '<span class="proj-today-main">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "今日暂无记录") + '</span>' +
-            (lastInt ? '<span class="interrupt-note">上次中断 ' + formatTime(lastInt.end) + '</span>' : "") +
-          '</span>' +
-          '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+    var g = groupOf(projects[i]);
+    if (g === null) chore.push(projects[i]);
+    else if (g === GROUP_LESS) less.push(projects[i]);
+    else if (g === GROUP_FLOW) flow.push(projects[i]);
+    else more.push(projects[i]);
+  }
+
+  function block(group, list, appendCards) {
+    appendCards = appendCards || [];
+    var html = '<div class="group-block">' +
+      '<div class="group-head">' +
+        '<span class="group-name">' + GROUP_LABEL[group] + '</span>' +
+        '<span class="group-summary">' + esc(groupSummaryText(group, minutesByPid, list)) + '</span>' +
+        '<button class="group-add" data-action="add-project-group" data-group="' + group +
+          '" aria-label="在' + GROUP_LABEL[group] + '新建项目">＋</button>' +
+      '</div>';
+    if (list.length === 0 && appendCards.length === 0) {
+      html += '<div class="group-empty">还没有项目</div>';
+    } else {
+      if (list.length > 0) {
+        html += '<div class="group-cards">';
+        for (var k = 0; k < list.length; k++) {
+          html += projectCardHTML(list[k], bucket, minutesByPid, limitByPid, running, dayKey);
+        }
+        html += '</div>';
+      }
+      /* 系统「事来则应」视觉上归入「如实知见」组、作为该组最后一张卡片；
+         身份不变（groupOf=null、系统项、样式与规则全部不变） */
+      if (appendCards.length > 0) {
+        html += '<div class="chore-cards">';
+        for (var c = 0; c < appendCards.length; c++) {
+          html += projectCardHTML(appendCards[c], bucket, minutesByPid, limitByPid, running, dayKey);
+        }
+        html += '</div>';
+      }
+    }
+    return html + '</div>';
+  }
+
+  var html = block(GROUP_MORE, more) + block(GROUP_LESS, less) + block(GROUP_FLOW, flow, chore);
+  /* 完全没有项目时保留原有空状态入口，不删功能 */
+  if (projects.length === 0) {
+    html = '<div class="empty-block">还没有项目' +
+      '<span class="empty-hint">先建一个项目，就能开始记录时间了</span>' +
+      '<button class="empty-action" data-action="add-project">＋ 新建项目</button></div>';
   }
   host.innerHTML = html;
 }
@@ -1416,7 +2105,10 @@ function renderRecordList(stats) {
         '</div>' +
         '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
       '</div>' +
-      '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + esc(seg.id) + '" aria-label="删除本段">×</button>' +
+      '<div class="rec-btns">' +
+        (isRunning ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' + esc(seg.id) + '" aria-label="编辑本段">✎</button>') +
+        '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + esc(seg.id) + '" aria-label="删除本段">×</button>' +
+      '</div>' +
     '</div>';
   }
   if (total > RECORDS_PAGE_SIZE) {
@@ -1437,8 +2129,10 @@ function render() {
   renderHeader();
   renderStatusBar(running);
   renderOverview(stats);
+  renderTimeline(stats, dayKey, now);
   renderProjectList(stats, running, dayKey);
   renderRecordList(stats);
+  renderLimitSummary(dayKey, now);
   applyReveal();
 }
 
@@ -1458,8 +2152,8 @@ function startTimer(pid) {
     var closedProject = getProject(running.projectId);
     var mins = minutesOfSegment(running.seg, now);
     if (isChoreProject(closedProject)) {
-      /* 杂事被代关：不弹窗，顶部状态条浮现一行「杂事已记录 XX 分钟」 */
-      showChoreNotice("杂事已记录 " + mins + " 分钟");
+      /* 事来则应被代关：不弹窗，顶部状态条浮现一行「事来则应已记录 XX 分钟」 */
+      showChoreNotice("事来则应已记录 " + mins + " 分钟");
     } else if (!toastText && closedProject) {
       toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
     }
@@ -1483,6 +2177,8 @@ function stopTimer(pid, endType) {
   state.currentDayKey = dayKeyOf(now);
   save();
   render();
+  /* 结束那一刻：若今天累计超过上限，顶部橙条提示一次（只提示，不阻断） */
+  checkLimitNotice(pid, dayKeyOf(now), now, true);
 }
 
 function deleteRecordById(segId) {
@@ -1509,7 +2205,7 @@ function deleteRecordById(segId) {
 }
 
 function deleteProjectById(pid) {
-  if (isSystemChore(getProject(pid))) return; /* 系统项目「杂事」不可删除 */
+  if (isSystemChore(getProject(pid))) return; /* 系统项目「事来则应」不可删除 */
   var now = Date.now();
   syncRolloverForNow(now);
   state.projects = (Array.isArray(state.projects) ? state.projects : []).filter(function (p) { return p.id !== pid; });
@@ -1537,7 +2233,12 @@ function onDocumentClick(e) {
   var id = el.getAttribute("data-id");
   switch (action) {
     case "edit-nickname": openNicknameModal(); break;
-    case "add-project": openProjectModal(); break;
+    case "add-project": openGroupChoiceModal(); break;
+    case "add-project-group": openProjectModal(el.getAttribute("data-group")); break;
+    case "choose-group":
+      closeModal();
+      openProjectModal(el.getAttribute("data-group"));
+      break;
     case "start": startTimer(id); break;
     case "interrupt": openInterruptSheet(id); break;
     case "finish": stopTimer(id, "finished"); break;
@@ -1548,17 +2249,27 @@ function onDocumentClick(e) {
       closeProjMenu();
       openConfirmModal({
         title: "清空今日记录",
-        message: "确定清空「杂事」今天的所有记录吗？其他项目不受影响，且无法恢复。",
+        message: "确定清空「事来则应」今天的所有记录吗？其他项目不受影响，且无法恢复。",
         confirmText: "清空", danger: true,
         onConfirm: function () { clearChoreToday(); }
       });
       break;
     case "target": openTargetModal(id); break;
     case "delete-record": openDeleteRecordModal(id); break;
+    case "edit-record": openEditRecordModal(id); break;
     case "toggle-note": toggleNote(id); break;
     case "toggle-records": toggleRecordsExpanded(); break;
+    case "toggle-hour": toggleTimelineHour(el.getAttribute("data-hour")); break;
+    case "add-hour-record": openAddHourRecordModal(el.getAttribute("data-hour")); break;
+    case "toggle-limit-summary":
+      limitsExpanded = !limitsExpanded;
+      renderLimitSummary(dayKeyOf(Date.now()), Date.now());
+      break;
     case "generate-card": openCardPreview(); break;
     case "export-records": exportRecords(); break;
+    case "set-unit": setTargetUnit(el.getAttribute("data-unit")); break;
+    case "quick-value": applyTargetQuick(el.getAttribute("data-value"), el.getAttribute("data-unit")); break;
+    case "skip-target": skipTargetSetting(id); break;
     case "modal-cancel": closeModal(); break;
     case "modal-confirm": handleModalConfirm(); break;
     case "modal-backdrop": closeModal(); break;
@@ -1668,7 +2379,27 @@ function openNicknameModal() {
   });
 }
 
-function openProjectModal() {
+/** 顶部全局＋：先极简三选一，再进对应组的新建流程（同一弹窗组件、不新增字段） */
+function openGroupChoiceModal() {
+  var panel =
+    '<div class="modal-title">新建到哪一组？</div>' +
+    '<div class="modal-desc">多多益善看目标下限，适可而止看时间上限，如实知见只记流水</div>' +
+    '<div class="group-choice-row">' +
+      '<button class="group-choice-btn" data-action="choose-group" data-group="more">多多益善' +
+        '<span class="gc-sub">至少投入多少</span></button>' +
+      '<button class="group-choice-btn" data-action="choose-group" data-group="less">适可而止' +
+        '<span class="gc-sub">别超过多少</span></button>' +
+      '<button class="group-choice-btn" data-action="choose-group" data-group="flow">如实知见' +
+        '<span class="gc-sub">只记流水</span></button>' +
+    '</div>' +
+    '<div class="modal-error" id="modal-error"></div>';
+  openModalShell(panel, { kind: "group-choice", onConfirm: null });
+  var panelEl = document.querySelector(".modal-panel");
+  if (panelEl) panelEl.classList.add("choice-modal");
+}
+
+function openProjectModal(group) {
+  var g = (group === GROUP_LESS) ? GROUP_LESS : ((group === GROUP_FLOW) ? GROUP_FLOW : GROUP_MORE);
   openInputModal({
     title: "新建项目",
     label: "项目名称（最多 10 个字，不可重名）",
@@ -1687,51 +2418,117 @@ function openProjectModal() {
       var pid = newId("p");
       state.projects.push({
         id: pid, name: name, colorIndex: idx,
-        targetMinutes: null, createdAt: Date.now(),
-        sortIndex: nextSortIndex()
+        targetMinutes: null, dailyLimit: null, createdAt: Date.now(),
+        sortIndex: nextSortIndex(), group: g
       });
       markReveal(pid);
       save(); render();
-      /* 紧接着弹出目标时长设置面板；延后到本次弹层被 closeModal 关闭之后，避免被清掉 */
-      window.setTimeout(function () { openTargetModal(pid, { cancelText: "暂不设置" }); }, 0);
+      /* 「如实知见」组只记流水、不设目标与上限：输完名字即创建完成，跳过设置面板；
+         其余两组仍按原流程紧接着弹出设置面板（延后到本次弹层被关闭之后，避免被清掉） */
+      if (g !== GROUP_FLOW) {
+        window.setTimeout(function () { openTargetModal(pid, { cancelText: "暂不设置" }); }, 0);
+      }
       return true;
     }
   });
 }
 
+/* ---- 统一设置弹窗：more / less 共用同一组件与布局 ----
+   仅标题、说明文字、默认值与写入字段不同；值统一换算成分钟写进现有字段，
+   不新增任何第二套字段。弹窗尺寸由 .target-modal 锁定（与旧弹窗实测一致）。 */
+var targetModalUnit = "minute";
+var targetModalPid = null;
+
+function targetModalValue() {
+  var el = document.getElementById("modal-input");
+  return el ? String(el.value === null || el.value === undefined ? "" : el.value).trim() : "";
+}
+/** 输入为空 / 0 / 非法 → 保存按钮置灰不可点 */
+function refreshTargetSaveButton() {
+  var btn = document.getElementById("modal-save");
+  if (!btn) return;
+  var v = parseNonNegInt(targetModalValue());
+  var okSave = (v !== null && v > 0);
+  btn.disabled = !okSave;
+  if (okSave) btn.classList.remove("btn-disabled");
+  else btn.classList.add("btn-disabled");
+}
+/** 单位切换：只改变输入框数字的解释，不改动已输入内容 */
+function setTargetUnit(unit) {
+  targetModalUnit = (unit === "hour") ? "hour" : "minute";
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var h = root.querySelector("#unit-hour"), m = root.querySelector("#unit-minute");
+  if (h) { if (targetModalUnit === "hour") h.classList.add("active"); else h.classList.remove("active"); }
+  if (m) { if (targetModalUnit === "minute") m.classList.add("active"); else m.classList.remove("active"); }
+  refreshTargetSaveButton();
+}
+/** 快捷胶囊：填入数值并把单位切到合适的那一个 */
+function applyTargetQuick(value, unit) {
+  var el = document.getElementById("modal-input");
+  if (el) el.value = String(value);
+  setTargetUnit(unit);
+}
+/** 「暂不设置」：more 清目标，less 清上限；不关闭任何其它功能 */
+function skipTargetSetting(pid) {
+  var p = getProject(pid);
+  if (!p || isSystemChore(p) || groupOf(p) === GROUP_FLOW) return;
+  if (groupOf(p) === GROUP_LESS) p.dailyLimit = null;
+  else p.targetMinutes = null;
+  save(); render(); closeModal();
+}
+
 function openTargetModal(pid, opts) {
   opts = opts || {};
   var p = getProject(pid);
-  if (!p || isSystemChore(p)) return; /* 系统项目「杂事」不设每日目标 */
-  var cur = (typeof p.targetMinutes === "number" && p.targetMinutes > 0) ? p.targetMinutes : 0;
-  var h = Math.floor(cur / 60), m = cur % 60;
+  if (!p || isSystemChore(p) || groupOf(p) === GROUP_FLOW) return; /* 事来则应 / 如实知见组不设每日目标 / 上限 */
+  var isLess = (groupOf(p) === GROUP_LESS);
+  var cur = isLess
+    ? ((typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0) ? p.dailyLimit : 0)
+    : ((typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0) ? p.targetMinutes : 0);
+  targetModalPid = pid;
+  targetModalUnit = "minute"; /* 默认选中「分钟」 */
   var panel =
-    '<div class="modal-title">修改目标时长</div>' +
-    '<div class="modal-desc">' + esc(p.name) + ' · 合计为 0 分钟视为「未设置目标」，不计入目标总时长</div>' +
-    '<div class="target-inputs">' +
-      '<div class="target-field"><label for="modal-input">小时（0~23）</label>' +
-        '<input id="modal-input" class="modal-input" type="number" inputmode="numeric" min="0" max="23" step="1" value="' + h + '"></div>' +
-      '<div class="target-field"><label for="modal-minutes">分钟（0~59）</label>' +
-        '<input id="modal-minutes" class="modal-input" type="number" inputmode="numeric" min="0" max="59" step="1" value="' + m + '"></div>' +
+    '<div class="modal-title">' + (isLess ? "设置每日上限" : "设置每日目标") + '</div>' +
+    '<div class="modal-desc">' + esc(p.name) + ' · ' + (isLess ? "适可而止" : "多多益善") + '</div>' +
+    '<div class="target-unit-row">' +
+      '<input id="modal-input" class="target-num" type="number" inputmode="numeric" min="0" step="1" ' +
+        'value="' + (cur > 0 ? cur : "") + '" placeholder="输入数字" autocomplete="off">' +
+      '<div class="target-units">' +
+        '<button class="unit-btn" id="unit-hour" data-action="set-unit" data-unit="hour">小时</button>' +
+        '<button class="unit-btn active" id="unit-minute" data-action="set-unit" data-unit="minute">分钟</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="target-hint-line">' +
+      (isLess ? "每天最多用这么久，超出会提醒" : "每天希望至少投入这么久") +
+    '</div>' +
+    '<div class="quick-row">' +
+      '<button class="quick-chip" data-action="quick-value" data-value="15" data-unit="minute">15 分</button>' +
+      '<button class="quick-chip" data-action="quick-value" data-value="30" data-unit="minute">30 分</button>' +
+      '<button class="quick-chip" data-action="quick-value" data-value="1" data-unit="hour">1 时</button>' +
+      '<button class="quick-chip" data-action="quick-value" data-value="2" data-unit="hour">2 时</button>' +
     '</div>' +
     '<div class="modal-error" id="modal-error"></div>' +
     '<div class="modal-actions">' +
-      '<button class="btn btn-outline" data-action="modal-cancel">' + esc((opts && opts.cancelText) || "取消") + '</button>' +
-      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+      '<button class="btn btn-outline" data-action="skip-target" data-id="' + esc(pid) + '">暂不设置</button>' +
+      '<button class="btn btn-primary" id="modal-save" data-action="modal-confirm">保存</button>' +
     '</div>';
   openModalShell(panel, {
     kind: "target",
-    onConfirm: function (v) {
-      var hv = parseNonNegInt(v.hours), mv = parseNonNegInt(v.minutes);
-      if (hv === null || mv === null) { showModalError("请输入有效的整数"); return false; }
-      if (hv < 0 || hv > 23) { showModalError("小时需在 0~23 之间"); return false; }
-      if (mv < 0 || mv > 59) { showModalError("分钟需在 0~59 之间"); return false; }
-      var total = hv * 60 + mv;
-      p.targetMinutes = total > 0 ? total : null;
+    onConfirm: function () {
+      var n = parseNonNegInt(targetModalValue());
+      if (n === null || n <= 0) { showModalError("请输入大于 0 的整数"); return false; }
+      var mins = (targetModalUnit === "hour") ? n * 60 : n;
+      if (isLess) p.dailyLimit = mins; else p.targetMinutes = mins;
       save(); render();
       return true;
     }
   });
+  var panelEl = document.querySelector(".modal-panel");
+  if (panelEl) panelEl.classList.add("target-modal");
+  var input = document.getElementById("modal-input");
+  if (input) input.oninput = refreshTargetSaveButton;
+  refreshTargetSaveButton();
 }
 
 function openDeleteProjectModal(pid) {
@@ -1756,6 +2553,313 @@ function openDeleteRecordModal(segId) {
   });
 }
 
+/* -------------------- 编辑记录时间（方案 A，增量新增） --------------------
+   只读/原地改写现有段：不改 id / endType / sourceProject / 所属项目 / 不换桶；
+   所有合计、完成率、超额、时间轴、CSV、记录卡均由 render() 从 state 实时现算，无需改动。*/
+
+/** "HH:MM" → {h,m}；空 / 格式错 / 越界返回 null */
+function parseClockHM(str) {
+  var t = String(str === null || str === undefined ? "" : str).trim();
+  var m = /^(\d{1,2}):(\d{2})$/.exec(t);
+  if (!m) return null;
+  var h = Number(m[1]), mm = Number(m[2]);
+  if (h < 0 || h > 23 || mm < 0 || mm > 59) return null;
+  return { h: h, m: mm };
+}
+
+/** 在「当天」桶里按段 id 定位（今日记录列表只渲染当天段）；只读，不改数据 */
+function findSegmentById(segId, dayKey) {
+  if (!segId || !dayKey) return null;
+  var bucket = (state.days && state.days[dayKey]) || {};
+  var pids = Object.keys(bucket);
+  for (var i = 0; i < pids.length; i++) {
+    var arr = bucket[pids[i]];
+    if (!Array.isArray(arr)) continue;
+    for (var j = 0; j < arr.length; j++) {
+      if (arr[j] && arr[j].id === segId) {
+        return { dayKey: dayKey, pid: pids[i], arr: arr, seg: arr[j], idx: j };
+      }
+    }
+  }
+  return null;
+}
+
+/** 编辑弹窗内实时预览：沿用 minutesOfSegment 的「不足 1 分钟按 1 分钟」口径 */
+function refreshEditPreview() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end");
+  var box = root.querySelector("#edit-preview");
+  if (!st || !en || !box) return;
+  var a = parseClockHM(st.value), b = parseClockHM(en.value);
+  if (!a || !b) {
+    box.textContent = "请填写开始和结束时间";
+    box.className = "edit-preview invalid";
+    return;
+  }
+  var diff = (b.h * 60 + b.m) - (a.h * 60 + a.m);
+  if (diff <= 0) {
+    box.textContent = "结束时间需晚于开始时间";
+    box.className = "edit-preview invalid";
+    return;
+  }
+  box.textContent = "修改后时长 " + Math.max(1, diff) + " 分钟";
+  box.className = "edit-preview";
+}
+
+/** 打开「编辑这段时间」弹窗：同一个 openModalShell，两个 time 输入 + 备注 + 实时时长预览 */
+function openEditRecordModal(segId) {
+  var now = Date.now();
+  var dayKey = dayKeyOf(now);
+  var found = findSegmentById(segId, dayKey);
+  if (!found) { showToast("这段记录已不在今天，请刷新后重试"); return; }
+  var seg = found.seg;
+  /* 进行中段（还没点结束）不可编辑：先结束再改，避免破坏「计时中」语义与状态条 */
+  if (seg.endType === "running" || seg.end === null || seg.end === undefined) {
+    showToast("请先结束计时，再编辑这段时间"); return;
+  }
+  var p = getProject(found.pid);
+  var pname = p ? p.name : "";
+  var panel =
+    '<div class="modal-title">编辑这段时间</div>' +
+    '<div class="modal-desc">' + esc(pname) + ' · 只改今天的钟点，日期不变</div>' +
+    '<div class="edit-time-row">' +
+      '<div class="edit-time-field"><label for="edit-start">开始时间</label>' +
+        '<input id="edit-start" class="modal-input" type="time" value="' + formatTime(seg.start) + '"></div>' +
+      '<div class="edit-time-field"><label for="edit-end">结束时间</label>' +
+        '<input id="edit-end" class="modal-input" type="time" value="' + formatTime(seg.end) + '"></div>' +
+    '</div>' +
+    '<label class="edit-note-label" for="edit-note">备注（最多 50 字，可留空）</label>' +
+    '<input id="edit-note" class="modal-input" type="text" maxlength="50" ' +
+      'value="' + esc(seg.note || "") + '" placeholder="可留空" autocomplete="off">' +
+    '<div class="edit-preview" id="edit-preview"></div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+    '</div>';
+  openModalShell(panel, {
+    kind: "edit-record",
+    onConfirm: function () {
+      var root = document.getElementById("modal-root");
+      if (!root) return false;
+      var st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end"), nt = root.querySelector("#edit-note");
+      return saveRecordEdit(segId,
+        st ? st.value : "", en ? en.value : "", nt ? nt.value : "");
+    }
+  });
+  var stEl = document.getElementById("edit-start"), enEl = document.getElementById("edit-end");
+  if (stEl) stEl.oninput = refreshEditPreview;
+  if (enEl) enEl.oninput = refreshEditPreview;
+  refreshEditPreview();
+}
+
+/** 保存编辑：校验 → 原地写 start/end/note → 派生数字自动重算。
+    校验：结束 > 开始、都在今天、结束不晚于现在；备注截断 50 字（与 sanitizeSegment 一致）。*/
+function saveRecordEdit(segId, startStr, endStr, noteStr) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  var found = findSegmentById(segId, dayKey);
+  if (!found) { showModalError("这段记录已不可编辑，请刷新后重试"); return false; }
+  var seg = found.seg;
+  if (seg.endType === "running" || seg.end === null || seg.end === undefined) {
+    showModalError("进行中的记录不能编辑，请先结束"); return false;
+  }
+  var a = parseClockHM(startStr), b = parseClockHM(endStr);
+  if (!a || !b) { showModalError("请填写有效的开始和结束时间"); return false; }
+  var midnight = midnightOf(dayKey);
+  var startTs = midnight + (a.h * 60 + a.m) * 60000;
+  var endTs = midnight + (b.h * 60 + b.m) * 60000;
+  if (endTs <= startTs) { showModalError("结束时间必须晚于开始时间"); return false; }
+  if (endTs > now) { showModalError("结束时间不能晚于现在"); return false; }
+  var note = Array.from(String(noteStr === null || noteStr === undefined ? "" : noteStr)).slice(0, 50).join("");
+  var pid = found.pid;
+  /* 编辑前该项目超额量：用于「从没超额变超额」的橙条提示判断 */
+  var before = limitRowsForDay(dayKey, now), oldOver = 0;
+  for (var i = 0; i < before.length; i++) if (before[i].projectId === pid) { oldOver = before[i].over; break; }
+  /* 原地改写，保持 id / endType / sourceProject / 所属项目 / 桶不变 */
+  seg.start = startTs;
+  seg.end = endTs;
+  seg.note = note;
+  state.currentDayKey = dayKey;
+  save();
+  render();
+  /* 编辑后若「适可而止」项目从没超额变超额，弹一次橙色提示条（只提示，不阻断） */
+  var p = getProject(pid);
+  if (p && groupOf(p) === GROUP_LESS) {
+    var after = limitRowsForDay(dayKey, now), newOver = 0;
+    for (var j = 0; j < after.length; j++) if (after[j].projectId === pid) { newOver = after[j].over; break; }
+    if (oldOver <= 0 && newOver > 0) showLimitNotice("《" + p.name + "》今天已超 " + newOver + " 分钟");
+  }
+  return true;
+}
+
+/* -------------------- 第十六轮：从空白小时「补记一段时间」（纯增量） -------------------- */
+
+/** 补记默认时间段：该小时内最长的空白区间；结束 clamp 到「现在」；
+    无空白 / 点了未来格子时回退为「现在前 30 分 → 现在」。纯计算，不改 state。 */
+function defaultAddRange(hour) {
+  var now = Date.now();
+  var dk = dayKeyOf(now);
+  var lo = hour * 60, hi = lo + 60;
+  var nowMin = Math.max(0, Math.min(1440, Math.floor((now - midnightOf(dk)) / 60000)));
+  var t = computeTimeline(computeDayStats(state, dk, now), dk, now);
+  var best = null;
+  for (var i = 0; i < t.blanks.length; i++) {
+    var s0 = Math.max(t.blanks[i].start, lo), e0 = Math.min(t.blanks[i].end, hi);
+    if (e0 > s0 && (!best || (e0 - s0) > (best.e - best.s))) best = { s: s0, e: e0 };
+  }
+  var a = best ? Math.round(best.s) : lo;
+  var b = best ? Math.round(best.e) : hi;
+  b = Math.min(b, nowMin);
+  if (b <= a) {
+    b = nowMin;
+    a = Math.max(0, b - 30);
+    if (b <= a) a = Math.max(0, b - 1);
+  }
+  return { start: timelineClock(a), end: timelineClock(b) };
+}
+
+/** 补记弹窗的项目下拉：按三组 optgroup 分组 + 事来则应；组内沿用 sortIndex 降序；只读 state。 */
+function projectOptionsHTML() {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var defs = [
+    { key: GROUP_MORE, label: "多多益善" },
+    { key: GROUP_LESS, label: "适可而止" },
+    { key: GROUP_FLOW, label: "如实知见" },
+    { key: "chore", label: CHORE_NAME }
+  ];
+  var buckets = {};
+  for (var d = 0; d < defs.length; d++) buckets[defs[d].key] = [];
+  for (var i = 0; i < ps.length; i++) {
+    var p = ps[i];
+    var k = (isSystemChore(p) || isChoreProject(p)) ? "chore" : groupOf(p);
+    if (!buckets[k]) k = GROUP_MORE;
+    buckets[k].push(p);
+  }
+  var html = "";
+  for (var j = 0; j < defs.length; j++) {
+    var items = buckets[defs[j].key];
+    if (!items.length) continue;
+    items.sort(function (x, y) { return sortIndexOf(y) - sortIndexOf(x); });
+    html += '<optgroup label="' + esc(defs[j].label) + '">';
+    for (var m = 0; m < items.length; m++) {
+      html += '<option value="' + esc(items[m].id) + '">' + esc(items[m].name) + '</option>';
+    }
+    html += '</optgroup>';
+  }
+  return html;
+}
+
+/** 补记弹窗内实时预览：沿用「不足 1 分钟按 1 分钟」口径，与编辑弹窗同款样式 */
+function refreshAddPreview() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var st = root.querySelector("#add-start"), en = root.querySelector("#add-end");
+  var box = root.querySelector("#add-preview");
+  if (!st || !en || !box) return;
+  var a = parseClockHM(st.value), b = parseClockHM(en.value);
+  if (!a || !b) {
+    box.textContent = "请填写开始和结束时间";
+    box.className = "edit-preview invalid";
+    return;
+  }
+  var diff = (b.h * 60 + b.m) - (a.h * 60 + a.m);
+  if (diff <= 0) {
+    box.textContent = "结束时间需晚于开始时间";
+    box.className = "edit-preview invalid";
+    return;
+  }
+  box.textContent = "将新增 " + Math.max(1, diff) + " 分钟";
+  box.className = "edit-preview";
+}
+
+/** 打开「补记一段时间」弹窗：复用编辑弹窗同一套布局，额外多一个项目下拉；
+    默认时间段 = 该小时最长空白段（clamp 到现在）。 */
+function openAddHourRecordModal(hour) {
+  var h = Number(hour);
+  if (!Number.isInteger(h) || h < 0 || h > 23) return;
+  var opts = projectOptionsHTML();
+  if (!opts) { showToast("请先新建一个项目，再来补记"); return; }
+  var range = defaultAddRange(h);
+  var panel =
+    '<div class="modal-title">补记一段时间</div>' +
+    '<div class="modal-desc">' + timelineClock(h * 60) + '–' + timelineClock((h + 1) * 60) +
+      ' · 只补今天的钟点，日期不变</div>' +
+    '<label class="edit-note-label" for="add-project">事项（项目）</label>' +
+    '<select id="add-project" class="modal-input modal-select">' + opts + '</select>' +
+    '<div class="edit-time-row">' +
+      '<div class="edit-time-field"><label for="add-start">开始时间</label>' +
+        '<input id="add-start" class="modal-input" type="time" value="' + range.start + '"></div>' +
+      '<div class="edit-time-field"><label for="add-end">结束时间</label>' +
+        '<input id="add-end" class="modal-input" type="time" value="' + range.end + '"></div>' +
+    '</div>' +
+    '<label class="edit-note-label" for="add-note">备注（最多 50 字，可留空）</label>' +
+    '<input id="add-note" class="modal-input" type="text" maxlength="50" ' +
+      'placeholder="可留空" autocomplete="off">' +
+    '<div class="edit-preview" id="add-preview"></div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+    '</div>';
+  openModalShell(panel, {
+    kind: "add-hour-record",
+    onConfirm: function () {
+      var root = document.getElementById("modal-root");
+      if (!root) return false;
+      var sel = root.querySelector("#add-project"),
+          st = root.querySelector("#add-start"),
+          en = root.querySelector("#add-end"),
+          nt = root.querySelector("#add-note");
+      return saveHourRecord(sel ? sel.value : "", st ? st.value : "",
+        en ? en.value : "", nt ? nt.value : "");
+    }
+  });
+  var stEl = document.getElementById("add-start"), enEl = document.getElementById("add-end");
+  if (stEl) stEl.oninput = refreshAddPreview;
+  if (enEl) enEl.oninput = refreshAddPreview;
+  refreshAddPreview();
+}
+
+/** 保存补记：校验 → 往当天该项目桶追加一段 finished 段 → save()/render() → 派生数字自动重算。
+    校验沿用编辑弹窗：结束>开始、都在今天、结束不晚于现在、备注截断 50 字；不禁止重叠、不改日期。
+    补记段不做专属标记，之后仍可用记录行的 ✎ 编辑 / × 删除。 */
+function saveHourRecord(pid, startStr, endStr, noteStr) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  var p = getProject(pid);
+  if (!p) { showModalError("请选择要补记的项目"); return false; }
+  var a = parseClockHM(startStr), b = parseClockHM(endStr);
+  if (!a || !b) { showModalError("请填写有效的开始和结束时间"); return false; }
+  var midnight = midnightOf(dayKey);
+  var startTs = midnight + (a.h * 60 + a.m) * 60000;
+  var endTs = midnight + (b.h * 60 + b.m) * 60000;
+  if (endTs <= startTs) { showModalError("结束时间必须晚于开始时间"); return false; }
+  if (endTs > now) { showModalError("结束时间不能晚于现在"); return false; }
+  var note = Array.from(String(noteStr === null || noteStr === undefined ? "" : noteStr)).slice(0, 50).join("");
+  /* 补记前该项目超额量：用于「从没超额变超额」的橙条判断 */
+  var before = limitRowsForDay(dayKey, now), oldOver = 0;
+  for (var i = 0; i < before.length; i++) if (before[i].projectId === pid) { oldOver = before[i].over; break; }
+  ensureBucket(state.days, dayKey, pid).push({
+    id: newId("s"), start: startTs, end: endTs,
+    endType: "finished", note: note, sourceProject: ""
+  });
+  state.currentDayKey = dayKey;
+  save();
+  render();
+  /* 补记后若「适可而止」项目从没超额变超额，弹一次橙色提示条（只提示，不阻断） */
+  if (groupOf(p) === GROUP_LESS) {
+    var after = limitRowsForDay(dayKey, now), newOver = 0;
+    for (var j = 0; j < after.length; j++) if (after[j].projectId === pid) { newOver = after[j].over; break; }
+    if (oldOver <= 0 && newOver > 0) showLimitNotice("《" + p.name + "》今天已超 " + newOver + " 分钟");
+  }
+  return true;
+}
+
+
 function toggleProjMenu(pid, anchorEl) {
   var existing = document.querySelector(".proj-menu");
   if (existing) {
@@ -1768,10 +2872,14 @@ function toggleProjMenu(pid, anchorEl) {
   var menu = document.createElement("div");
   menu.className = "proj-menu";
   menu.setAttribute("data-project", pid);
-  menu.innerHTML = isSystemChore(getProject(pid))
+  var mp = getProject(pid);
+  menu.innerHTML = isSystemChore(mp)
     ? '<button class="menu-item" data-action="menu-clear-chore" data-id="' + esc(pid) + '">清空今日记录</button>'
-    : '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">修改目标时长</button>' +
-      '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>';
+    : (groupOf(mp) === GROUP_FLOW
+        ? '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>'
+        : '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">' +
+            (groupOf(mp) === GROUP_LESS ? "设置每日上限" : "设置每日目标") + '</button>' +
+          '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>');
   card.appendChild(menu);
 }
 
@@ -1822,7 +2930,8 @@ function fitText(ctx, text, maxWidth) {
 function drawCardCanvas(canvas, stats, now) {
   var W = 750;
   var n = stats.perProject.length;
-  var H = Math.max(1000, 700 + n * 96);
+  /* 两段分组标签各占 52px（有记录时才画），项目行仍为 96px */
+  var H = Math.max(1000, 700 + n * 96 + (n > 0 ? 104 : 0));
   canvas.width = W * 2;
   canvas.height = H * 2;
   canvas.style.width = "100%";
@@ -1833,6 +2942,9 @@ function drawCardCanvas(canvas, stats, now) {
   ctx.scale(2, 2); /* 2 倍位图，逻辑坐标仍按 750×H 绘制 */
 
   var left = 76, right = 674;
+  var limitByPid = {};
+  var lrows = limitRowsForDay(dayKeyOf(now), now);
+  for (var li = 0; li < lrows.length; li++) limitByPid[lrows[li].projectId] = lrows[li];
 
   ctx.fillStyle = "#EDF3FC";
   ctx.fillRect(0, 0, W, H);
@@ -1884,11 +2996,11 @@ function drawCardCanvas(canvas, stats, now) {
     roundRect(ctx, left, barY, bw, barH, Math.min(7, bw / 2)); ctx.fill();
   }
 
-  /* 其中杂事 XX 分钟：位置在今日总时长下面，无杂事记录时不显示。
-     杂事行/小节标题/列表统一下移，给这行灰字留出不与标题相挤的间距（画布高度 H 无需改动）。 */
+  /* 其中事来则应 XX 分钟：位置在今日总时长下面，无事来则应记录时不显示。
+     事来则应行/小节标题/列表统一下移，给这行灰字留出不与标题相挤的间距（画布高度 H 无需改动）。 */
   if (stats.choreMinutes > 0) {
     ctx.fillStyle = "#8A94A6"; ctx.font = "22px " + FONT_STACK;
-    ctx.fillText("其中杂事 " + stats.choreMinutes + " 分钟", left, 430);
+    ctx.fillText("其中事来则应 " + stats.choreMinutes + " 分钟", left, 430);
   }
 
   ctx.fillStyle = "#1F2A44"; ctx.font = "bold 30px " + FONT_STACK;
@@ -1899,21 +3011,53 @@ function drawCardCanvas(canvas, stats, now) {
     ctx.fillStyle = "#A6AFC0"; ctx.font = "26px " + FONT_STACK;
     ctx.fillText("今天还没有记录", left, listStart + 46);
   } else {
-    for (var i = 0; i < n; i++) {
-      var item = stats.perProject[i];
-      var y = listStart + i * 96;
+    /* 按分组拆成上下三段；组内保持原有顺序，事来则应并入「如实知见」段最后且不加标签 */
+    var moreItems = [], lessItems = [], flowItems = [], choreItems = [];
+    for (var gi = 0; gi < stats.perProject.length; gi++) {
+      var it = stats.perProject[gi];
+      var gp = groupOf(getProject(it.projectId));
+      if (gp === null) choreItems.push(it);
+      else if (gp === GROUP_LESS) lessItems.push(it);
+      else if (gp === GROUP_FLOW) flowItems.push(it);
+      else moreItems.push(it);
+    }
+    var y = listStart;
+    function drawGroupLabel(label) {
+      ctx.fillStyle = "#1F2A44"; ctx.font = "bold 24px " + FONT_STACK; ctx.textAlign = "left";
+      ctx.fillText(label, left, y + 32);
+      ctx.strokeStyle = "#EEF1F7"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(left, y + 44); ctx.lineTo(right, y + 44); ctx.stroke();
+      y += 52;
+    }
+    function drawItemRow(item) {
       ctx.fillStyle = "#F7FAFF";
       roundRect(ctx, left, y, right - left, 80, 16); ctx.fill();
       ctx.fillStyle = item.colorHex || colorOf(item.colorIndex);
       roundRect(ctx, left + 16, y + 18, 8, 44, 4); ctx.fill();
       ctx.fillStyle = "#1F2A44"; ctx.font = "30px " + FONT_STACK;
       ctx.textAlign = "left";
-      ctx.fillText(fitText(ctx, item.name, 330), left + 40, y + 50);
+      var lim = limitByPid[item.projectId];
+      var maxNameW = (lim && lim.over > 0) ? 210 : 330;
+      var nameText = fitText(ctx, item.name, maxNameW);
+      ctx.fillText(nameText, left + 40, y + 50);
+      /* 超额项目：名字后面用红字标出超出多少分钟（不与右侧时长重叠） */
+      if (lim && lim.over > 0) {
+        ctx.fillStyle = "#E0453B"; ctx.font = "bold 24px " + FONT_STACK;
+        ctx.fillText("已超 " + lim.over + " 分钟", left + 40 + maxNameW + 14, y + 50);
+      }
       ctx.fillStyle = "#2F7DF6"; ctx.font = "bold 30px " + FONT_STACK;
       ctx.textAlign = "right";
       ctx.fillText(formatMinutes(item.minutes), right - 20, y + 50);
       ctx.textAlign = "left";
+      y += 96;
     }
+    drawGroupLabel("多多益善");
+    for (var mi = 0; mi < moreItems.length; mi++) drawItemRow(moreItems[mi]);
+    drawGroupLabel("适可而止");
+    for (var li2 = 0; li2 < lessItems.length; li2++) drawItemRow(lessItems[li2]);
+    drawGroupLabel("如实知见");
+    for (var fi = 0; fi < flowItems.length; fi++) drawItemRow(flowItems[fi]);
+    for (var ci = 0; ci < choreItems.length; ci++) drawItemRow(choreItems[ci]);
   }
 
   ctx.fillStyle = "#B4BDCB"; ctx.font = "22px " + FONT_STACK;
@@ -1982,7 +3126,7 @@ function init() {
   state = load();
   /* 兼容旧数据：仅在存在缺 sortIndex 的项目时按当前顺序重编号 */
   var needSave = ensureSortIndexes(state);
-  /* 系统项目「杂事」：首次打开 / 读取旧数据时自动补齐并规整 */
+  /* 系统项目「事来则应」：首次打开 / 读取旧数据时自动补齐并规整 */
   if (ensureChoreProject(state)) needSave = true;
   if (needSave) save();
   var now = Date.now();
