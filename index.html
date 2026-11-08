@@ -34,22 +34,41 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   padding-top:calc(10px + env(safe-area-inset-top,0px));
   padding-bottom:calc(28px + env(safe-area-inset-bottom,0px));
 }
-#app-header{max-width:480px;margin:0 auto;padding:0 12px 6px;display:flex;align-items:center;gap:8px;}
+#app-header{
+  max-width:480px;width:calc(100% - 24px);margin:0 auto 12px;
+  padding:17px 16px;display:flex;align-items:center;gap:14px;
+  background:linear-gradient(110deg,#E8F2FF 0%,#F4F9FF 46%,#FFFFFF 100%);
+  border:1px solid #E3EDFB;border-radius:22px;
+  box-shadow:0 2px 10px rgba(47,125,246,.05);
+}
 .avatar{
-  width:46px;height:46px;flex:0 0 46px;border-radius:50%;
-  background:linear-gradient(135deg,#4B93FF,#2F7DF6);color:#fff;
-  font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 10px rgba(47,125,246,.25);
+  width:66px;height:66px;flex:0 0 66px;border-radius:50%;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 9px rgba(60,110,190,.12);
 }
 .header-name{flex:1 1 auto;min-width:0;}
-.header-name-inner{display:flex;align-items:center;min-width:0;gap:4px;}
-.header-name-text{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:17px;font-weight:700;}
+.header-name-inner{display:flex;align-items:center;min-width:0;gap:10px;}
+.header-name-text{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:21px;font-weight:800;letter-spacing:.5px;}
+.header-date{margin-top:7px;font-size:14px;color:var(--muted);}
 .icon-btn{
   width:44px;height:44px;flex:0 0 44px;display:inline-flex;align-items:center;justify-content:center;
   border-radius:12px;color:var(--muted);font-size:22px;line-height:1;
 }
 .icon-btn:active{background:#EEF3FB;}
-.icon-btn.edit-btn{width:32px;height:32px;flex:0 0 32px;border-radius:9px;color:#6E7C93;}
+.icon-btn.edit-btn{
+  width:auto;height:auto;flex:0 0 auto;padding:5px 11px;gap:4px;
+  border:1px solid #BED7FF;border-radius:999px;
+  background:#fff;color:var(--blue);font-size:13px;font-weight:600;line-height:1;
+}
+.icon-btn.edit-btn:active{background:#F0F6FF;}
+.icon-btn.edit-btn svg{width:13px;height:13px;flex:0 0 13px;}
+@media (max-width:360px){
+  #app-header{padding:14px 12px;gap:10px;}
+  .avatar{width:56px;height:56px;flex:0 0 56px;}
+  .avatar svg{width:31px;height:31px;}
+  .header-name-text{font-size:18px;}
+  .header-date{font-size:13px;}
+}
 .wrap{max-width:480px;margin:0 auto;padding:0 12px;}
 .card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,60,110,.06);padding:16px;margin-bottom:12px;}
 .section-title{font-size:16px;font-weight:700;margin-bottom:12px;}
@@ -181,6 +200,49 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 }
 .generate-btn:active{transform:scale(.99);background:#F7FAFF;}
 .footer-note{text-align:center;font-size:14px;color:#A6AFC0;margin-top:14px;}
+.app-version{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#AEB8C8;letter-spacing:.6px;vertical-align:1px;}
+
+/* ========== 跨设备同步条（v0.3A） ========== */
+#sync-bar{margin:16px 0 0;}
+.sync-bar{
+  display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;
+  padding:11px 14px;border:1px solid #E4EAF3;border-radius:14px;background:#fff;
+  font-size:13.5px;line-height:1.4;color:#5A6B85;text-align:left;
+  font-family:inherit;cursor:pointer;
+}
+.sync-bar:active{background:#F6F9FF;}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;background:#C9D3E3;}
+.sync-dot-on{background:#34C759;}
+.sync-dot-busy{background:#3B82F6;animation:syncPulse 1.1s ease-in-out infinite;}
+.sync-dot-err{background:#EF4444;}
+.sync-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sync-arrow{flex:0 0 auto;color:#AEB8C8;font-size:16px;line-height:1;}
+@keyframes syncPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.sync-hint{font-size:12px;color:#8A97AC;line-height:1.6;margin-top:6px;}
+.sync-meta{font-size:12px;color:#8A97AC;margin-top:9px;line-height:1.6;}
+/* ========== 配对二维码（v0.3B） ========== */
+.sync-gen{margin-top:8px;}
+.sync-gen .btn{width:100%;height:44px;min-height:44px;background:#F2F7FF;color:var(--blue);border:1px solid #D9E6FB;}
+.sync-gen .btn:active{background:#E7F0FF;}
+.pair-entry{margin-top:12px;}
+.pair-entry .btn{width:100%;height:46px;min-height:46px;background:#F2F7FF;color:var(--blue);
+  border:1px solid #D9E6FB;font-size:15px;}
+.pair-entry .btn:active{background:#E7F0FF;}
+.pair-box{display:flex;justify-content:center;margin:14px 0 2px;}
+.pair-qr{padding:10px;background:#fff;border:1px solid #E7ECF5;border-radius:14px;line-height:0;}
+.pair-qr canvas{display:block;max-width:100%;height:auto;}
+.pair-code{margin-top:10px;padding:9px 11px;border:1px dashed #D7DFEC;border-radius:10px;background:#F8FAFE;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;color:#5A6B85;
+  word-break:break-all;text-align:center;letter-spacing:.4px;line-height:1.5;}
+.pair-link-row{display:flex;gap:8px;align-items:stretch;}
+.pair-link{flex:1 1 auto;min-width:0;box-sizing:border-box;max-height:74px;overflow-y:auto;
+  padding:9px 11px;border:1px solid #E4EAF3;border-radius:10px;background:#fff;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;
+  line-height:1.55;color:#5A6B85;word-break:break-all;-webkit-user-select:text;user-select:text;}
+.pair-link-row .btn{flex:0 0 auto;align-self:center;padding-left:16px;padding-right:16px;}
+@media (max-width:360px){
+  .sync-bar{padding:10px 12px;font-size:13px;border-radius:12px;}
+}
 
 /* ========== Toast ========== */
 #toast{
@@ -434,6 +496,52 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 #ov-limit-summary{margin-top:6px;}
 .ov-limit-head{display:block;width:100%;text-align:left;padding:6px 0;color:var(--muted);font-size:12px;font-weight:600;}
 .ov-limit-head .ov-less-over{color:#E0453B;font-weight:700;}
+
+/* ========== 历史记录（按北京时间选日期，只读查看） ========== */
+.hist-pick{display:flex;align-items:center;gap:8px;}
+.hist-date{
+  flex:1 1 auto;min-width:0;width:100%;height:42px;padding:0 10px;
+  border:1px solid #DCE5F2;border-radius:11px;background:#F9FBFF;
+  color:var(--text);font-size:15px;outline:none;
+  -webkit-appearance:none;appearance:none;font-variant-numeric:tabular-nums;
+}
+.hist-date:focus{border-color:var(--blue);background:#fff;}
+.hist-nav{
+  width:42px;height:42px;flex:0 0 42px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid #DCE5F2;border-radius:11px;background:#F9FBFF;color:var(--blue);
+  font-size:24px;line-height:1;
+}
+.hist-nav:active{background:#EEF3FB;}
+.hist-nav:disabled{opacity:.35;}
+.hist-label{font-size:13px;font-weight:700;margin-top:10px;font-variant-numeric:tabular-nums;}
+.hist-summary{font-size:12px;color:var(--muted);margin-top:2px;}
+.hist-summary:empty{display:none;}
+.hist-empty{font-size:14px;color:var(--muted);text-align:center;padding:22px 8px;line-height:1.6;}
+.hist-empty-hint{display:block;font-size:12px;color:#AEB7C6;margin-top:4px;}
+/* 补记弹窗的日期输入 */
+.add-date-input{font-variant-numeric:tabular-nums;-webkit-appearance:none;appearance:none;}
+@media (max-width:360px){
+  .hist-nav{width:38px;height:38px;flex:0 0 38px;}
+  .hist-date{height:38px;font-size:14px;padding:0 8px;}
+}
+/* ========== 补记弹窗内「直接新建项目」（第二十一轮增量） ========== */
+.add-inline-toggle{display:block;width:100%;margin-top:9px;padding:4px 0;background:none;border:0;text-align:left;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;}
+.add-inline-toggle:active{opacity:.7;}
+.add-inline-box{display:none;margin-top:8px;background:#F2F7FF;border:1px solid #D8E6FF;border-radius:12px;padding:12px;}
+.add-inline-box.open{display:block;}
+.add-inline-box .edit-note-label{margin:10px 0 6px;font-size:13px;}
+.add-inline-box .edit-note-label:first-child{margin-top:0;}
+.add-inline-box .modal-input{background:#fff;border-color:#D8E6FF;height:44px;font-size:15px;}
+.add-inline-box .modal-input:focus{background:#fff;border-color:var(--blue);}
+.add-group-row{display:flex;gap:6px;}
+.add-group-chip{flex:1 1 0;min-width:0;height:36px;border-radius:9px;background:#fff;border:1.5px solid #E1EAF7;color:var(--muted);font-size:13px;}
+.add-group-chip.active{border-color:var(--blue);color:var(--blue);font-weight:700;}
+.add-inline-hint{font-size:12px;color:var(--muted);line-height:1.55;margin-top:10px;}
+.modal-select:disabled{opacity:.45;background:#F2F5FA;}
+@media (max-width:360px){
+  .add-group-chip{font-size:12px;padding:0 2px;}
+  .add-inline-hint{font-size:11px;}
+}
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -484,9 +592,25 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
       </div>
     </section>
 
+    <section class="card" id="history-card">
+      <div class="section-head">
+        <div class="section-title">历史记录</div>
+        <button class="head-action" data-action="history-add">＋ 记一段</button>
+      </div>
+      <div class="hist-pick">
+        <button type="button" class="hist-nav" id="history-prev" data-action="history-prev" aria-label="前一天">‹</button>
+        <input type="date" id="history-date" class="hist-date" aria-label="选择日期">
+        <button type="button" class="hist-nav" id="history-next" data-action="history-next" aria-label="后一天">›</button>
+      </div>
+      <div class="hist-label" id="history-label"></div>
+      <div class="hist-summary" id="history-summary"></div>
+      <div id="history-list"></div>
+    </section>
+
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e-->数据仅保存在本机浏览器 · 不上传</div>
+    <div id="sync-bar"></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3B</span></div>
   </div>
 </div>
 
@@ -522,6 +646,14 @@ var STORAGE_KEY = "my-time-records:v1";
 var FONT_STACK = '-apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif';
 var WEEK_NAMES = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 var PENCIL_SVG = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>';
+var WEEK_SHORT = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+var SPROUT_SVG = '<svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 33V19" stroke="#3FAE5A" stroke-width="2.2" stroke-linecap="round"></path><path d="M20 23C13.4 23 9.5 19.6 9.5 13.2C15.8 12.6 20 16.2 20 23Z" fill="#66C86F"></path><path d="M20 18.6C20 12 24 8.4 30.6 8.8C30.9 15.4 27 19 20 18.6Z" fill="#3FAE5A"></path></svg>';
+/** 头部日期：北京时间今天 →「YYYY年M月D日 · 周X」；仅展示，不参与任何统计 */
+function headerDateText() {
+  var p = bjTodayKey().split("-");
+  var d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2])));
+  return Number(p[0]) + "年" + Number(p[1]) + "月" + Number(p[2]) + "日 · " + WEEK_SHORT[d.getUTCDay()];
+}
 
 /** HTML 转义：所有用户输入进入 innerHTML 前必须经过这里，防 XSS 与布局崩坏 */
 function esc(value) {
@@ -536,6 +668,30 @@ function pad2(n) { return String(n).padStart(2, "0"); }
 function dayKeyOf(ts) {
   var d = new Date(ts);
   return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+}
+
+/* -------------------- 北京时间（UTC+8）日期口径 --------------------
+   只用于「历史记录」的日期选择与「补记」等新记录的日期归属，不随设备时区漂移。
+   现有 dayKeyOf / midnightOf / formatTime / sanitizeState 全部保持原样：
+   旧记录原有的日期 key、段数量、时间戳一律不动（零迁移）；
+   今日视图 / 统计 / 时间轴 / CSV / 记录卡的口径不变。 */
+var BJ_OFFSET_MS = 8 * 3600 * 1000;
+function bjDayKeyOf(ts) {
+  var d = new Date(Number(ts) + BJ_OFFSET_MS);
+  return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate());
+}
+function bjTodayKey() { return bjDayKeyOf(Date.now()); }
+/** dayKey → "YYYY-MM-DD 星期X"；用 UTC 构造，避免本地时区把日期挪一天 */
+function bjDayLabel(dayKey) {
+  var p = String(dayKey).split("-");
+  var d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2])));
+  return dayKey + " " + WEEK_NAMES[d.getUTCDay()];
+}
+/** dayKey ± n 天（UTC 运算，不受时区 / 夏令时影响） */
+function shiftDayKey(dayKey, n) {
+  var p = String(dayKey).split("-");
+  var d = new Date(Date.UTC(Number(p[0]), Number(p[1]) - 1, Number(p[2]) + Number(n)));
+  return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate());
 }
 
 /** dayKey → 当天本地零点的时间戳 */
@@ -1480,6 +1636,8 @@ function load() {
 function save() {
   try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
   catch (e) { /* file:// 下 localStorage 不可用：优雅降级为内存态，不白屏 */ }
+  /* 同步层：所有写入都经过这里，因此一处挂钩即可覆盖全部变更路径 */
+  markSyncDirty();
 }
 
 function ensureBucket(days, dayKey, pid) {
@@ -1636,11 +1794,11 @@ function closeRunningAt(running, endTs, endType, extra) {
 
 function renderHeader() {
   document.getElementById("app-header").innerHTML =
-    '<div class="avatar">时</div>' +
+    '<div class="avatar">' + SPROUT_SVG + '</div>' +
     '<div class="header-name"><div class="header-name-inner">' +
       '<span class="header-name-text">' + esc(state.nickname) + '</span>' +
-      '<button class="icon-btn edit-btn" data-action="edit-nickname" aria-label="编辑昵称">' + PENCIL_SVG + '</button>' +
-    '</div></div>';
+      '<button class="icon-btn edit-btn" data-action="edit-nickname" aria-label="编辑昵称">' + PENCIL_SVG + '编辑</button>' +
+    '</div><div class="header-date">' + headerDateText() + '</div></div>';
 }
 
 /* 把分钟差格式化为「X 小时 Y 分」，仅用于概览剩余文案，不改判断分支 */
@@ -2120,6 +2278,104 @@ function renderRecordList(stats) {
   host.innerHTML = html;
 }
 
+/* -------------------- 历史记录（只读查看 + 按北京时间的日期选择） -------------------- */
+
+/** 当前查看的日期：纯 UI 状态，不写入 state / localStorage */
+var historyDayKey = null;
+
+function normalizeHistoryDate(v) {
+  var t = String(v === null || v === undefined ? "" : v).trim();
+  if (!isValidDayKey(t)) return null;
+  var today = bjTodayKey();
+  return t > today ? today : t;
+}
+
+/** 前后翻一天：next 不超过北京时间今天；只重绘历史卡片，不动其他模块 */
+function shiftHistoryDay(n) {
+  var base = historyDayKey || bjTodayKey();
+  var next = shiftDayKey(base, n);
+  var today = bjTodayKey();
+  if (next > today) next = today;
+  historyDayKey = next;
+  renderHistory();
+}
+
+/** 历史记录「＋ 记一段」：日期预填为当前查看的那一天 */
+function openHistoryAddModal() {
+  openAddHourRecordModal(null, historyDayKey || bjTodayKey());
+}
+
+/**
+ * 渲染历史记录卡片：按所选日期读取 state.days[dayKey]，展示每段的
+ * 项目 / 起止时间 / 时长 / 备注与来源；无记录的日期显示「暂无记录」。
+ * 只读，不改任何数据；与今日记录列表、统计、CSV 完全独立。
+ */
+function renderHistory() {
+  var pick = document.getElementById("history-date");
+  var label = document.getElementById("history-label");
+  var sum = document.getElementById("history-summary");
+  var list = document.getElementById("history-list");
+  if (!list) return;
+  var today = bjTodayKey();
+  if (!historyDayKey || !isValidDayKey(historyDayKey)) historyDayKey = today;
+  if (historyDayKey > today) historyDayKey = today;
+  if (pick) { pick.value = historyDayKey; pick.max = today; }
+  var prevBtn = document.getElementById("history-prev");
+  var nextBtn = document.getElementById("history-next");
+  if (nextBtn) nextBtn.disabled = (historyDayKey >= today);
+  if (prevBtn) prevBtn.disabled = false;
+  if (label) label.textContent = bjDayLabel(historyDayKey);
+  var now = Date.now();
+  var stats = computeDayStats(state, historyDayKey, now);
+  if (sum) {
+    sum.textContent = stats.records.length
+      ? ("共 " + stats.records.length + " 段 · 合计 " + remainingText(stats.totalMinutes))
+      : "";
+  }
+  if (stats.records.length === 0) {
+    list.innerHTML = '<div class="hist-empty">暂无记录' +
+      '<span class="hist-empty-hint">可点右上「＋ 记一段」补填这一天，或换一个日期</span></div>';
+    return;
+  }
+  /* 按时间从早到晚展示（computeDayStats 的 records 是 start 降序） */
+  var recs = stats.records.slice().reverse();
+  var html = "";
+  for (var i = 0; i < recs.length; i++) {
+    var rec = recs[i], seg = rec.segment;
+    var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
+    var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
+    var tag = isRunning ? '<span class="tag tag-running">计时中</span>'
+      : (seg.endType === "interrupted" ? '<span class="tag">中断</span>' : "");
+    var note = (typeof seg.note === "string") ? seg.note : "";
+    var src = (typeof seg.sourceProject === "string") ? seg.sourceProject : "";
+    var noteHTML = note ? '<span class="rec-note">' + esc(note) + '</span>' : "";
+    var fromHTML = src ? '<span class="rec-from">← ' + esc(src) + '</span>' : "";
+    html += '<div class="record-row">' +
+      '<span class="dot" style="background:' + (rec.colorHex || colorOf(rec.project.colorIndex)) + '"></span>' +
+      '<div class="rec-main">' +
+        '<div class="rec-line1">' +
+          '<span class="rec-name ellipsis">' + esc(rec.project.name) + '</span>' +
+          '<span class="rec-time">' + timeText + '</span>' +
+        '</div>' +
+        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  list.innerHTML = html;
+}
+
+/** change 事件委托：只处理日期选择器（click / keydown 委托保持不变） */
+function onDocumentChange(e) {
+  var t = e.target;
+  if (!t || !t.id) return;
+  if (t.id === "history-date") {
+    var dk = normalizeHistoryDate(t.value);
+    if (!dk) { t.value = historyDayKey || bjTodayKey(); return; }
+    historyDayKey = dk;
+    renderHistory();
+  }
+}
+
 /** 一次 render 只取一次 now，向下传递，保证所有合计同源 */
 function render() {
   var now = Date.now();
@@ -2133,6 +2389,7 @@ function render() {
   renderProjectList(stats, running, dayKey);
   renderRecordList(stats);
   renderLimitSummary(dayKey, now);
+  renderHistory();
   applyReveal();
 }
 
@@ -2261,6 +2518,17 @@ function onDocumentClick(e) {
     case "toggle-records": toggleRecordsExpanded(); break;
     case "toggle-hour": toggleTimelineHour(el.getAttribute("data-hour")); break;
     case "add-hour-record": openAddHourRecordModal(el.getAttribute("data-hour")); break;
+    case "add-inline-new": toggleAddInlineNew(); break;
+    case "add-inline-group": setAddInlineGroup(el.getAttribute("data-group")); break;
+    case "history-add": openHistoryAddModal(); break;
+    case "sync-open": openSyncModal(); break;
+    case "sync-save": saveSyncFromModal(); break;
+    case "sync-off": disableSync(); break;
+    case "sync-gen": fillRandomCode(); break;
+    case "pair-open": openPairModal(); break;
+    case "pair-copy": copyPairLink(); break;
+    case "history-prev": shiftHistoryDay(-1); break;
+    case "history-next": shiftHistoryDay(1); break;
     case "toggle-limit-summary":
       limitsExpanded = !limitsExpanded;
       renderLimitSummary(dayKeyOf(Date.now()), Date.now());
@@ -2284,7 +2552,7 @@ function onDocumentKeydown(e) {
     if (sheetState) { var sp = sheetState.pid; closeSheet(); doInterrupt(sp, "only", ""); }
     else if (modalState) closeModal();
   }
-  if (e.key === "Enter" && modalState && modalState.kind !== "preview") {
+  if (e.key === "Enter" && modalState && modalState.kind !== "preview" && modalState.kind !== "pair") {
     var t = e.target;
     if (t && t.tagName === "INPUT") { e.preventDefault(); handleModalConfirm(); }
   }
@@ -2699,11 +2967,14 @@ function saveRecordEdit(segId, startStr, endStr, noteStr) {
 
 /** 补记默认时间段：该小时内最长的空白区间；结束 clamp 到「现在」；
     无空白 / 点了未来格子时回退为「现在前 30 分 → 现在」。纯计算，不改 state。 */
-function defaultAddRange(hour) {
+function defaultAddRange(hour, dayKey) {
   var now = Date.now();
-  var dk = dayKeyOf(now);
+  var dk = isValidDayKey(dayKey) ? dayKey : bjTodayKey();
   var lo = hour * 60, hi = lo + 60;
-  var nowMin = Math.max(0, Math.min(1440, Math.floor((now - midnightOf(dk)) / 60000)));
+  /* 过去日期整天都可补记，不再 clamp 到「现在」；今天口径与原来完全一致 */
+  var nowMin = (dk === bjTodayKey())
+    ? Math.max(0, Math.min(1440, Math.floor((now - midnightOf(dk)) / 60000)))
+    : 1440;
   var t = computeTimeline(computeDayStats(state, dk, now), dk, now);
   var best = null;
   for (var i = 0; i < t.blanks.length; i++) {
@@ -2719,6 +2990,83 @@ function defaultAddRange(hour) {
     if (b <= a) a = Math.max(0, b - 1);
   }
   return { start: timelineClock(a), end: timelineClock(b) };
+}
+
+/** 历史「＋ 记一段」的默认时段：所选日期活动区间内最长空白；全天空白回退 09:00–10:00。
+    结束分钟 clamp 到 23:59，保证 <input type="time"> 拿到合法值。纯计算，不改 state。 */
+function defaultAddRangeForDay(dayKey) {
+  var now = Date.now();
+  var dk = isValidDayKey(dayKey) ? dayKey : bjTodayKey();
+  var t = computeTimeline(computeDayStats(state, dk, now), dk, now);
+  var lb = t.longestBlank;
+  if (lb) {
+    var s = Math.max(0, Math.round(lb.start));
+    var e = Math.min(1439, Math.round(lb.end));
+    if (e > s) return { start: timelineClock(s), end: timelineClock(e) };
+  }
+  return { start: "09:00", end: "10:00" };
+}
+
+/* -------------------- 第二十一轮：补记弹窗内「直接新建项目」（纯增量） -------------------- */
+
+/** 是否处于内联新建模式：由内联区 open class 判定，零额外状态，弹窗重建自动复位 */
+function isAddInlineNew() {
+  var box = document.getElementById("add-inline-box");
+  return !!box && box.classList.contains("open");
+}
+/** 展开 / 收起内联新建区；展开时禁用项目下拉，避免「既选项目又填新名」的歧义 */
+function toggleAddInlineNew() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var box = root.querySelector("#add-inline-box"),
+      sel = root.querySelector("#add-project"),
+      btn = root.querySelector("#add-inline-toggle"),
+      input = root.querySelector("#add-new-name");
+  if (!box) return;
+  var open = !box.classList.contains("open");
+  if (open) box.classList.add("open"); else box.classList.remove("open");
+  if (sel) sel.disabled = open;
+  if (btn) btn.textContent = open ? "收起新建项目" : "＋ 直接新建项目";
+  if (open && input && typeof input.focus === "function") { try { input.focus(); } catch (e) {} }
+}
+/** 当前选中的新建分组：只读 DOM，默认「多多益善」 */
+function currentAddInlineGroup() {
+  var el = document.querySelector("#add-group-row .add-group-chip.active");
+  var g = el ? el.getAttribute("data-group") : GROUP_MORE;
+  return (g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_MORE;
+}
+function setAddInlineGroup(g) {
+  var ng = (g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_MORE;
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var chips = root.querySelectorAll("#add-group-row .add-group-chip");
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].getAttribute("data-group") === ng) chips[i].classList.add("active");
+    else chips[i].classList.remove("active");
+  }
+}
+/** 按现有 openProjectModal 同一套字段与校验创建一个项目，返回新 pid；
+    失败显示弹窗红字并返回 null。不 save / 不 render，由 saveHourRecord 统一一次落盘。 */
+function createProjectInline() {
+  var root = document.getElementById("modal-root");
+  if (!root) return null;
+  var input = root.querySelector("#add-new-name");
+  var name = String(input && input.value !== null && input.value !== undefined ? input.value : "").trim();
+  if (name.length === 0) { showModalError("项目名称不能为空"); return null; }
+  if (Array.from(name).length > 10) { showModalError("项目名称最多 10 个字"); return null; }
+  if (isChoreName(name)) { showModalError("「" + CHORE_NAME + "」为系统项目，请换一个名字"); return null; }
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var dup = ps.some(function (p) { return String(p.name).trim().toLowerCase() === name.toLowerCase(); });
+  if (dup) { showModalError("已存在同名项目"); return null; }
+  var idx = state.nextColorIndex % PALETTE.length;
+  state.nextColorIndex = idx + 1;
+  var pid = newId("p");
+  state.projects.push({
+    id: pid, name: name, colorIndex: idx,
+    targetMinutes: null, dailyLimit: null, createdAt: Date.now(),
+    sortIndex: nextSortIndex(), group: currentAddInlineGroup()
+  });
+  return pid;
 }
 
 /** 补记弹窗的项目下拉：按三组 optgroup 分组 + 事来则应；组内沿用 sortIndex 降序；只读 state。 */
@@ -2775,20 +3123,46 @@ function refreshAddPreview() {
   box.className = "edit-preview";
 }
 
-/** 打开「补记一段时间」弹窗：复用编辑弹窗同一套布局，额外多一个项目下拉；
-    默认时间段 = 该小时最长空白段（clamp 到现在）。 */
-function openAddHourRecordModal(hour) {
-  var h = Number(hour);
-  if (!Number.isInteger(h) || h < 0 || h > 23) return;
+/** 打开「补记一段时间」弹窗：复用编辑弹窗同一套布局，多一个项目下拉与「日期」字段。
+    hour 为 0–23：从时间轴某个空白小时进入（默认时段取该小时最长空白）；
+    hour 传 null：从「历史记录」进入（默认时段取所选日期当天最长空白）。
+    dayKey 默认北京时间今天，可改到过去：补到哪天就算在哪天，不计入今天。
+    第二十一轮：项目下拉下方增加「＋ 直接新建项目」内联区，可在弹窗内建项目并一次保存。 */
+function openAddHourRecordModal(hour, dayKey) {
+  var h = (hour === null || hour === undefined || hour === "") ? null : Number(hour);
+  if (h !== null && (!Number.isInteger(h) || h < 0 || h > 23)) return;
   var opts = projectOptionsHTML();
-  if (!opts) { showToast("请先新建一个项目，再来补记"); return; }
-  var range = defaultAddRange(h);
+  var autoInline = !opts; /* 一个可选项目都没有时，直接展开内联新建区，不再把人赶走 */
+  var today = bjTodayKey();
+  var dk = isValidDayKey(dayKey) ? dayKey : today;
+  if (dk > today) dk = today;
+  var range = (h === null) ? defaultAddRangeForDay(dk) : defaultAddRange(h, dk);
+  var desc = (h === null)
+    ? "日期默认今天，可改到过去 · 补到哪天算哪天"
+    : (timelineClock(h * 60) + "–" + timelineClock((h + 1) * 60) + " · 可改日期，补到哪天算哪天");
+  var inlineHTML =
+    '<button type="button" class="add-inline-toggle" id="add-inline-toggle" data-action="add-inline-new">' +
+      (autoInline ? "收起新建项目" : "＋ 直接新建项目") + '</button>' +
+    '<div class="add-inline-box' + (autoInline ? " open" : "") + '" id="add-inline-box">' +
+      '<label class="edit-note-label" for="add-new-name">新项目名称（最多 10 个字，不可重名）</label>' +
+      '<input id="add-new-name" class="modal-input" type="text" placeholder="例如：写周报" autocomplete="off">' +
+      '<label class="edit-note-label">归到哪一组</label>' +
+      '<div class="add-group-row" id="add-group-row">' +
+        '<button type="button" class="add-group-chip active" data-action="add-inline-group" data-group="more">多多益善</button>' +
+        '<button type="button" class="add-group-chip" data-action="add-inline-group" data-group="less">适可而止</button>' +
+        '<button type="button" class="add-group-chip" data-action="add-inline-group" data-group="flow">如实知见</button>' +
+      '</div>' +
+      '<div class="add-inline-hint">将同时创建这个项目，并把这一段记到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。</div>' +
+    '</div>';
   var panel =
     '<div class="modal-title">补记一段时间</div>' +
-    '<div class="modal-desc">' + timelineClock(h * 60) + '–' + timelineClock((h + 1) * 60) +
-      ' · 只补今天的钟点，日期不变</div>' +
+    '<div class="modal-desc">' + desc + ' · 日期按北京时间</div>' +
+    '<label class="edit-note-label" for="add-date">日期（默认今天，可改到过去）</label>' +
+    '<input id="add-date" class="modal-input add-date-input" type="date" value="' + esc(dk) + '" max="' + esc(today) + '">' +
     '<label class="edit-note-label" for="add-project">事项（项目）</label>' +
-    '<select id="add-project" class="modal-input modal-select">' + opts + '</select>' +
+    '<select id="add-project" class="modal-input modal-select"' + (autoInline ? ' disabled' : '') + '>' +
+      (opts || '<option value="">（暂无可选项目，请在下方新建）</option>') + '</select>' +
+    inlineHTML +
     '<div class="edit-time-row">' +
       '<div class="edit-time-field"><label for="add-start">开始时间</label>' +
         '<input id="add-start" class="modal-input" type="time" value="' + range.start + '"></div>' +
@@ -2809,12 +3183,25 @@ function openAddHourRecordModal(hour) {
     onConfirm: function () {
       var root = document.getElementById("modal-root");
       if (!root) return false;
-      var sel = root.querySelector("#add-project"),
+      var dt = root.querySelector("#add-date"),
+          sel = root.querySelector("#add-project"),
           st = root.querySelector("#add-start"),
           en = root.querySelector("#add-end"),
           nt = root.querySelector("#add-note");
-      return saveHourRecord(sel ? sel.value : "", st ? st.value : "",
-        en ? en.value : "", nt ? nt.value : "");
+      var inline = isAddInlineNew();
+      var newName = "";
+      if (inline) {
+        var nm = root.querySelector("#add-new-name");
+        newName = nm ? String(nm.value === null || nm.value === undefined ? "" : nm.value).trim() : "";
+      }
+      var ok = saveHourRecord(inline ? "" : (sel ? sel.value : ""),
+        st ? st.value : "", en ? en.value : "", nt ? nt.value : "",
+        dt ? dt.value : "", inline);
+      if (ok && inline) {
+        var dk2 = dt ? dt.value : "", t2 = bjTodayKey();
+        showToast("已创建《" + newName + "》并补记" + (dk2 && dk2 !== t2 ? "到 " + dk2 : ""));
+      }
+      return ok;
     }
   });
   var stEl = document.getElementById("add-start"), enEl = document.getElementById("add-end");
@@ -2823,36 +3210,59 @@ function openAddHourRecordModal(hour) {
   refreshAddPreview();
 }
 
-/** 保存补记：校验 → 往当天该项目桶追加一段 finished 段 → save()/render() → 派生数字自动重算。
-    校验沿用编辑弹窗：结束>开始、都在今天、结束不晚于现在、备注截断 50 字；不禁止重叠、不改日期。
-    补记段不做专属标记，之后仍可用记录行的 ✎ 编辑 / × 删除。 */
-function saveHourRecord(pid, startStr, endStr, noteStr) {
+/** 保存补记：校验 → 往「所选日期」该项目桶追加一段 finished 段 → save()/render()。
+    dayKey 默认北京时间今天；补到过去日期时只写那一天，绝不计入今天，
+    且 currentDayKey 保持今天口径不变（避免误触发跨天规范化）。
+    校验：结束>开始、日期合法且不晚于北京时间今天、结束不晚于现在、备注截断 50 字。 */
+function saveHourRecord(pid, startStr, endStr, noteStr, dayKey, inlineNew) {
   var now = Date.now();
   syncRolloverForNow(now);
-  var dayKey = dayKeyOf(now);
-  var p = getProject(pid);
-  if (!p) { showModalError("请选择要补记的项目"); return false; }
+  var today = bjTodayKey();
+  var dk = isValidDayKey(dayKey) ? dayKey : today;
+  if (dk > today) { showModalError("不能补记未来的日期"); return false; }
+  /* 普通路径保持原报错顺序：先查项目；内联新建路径此时项目还没创建，跳过此步 */
+  if (!inlineNew) {
+    var pre = getProject(pid);
+    if (!pre) { showModalError("请选择要补记的项目"); return false; }
+  }
   var a = parseClockHM(startStr), b = parseClockHM(endStr);
   if (!a || !b) { showModalError("请填写有效的开始和结束时间"); return false; }
-  var midnight = midnightOf(dayKey);
+  var midnight = midnightOf(dk);
   var startTs = midnight + (a.h * 60 + a.m) * 60000;
   var endTs = midnight + (b.h * 60 + b.m) * 60000;
   if (endTs <= startTs) { showModalError("结束时间必须晚于开始时间"); return false; }
   if (endTs > now) { showModalError("结束时间不能晚于现在"); return false; }
+  /* 内联新建：所有校验通过后才建项目，保证「补记失败不会残留空项目」；
+     创建后与普通路径共用同一次 save()/render()，一次落盘原子完成 */
+  var p;
+  if (inlineNew) {
+    var newPid = createProjectInline();
+    if (!newPid) return false;
+    pid = newPid;
+    p = getProject(pid);
+  } else {
+    p = getProject(pid);
+  }
   var note = Array.from(String(noteStr === null || noteStr === undefined ? "" : noteStr)).slice(0, 50).join("");
-  /* 补记前该项目超额量：用于「从没超额变超额」的橙条判断 */
-  var before = limitRowsForDay(dayKey, now), oldOver = 0;
-  for (var i = 0; i < before.length; i++) if (before[i].projectId === pid) { oldOver = before[i].over; break; }
-  ensureBucket(state.days, dayKey, pid).push({
+  /* 超额提示只属于「今天」：补到过去日期时不弹，避免与今日统计混淆 */
+  var oldOver = 0;
+  if (dk === today) {
+    var before = limitRowsForDay(dk, now);
+    for (var i = 0; i < before.length; i++) if (before[i].projectId === pid) { oldOver = before[i].over; break; }
+  }
+  ensureBucket(state.days, dk, pid).push({
     id: newId("s"), start: startTs, end: endTs,
     endType: "finished", note: note, sourceProject: ""
   });
-  state.currentDayKey = dayKey;
+  if (dk !== today) {
+    historyDayKey = dk; /* 补记后历史卡片自动切到这一天，方便立刻核对 */
+    showToast("已补记到 " + dk);
+  }
   save();
   render();
-  /* 补记后若「适可而止」项目从没超额变超额，弹一次橙色提示条（只提示，不阻断） */
-  if (groupOf(p) === GROUP_LESS) {
-    var after = limitRowsForDay(dayKey, now), newOver = 0;
+  /* 补到今天且「适可而止」项目从没超额变超额，弹一次橙色提示条（口径不变） */
+  if (dk === today && groupOf(p) === GROUP_LESS) {
+    var after = limitRowsForDay(dk, now), newOver = 0;
     for (var j = 0; j < after.length; j++) if (after[j].projectId === pid) { newOver = after[j].over; break; }
     if (oldOver <= 0 && newOver > 0) showLimitNotice("《" + p.name + "》今天已超 " + newOver + " 分钟");
   }
@@ -3117,6 +3527,845 @@ function saveCardImage() {
   } catch (e) { /* 桌面自动下载失败不影响移动端长按保存 */ }
 }
 
+/* -------------------- 七点四、二维码编码器（v0.3B，零依赖） -------------------- */
+/* 极简 QR 编码器（byte 模式，纠错等级 L，版本 1-9）
+ * 零依赖，输出 0/1 矩阵。用于把配对链接渲染成二维码。 */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) module.exports = factory();
+  else root.QRCore = factory();
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  /* ---------- GF(256)，本原多项式 0x11D ---------- */
+  var EXP = new Array(512), LOG = new Array(256);
+  (function () {
+    var x = 1, i;
+    for (i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11D; }
+    for (i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  })();
+
+  function gmul(a, b) { return (a === 0 || b === 0) ? 0 : EXP[LOG[a] + LOG[b]]; }
+
+  var genCache = {};
+  function rsGenPoly(deg) {
+    if (genCache[deg]) return genCache[deg];
+    var poly = [1], i, j;
+    for (i = 0; i < deg; i++) {
+      var next = new Array(poly.length + 1);
+      for (j = 0; j < next.length; j++) next[j] = 0;
+      for (j = 0; j < poly.length; j++) {
+        next[j] ^= poly[j];
+        next[j + 1] ^= gmul(poly[j], EXP[i]);
+      }
+      poly = next;
+    }
+    genCache[deg] = poly;
+    return poly;
+  }
+
+  function rsEncode(data, ecLen) {
+    var gen = rsGenPoly(ecLen);
+    var res = new Array(data.length + ecLen), i, j;
+    for (i = 0; i < res.length; i++) res[i] = 0;
+    for (i = 0; i < data.length; i++) res[i] = data[i];
+    for (i = 0; i < data.length; i++) {
+      var coef = res[i];
+      if (coef === 0) continue;
+      for (j = 0; j < gen.length; j++) res[i + j] ^= gmul(gen[j], coef);
+    }
+    return res.slice(data.length);
+  }
+
+  /* ---------- 版本表（纠错 L） ---------- */
+  var VER = {
+    1:  { ec: 7,  b1: 1, d1: 19,  b2: 0, d2: 0 },
+    2:  { ec: 10, b1: 1, d1: 34,  b2: 0, d2: 0 },
+    3:  { ec: 15, b1: 1, d1: 55,  b2: 0, d2: 0 },
+    4:  { ec: 20, b1: 1, d1: 80,  b2: 0, d2: 0 },
+    5:  { ec: 26, b1: 1, d1: 108, b2: 0, d2: 0 },
+    6:  { ec: 18, b1: 2, d1: 68,  b2: 0, d2: 0 },
+    7:  { ec: 20, b1: 2, d1: 78,  b2: 0, d2: 0 },
+    8:  { ec: 24, b1: 2, d1: 97,  b2: 0, d2: 0 },
+    9:  { ec: 30, b1: 2, d1: 116, b2: 0, d2: 0 }
+  };
+  var ALIGN = {
+    1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30],
+    6: [6, 34], 7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46]
+  };
+
+  function dataCodewords(v) { var t = VER[v]; return t.b1 * t.d1 + t.b2 * t.d2; }
+
+  function utf8Bytes(s) {
+    var out = [], i, c;
+    for (i = 0; i < s.length; i++) {
+      c = s.charCodeAt(i);
+      if (c < 0x80) out.push(c);
+      else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+      else if (c < 0xd800 || c >= 0xe000) out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+      else {
+        i++;
+        var c2 = s.charCodeAt(i);
+        var cp = 0x10000 + ((c & 0x3ff) << 10) + (c2 & 0x3ff);
+        out.push(0xf0 | (cp >> 18), 0x80 | ((cp >> 12) & 63), 0x80 | ((cp >> 6) & 63), 0x80 | (cp & 63));
+      }
+    }
+    return out;
+  }
+
+  function pickVersion(nbytes) {
+    for (var v = 1; v <= 9; v++) {
+      if (4 + 8 + nbytes * 8 <= dataCodewords(v) * 8) return v;
+    }
+    return 0;
+  }
+
+  /* ---------- 数据码字 ---------- */
+  function makeCodewords(bytes, v) {
+    var cap = dataCodewords(v) * 8;
+    var bits = [], i, b;
+    function push(val, len) { for (var k = len - 1; k >= 0; k--) bits.push((val >>> k) & 1); }
+
+    push(4, 4);            /* byte 模式 */
+    push(bytes.length, 8); /* 版本 1-9 计数 8 位 */
+    for (i = 0; i < bytes.length; i++) push(bytes[i], 8);
+
+    var term = Math.min(4, cap - bits.length);
+    for (i = 0; i < term; i++) bits.push(0);
+    while (bits.length % 8 !== 0) bits.push(0);
+
+    var data = [];
+    for (i = 0; i < bits.length; i += 8) {
+      var byteVal = 0;
+      for (var j = 0; j < 8; j++) byteVal = (byteVal << 1) | bits[i + j];
+      data.push(byteVal);
+    }
+    var pads = [0xEC, 0x11], p = 0;
+    while (data.length < cap / 8) { data.push(pads[p & 1]); p++; }
+
+    /* 分块 + 纠错 + 交错 */
+    var t = VER[v], blocks = [], off = 0;
+    for (i = 0; i < t.b1; i++) { blocks.push(data.slice(off, off + t.d1)); off += t.d1; }
+    for (i = 0; i < t.b2; i++) { blocks.push(data.slice(off, off + t.d2)); off += t.d2; }
+
+    var ecs = [], k;
+    for (i = 0; i < blocks.length; i++) ecs.push(rsEncode(blocks[i], t.ec));
+
+    var result = [], maxD = 0;
+    for (i = 0; i < blocks.length; i++) if (blocks[i].length > maxD) maxD = blocks[i].length;
+    for (i = 0; i < maxD; i++) for (k = 0; k < blocks.length; k++) if (i < blocks[k].length) result.push(blocks[k][i]);
+    for (i = 0; i < t.ec; i++) for (k = 0; k < ecs.length; k++) result.push(ecs[k][i]);
+    return result;
+  }
+
+  function toBits(codewords) {
+    var bits = [];
+    for (var i = 0; i < codewords.length; i++) {
+      for (var k = 7; k >= 0; k--) bits.push((codewords[i] >>> k) & 1);
+    }
+    return bits;
+  }
+
+  /* ---------- 矩阵 ---------- */
+  function makeMatrix(v, codewords, mask) {
+    var size = 17 + 4 * v;
+    var mod = [], fn = [], r, c;
+    for (r = 0; r < size; r++) {
+      mod.push(new Array(size)); fn.push(new Array(size));
+      for (c = 0; c < size; c++) { mod[r][c] = 0; fn[r][c] = false; }
+    }
+    function setF(rr, cc, val) {
+      if (rr < 0 || cc < 0 || rr >= size || cc >= size) return;
+      mod[rr][cc] = val ? 1 : 0; fn[rr][cc] = true;
+    }
+
+    /* 定位图案 + 分隔符 */
+    function finder(top, left) {
+      for (r = -1; r <= 7; r++) for (c = -1; c <= 7; c++) {
+        var rr = top + r, cc = left + c;
+        if (rr < 0 || cc < 0 || rr >= size || cc >= size) continue;
+        var on = (r >= 0 && r <= 6 && (c === 0 || c === 6)) ||
+                 (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
+                 (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+        setF(rr, cc, on);
+      }
+    }
+    finder(0, 0); finder(0, size - 7); finder(size - 7, 0);
+
+    /* 定时图案 */
+    for (r = 8; r < size - 8; r++) { if (!fn[r][6]) setF(r, 6, (r % 2) === 0); }
+    for (c = 8; c < size - 8; c++) { if (!fn[6][c]) setF(6, c, (c % 2) === 0); }
+
+    /* 对齐图案 */
+    var pos = ALIGN[v], i, j;
+    for (i = 0; i < pos.length; i++) for (j = 0; j < pos.length; j++) {
+      var ar = pos[i], ac = pos[j];
+      if (fn[ar][ac]) continue;
+      for (r = -2; r <= 2; r++) for (c = -2; c <= 2; c++) {
+        var on2 = Math.max(Math.abs(r), Math.abs(c)) !== 1;
+        setF(ar + r, ac + c, on2);
+      }
+    }
+
+    /* 暗模块 + 预留格式区 */
+    setF(size - 8, 8, true);
+    for (i = 0; i <= 8; i++) { if (!fn[i][8]) setF(i, 8, false); if (!fn[8][i]) setF(8, i, false); }
+    for (i = 0; i < 8; i++) { setF(8, size - 1 - i, false); setF(size - 1 - i, 8, false); }
+
+    /* 版本信息（v>=7） */
+    if (v >= 7) {
+      var rem = v, bits;
+      for (i = 0; i < 12; i++) rem = (rem << 1) ^ (((rem >>> 11) & 1) * 0x1F25);
+      bits = v << 12 | rem;
+      for (i = 0; i < 18; i++) {
+        var bit = (bits >>> i) & 1;
+        var a = size - 11 + (i % 3), b = Math.floor(i / 3);
+        setF(b, a, bit); setF(a, b, bit);
+      }
+    }
+
+    /* 数据位之字形填充 */
+    var allBits = toBits(codewords), bi = 0;
+    for (var right = size - 1; right >= 1; right -= 2) {
+      if (right === 6) right = 5;
+      for (var vert = 0; vert < size; vert++) {
+        for (j = 0; j < 2; j++) {
+          var col = right - j;
+          var upward = ((right + 1) & 2) === 0;
+          var row = upward ? size - 1 - vert : vert;
+          if (!fn[row][col]) {
+            mod[row][col] = (bi < allBits.length) ? allBits[bi++] : 0;
+          }
+        }
+      }
+    }
+
+    /* 掩码 */
+    for (r = 0; r < size; r++) for (c = 0; c < size; c++) {
+      if (fn[r][c]) continue;
+      var inv;
+      switch (mask) {
+        case 0: inv = ((r + c) % 2) === 0; break;
+        case 1: inv = (r % 2) === 0; break;
+        case 2: inv = (c % 3) === 0; break;
+        case 3: inv = ((r + c) % 3) === 0; break;
+        case 4: inv = ((Math.floor(r / 2) + Math.floor(c / 3)) % 2) === 0; break;
+        case 5: inv = ((r * c) % 2) + ((r * c) % 3) === 0; break;
+        case 6: inv = ((((r * c) % 2) + ((r * c) % 3)) % 2) === 0; break;
+        default: inv = ((((r + c) % 2) + ((r * c) % 3)) % 2) === 0; break;
+      }
+      if (inv) mod[r][c] ^= 1;
+    }
+
+    /* 格式信息（L=01）*/
+    var data = (1 << 3) | mask;  /* 纠错 L 的 formatBits = 01 */
+    var rem2 = data;
+    for (i = 0; i < 10; i++) rem2 = (rem2 << 1) ^ (((rem2 >>> 9) & 1) * 0x537);
+    var fbits = ((data << 10) | rem2) ^ 0x5412;
+    function bitAt(x) { return (fbits >>> x) & 1; }
+    for (i = 0; i <= 5; i++) setF(i, 8, bitAt(i));
+    setF(7, 8, bitAt(6)); setF(8, 8, bitAt(7)); setF(8, 7, bitAt(8));
+    for (i = 9; i < 15; i++) setF(8, 14 - i, bitAt(i));
+    for (i = 0; i < 8; i++) setF(8, size - 1 - i, bitAt(i));
+    for (i = 8; i < 15; i++) setF(size - 15 + i, 8, bitAt(i));
+    setF(size - 8, 8, true);
+
+    return { size: size, mod: mod };
+  }
+
+  /* ---------- 惩罚评分 ---------- */
+  function penalty(mod, size) {
+    var score = 0, r, c, i;
+
+    /* 1. 行/列连续 5 个以上同色 */
+    for (r = 0; r < size; r++) {
+      var runR = 1, runC = 1;
+      for (c = 1; c < size; c++) {
+        if (mod[r][c] === mod[r][c - 1]) { runR++; if (runR === 5) score += 3; else if (runR > 5) score += 1; }
+        else runR = 1;
+        if (mod[c][r] === mod[c - 1][r]) { runC++; if (runC === 5) score += 3; else if (runC > 5) score += 1; }
+        else runC = 1;
+      }
+    }
+
+    /* 2. 2x2 同色块 */
+    for (r = 0; r < size - 1; r++) for (c = 0; c < size - 1; c++) {
+      var v0 = mod[r][c];
+      if (v0 === mod[r][c + 1] && v0 === mod[r + 1][c] && v0 === mod[r + 1][c + 1]) score += 3;
+    }
+
+    /* 3. 类似定位图案 1011101 0000 / 0000 1011101 */
+    function hasPattern(arr) {
+      var s = arr.join(""), n = 0, idx = -1;
+      var p1 = "10111010000", p2 = "00001011101";
+      while ((idx = s.indexOf(p1, idx + 1)) !== -1) n++;
+      idx = -1;
+      while ((idx = s.indexOf(p2, idx + 1)) !== -1) n++;
+      return n;
+    }
+    for (r = 0; r < size; r++) {
+      var rowArr = [], colArr = [];
+      for (c = 0; c < size; c++) { rowArr.push(mod[r][c]); colArr.push(mod[c][r]); }
+      score += 40 * (hasPattern(rowArr) + hasPattern(colArr));
+    }
+
+    /* 4. 深色比例 */
+    var dark = 0;
+    for (r = 0; r < size; r++) for (c = 0; c < size; c++) if (mod[r][c]) dark++;
+    var total = size * size;
+    var k = Math.floor(Math.abs(dark * 100 / total - 50) / 5);
+    score += k * 10;
+
+    return score;
+  }
+
+  function make(text) {
+    var bytes = utf8Bytes(String(text));
+    var v = pickVersion(bytes.length);
+    if (!v) throw new Error("内容过长");
+    var cw = makeCodewords(bytes, v);
+
+    var best = null, bestScore = Infinity, bestMask = 0;
+    for (var m = 0; m < 8; m++) {
+      var out = makeMatrix(v, cw, m);
+      var sc = penalty(out.mod, out.size);
+      if (sc < bestScore) { bestScore = sc; best = out; bestMask = m; }
+    }
+    return { size: best.size, modules: best.mod, version: v, mask: bestMask, bytes: bytes.length };
+  }
+
+  return { make: make };
+});
+
+
+/* -------------------- 七点五、跨设备同步（v0.3A） -------------------- */
+/* 数据存在用户自己的 Supabase 项目里，只通过两个 RPC 读写：
+   表被 RLS 锁死，匿名密钥拿不到任何一行，只能调 ttr_pull / ttr_push。
+   本地 localStorage 仍是主存储；同步只是加一层，断网/失败完全不影响本地记录。 */
+
+var SYNC_URL = "https://jspdemgigieviomippcn.supabase.co";
+var SYNC_KEY = "sb_publishable_rDhhWJG2jGL-qF6N9-xZzQ_UY64cOS7";
+var SYNC_CFG_KEY = "my-time-records:sync:v1";
+var SYNC_MIN_CODE = 12;
+var SYNC_THROTTLE_MS = 2500;
+
+var syncCfg = { enabled: false, code: "", lastRev: 0, lastAt: 0 };
+var syncRt = { dirty: false, running: false, timer: null, err: "" };
+
+function syncEsc(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function syncClone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function loadSyncCfg() {
+  var raw = null;
+  try { raw = window.localStorage.getItem(SYNC_CFG_KEY); } catch (e) { raw = null; }
+  if (!raw) return;
+  var o = null;
+  try { o = JSON.parse(raw); } catch (e) { return; }
+  if (!o || typeof o !== "object") return;
+  syncCfg.code = (typeof o.code === "string") ? o.code : "";
+  syncCfg.lastRev = (typeof o.lastRev === "number" && isFinite(o.lastRev) && o.lastRev >= 0) ? o.lastRev : 0;
+  syncCfg.lastAt = (typeof o.lastAt === "number" && isFinite(o.lastAt)) ? o.lastAt : 0;
+  syncCfg.enabled = (o.enabled === true) && syncCfg.code.length >= SYNC_MIN_CODE;
+}
+
+function persistSyncCfg() {
+  try { window.localStorage.setItem(SYNC_CFG_KEY, JSON.stringify(syncCfg)); } catch (e) {}
+}
+
+/* ---------- 网络层：只用 apikey 头，无需 Authorization ---------- */
+function syncRpc(fn, body) {
+  return fetch(SYNC_URL + "/rest/v1/rpc/" + fn, {
+    method: "POST",
+    headers: { "apikey": SYNC_KEY, "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  }).then(function (res) {
+    return res.text().then(function (txt) {
+      var js = null;
+      try { js = txt ? JSON.parse(txt) : null; } catch (e) { js = null; }
+      if (!res.ok) {
+        var m = (js && (js.message || js.hint)) ? String(js.message || js.hint) : ("HTTP " + res.status);
+        throw new Error(m);
+      }
+      return js;
+    });
+  });
+}
+
+function syncPull() {
+  return syncRpc("ttr_pull", { p_code: syncCfg.code }).then(function (rows) {
+    if (!Array.isArray(rows) || !rows.length) return null;
+    var row = rows[0];
+    if (!row || !row.payload || typeof row.payload !== "object") return null;
+    return { payload: row.payload, rev: Number(row.rev) || 0 };
+  });
+}
+
+function syncPush(payload, baseRev) {
+  return syncRpc("ttr_push", { p_code: syncCfg.code, p_payload: payload, p_base_rev: baseRev })
+    .then(function (rows) {
+      var row = (Array.isArray(rows) && rows.length) ? rows[0] : null;
+      if (!row) throw new Error("推送未返回结果");
+      return { rev: Number(row.rev) || 0, conflict: row.conflict === true };
+    });
+}
+
+/* ---------- 应用远端状态：直接写盘 + 重绘，绝不调 save()（否则会再触发同步） ---------- */
+function applyRemoteState(payload) {
+  state = sanitizeState(payload);
+  try { ensureChoreProject(state); } catch (e) {}
+  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  render();
+  renderSyncBar();
+}
+
+/* ---------- 合并：远端为基底，把本地独有的项目/段补进去 ---------- */
+function mergeRemote(localS, remoteS) {
+  var out = syncClone(remoteS);
+  if (!Array.isArray(out.projects)) out.projects = [];
+  if (!out.days || typeof out.days !== "object") out.days = {};
+
+  var rp = {}, taken = {}, i, k;
+  for (i = 0; i < out.projects.length; i++) { rp[out.projects[i].id] = out.projects[i]; taken[out.projects[i].id] = true; }
+
+  var localProj = Array.isArray(localS.projects) ? localS.projects : [];
+  var pidMap = {};
+
+  function freshPid(base) {
+    var n = 1, cand = base + "_m";
+    while (taken[cand]) { n++; cand = base + "_m" + n; }
+    return cand;
+  }
+
+  for (i = 0; i < localProj.length; i++) {
+    var lp = localProj[i];
+    if (!lp || !lp.id) continue;
+    var same = rp[lp.id];
+    if (!same) {
+      var c1 = syncClone(lp);
+      out.projects.push(c1); rp[c1.id] = c1; taken[c1.id] = true;
+      pidMap[lp.id] = c1.id;
+    } else if (String(same.name == null ? "" : same.name) === String(lp.name == null ? "" : lp.name)) {
+      pidMap[lp.id] = lp.id;
+    } else {
+      /* 两台设备各自新建却撞了同一个 id：给本地这个换新 id，并迁移它的记录 */
+      var nid = freshPid(lp.id);
+      var c2 = syncClone(lp);
+      c2.id = nid;
+      out.projects.push(c2); rp[nid] = c2; taken[nid] = true;
+      pidMap[lp.id] = nid;
+    }
+  }
+
+  var ldays = (localS.days && typeof localS.days === "object") ? localS.days : {};
+  for (var dk in ldays) {
+    if (!Object.prototype.hasOwnProperty.call(ldays, dk)) continue;
+    var bucket = ldays[dk];
+    if (!bucket || typeof bucket !== "object") continue;
+    for (var pid in bucket) {
+      if (!Object.prototype.hasOwnProperty.call(bucket, pid)) continue;
+      var arr = bucket[pid];
+      if (!Array.isArray(arr) || !arr.length) continue;
+      var np = pidMap[pid] || pid;
+      if (!rp[np]) continue;                    /* 项目已不存在：随项目一起丢弃 */
+      if (!out.days[dk]) out.days[dk] = {};
+      if (!Array.isArray(out.days[dk][np])) out.days[dk][np] = [];
+      var target = out.days[dk][np], seen = {}, a, b;
+      for (a = 0; a < target.length; a++) seen[target[a].id] = true;
+      for (b = 0; b < arr.length; b++) {
+        var seg = arr[b];
+        if (!seg || !seg.id) continue;
+        if (!seen[seg.id]) { target.push(syncClone(seg)); seen[seg.id] = true; continue; }
+        /* 同 id：内容一致视为同一条；不一致说明两端各自生成撞号，改名后都保留 */
+        var exist = null, t;
+        for (t = 0; t < target.length; t++) if (target[t].id === seg.id) { exist = target[t]; break; }
+        var diff = !exist
+          || Number(exist.start) !== Number(seg.start)
+          || Number(exist.end === null ? -1 : exist.end) !== Number(seg.end === null ? -1 : seg.end)
+          || String(exist.note == null ? "" : exist.note) !== String(seg.note == null ? "" : seg.note);
+        if (diff) {
+          var nsid = seg.id + "_m", c = 1;
+          while (seen[nsid]) { c++; nsid = seg.id + "_m" + c; }
+          var ns = syncClone(seg); ns.id = nsid;
+          target.push(ns); seen[nsid] = true;
+        }
+      }
+    }
+  }
+
+  out.nextId = Math.max(Number(out.nextId) || 1, Number(localS.nextId) || 1);
+  return out;
+}
+
+/* ---------- 调度 ---------- */
+function markSyncDirty() {
+  if (!syncCfg.enabled || syncRt.running) return;
+  syncRt.dirty = true;
+  scheduleSync();
+}
+
+function scheduleSync() {
+  if (!syncCfg.enabled) return;
+  if (syncRt.timer) { try { window.clearTimeout(syncRt.timer); } catch (e) {} }
+  syncRt.timer = window.setTimeout(function () {
+    syncRt.timer = null;
+    runSync(false);
+  }, SYNC_THROTTLE_MS);
+}
+
+/* ---------- 主流程：pull → 判断 → merge/push → 冲突重试一次 ---------- */
+function runSync(manual) {
+  if (!syncCfg.enabled) return Promise.resolve();
+  if (syncRt.running) return Promise.resolve();
+  syncRt.running = true;
+  if (manual) syncRt.err = "";
+  renderSyncBar();
+
+  function settle(ok, msg) {
+    syncRt.running = false;
+    if (ok) {
+      syncRt.err = "";
+      syncRt.dirty = false;
+      syncCfg.lastAt = Date.now();
+      persistSyncCfg();
+    } else {
+      syncRt.err = msg || "同步失败";
+    }
+    renderSyncBar();
+    renderFooterNote();
+  }
+
+  return syncPull().then(function (remote) {
+    if (!remote) {
+      return { push: syncClone(state), base: 0, applyAfter: false };
+    }
+    var rev = remote.rev;
+
+    if (rev === syncCfg.lastRev && !syncRt.dirty) return { done: true };
+
+    if (rev !== syncCfg.lastRev && !syncRt.dirty) {
+      /* 云端更新、本地无改动：直接采用云端（删除操作因此能生效） */
+      applyRemoteState(remote.payload);
+      syncCfg.lastRev = rev;
+      persistSyncCfg();
+      return { done: true };
+    }
+
+    if (rev !== syncCfg.lastRev && syncRt.dirty) {
+      /* 两端都有改动：合并后推送 */
+      return { push: mergeRemote(state, remote.payload), base: rev, applyAfter: true };
+    }
+
+    return { push: syncClone(state), base: rev, applyAfter: false };
+  }).then(function (plan) {
+    if (!plan || plan.done) return null;
+    return syncPush(plan.push, plan.base).then(function (r) {
+      if (!r.conflict) {
+        syncCfg.lastRev = r.rev;
+        persistSyncCfg();
+        if (plan.applyAfter) applyRemoteState(plan.push);
+        return null;
+      }
+      /* 版本被别的设备抢先推进：重新拉取、合并、重推一次 */
+      return syncPull().then(function (again) {
+        var rev2 = again ? again.rev : 0;
+        var merged = again ? mergeRemote(state, again.payload) : syncClone(state);
+        return syncPush(merged, rev2).then(function (r2) {
+          if (r2.conflict) throw new Error("两台设备同时在改，请稍后再试");
+          syncCfg.lastRev = r2.rev;
+          persistSyncCfg();
+          applyRemoteState(merged);
+          return null;
+        });
+      });
+    });
+  }).then(function () {
+    settle(true);
+  }).catch(function (e) {
+    settle(false, (e && e.message) ? e.message : "网络异常");
+  });
+}
+
+/* ---------- UI ---------- */
+function syncAgoText() {
+  if (!syncCfg.lastAt) return "尚未同步";
+  var d = Date.now() - syncCfg.lastAt;
+  if (d < 45000) return "刚刚";
+  if (d < 3600000) return Math.round(d / 60000) + " 分钟前";
+  if (d < 86400000) return Math.round(d / 3600000) + " 小时前";
+  return Math.round(d / 86400000) + " 天前";
+}
+
+/* ---------- 配对（v0.3B）：扫码代替手输同步码 ---------- */
+var SYNC_PAIRED_NOW = false;
+
+function genPairCode() {
+  var alpha = "abcdefghijkmnpqrstuvwxyz23456789"; /* 去掉 l/o/0/1 等易混字符 */
+  var arr = new Uint8Array(10), i, s = "";
+  if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(arr);
+  else for (i = 0; i < 10; i++) arr[i] = Math.floor(Math.random() * 256);
+  for (i = 0; i < 10; i++) s += alpha.charAt(arr[i] % alpha.length);
+  return "ok-" + s.slice(0, 6) + "-" + s.slice(6);
+}
+
+function pairLinkFor(code) {
+  var origin = "https://oktime.cc", p = "/";
+  try {
+    if (/^https?:$/i.test(location.protocol)) origin = location.origin;
+    p = location.pathname || "/";
+  } catch (e) {}
+  p = p.replace(/[^/]*$/, "");            /* 去掉文件名，只留目录 */
+  if (p === "") p = "/";
+  return origin + p + "?pair=" + encodeURIComponent(code);
+}
+
+function paintQR(canvas, text) {
+  if (!canvas || typeof QRCore === "undefined") return false;
+  var r;
+  try { r = QRCore.make(String(text)); } catch (e) { return false; }
+  var quiet = 4, total = r.size + quiet * 2;
+  var scale = Math.max(2, Math.floor(184 / total));
+  var px = total * scale;
+  var dpr = window.devicePixelRatio || 1;
+  var ctx = canvas.getContext("2d");
+  if (!ctx) return false;
+  canvas.width = Math.round(px * dpr);
+  canvas.height = Math.round(px * dpr);
+  canvas.style.width = px + "px";
+  canvas.style.height = px + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(0, 0, px, px);
+  ctx.fillStyle = "#000000";
+  for (var i = 0; i < r.size; i++) {
+    for (var j = 0; j < r.size; j++) {
+      if (r.modules[i][j]) ctx.fillRect((j + quiet) * scale, (i + quiet) * scale, scale, scale);
+    }
+  }
+  return true;
+}
+
+function openPairModal() {
+  if (!syncCfg.enabled) { openSyncModal(); return; }
+  var link = pairLinkFor(syncCfg.code);
+  var panel =
+    '<div class="modal-title">配对一台新设备</div>' +
+    '<div class="modal-desc">用另一台设备的相机或微信扫这个码，它会自动打开同一份记录并开始同步，不需要手输任何东西。</div>' +
+    '<div class="pair-box"><div class="pair-qr"><canvas id="pair-qr"></canvas></div></div>' +
+    '<div class="pair-code">' + syncEsc(syncCfg.code) + '</div>' +
+    '<label class="modal-label" for="pair-link">或者复制这条链接，发到你自己的另一台设备</label>' +
+    '<div class="pair-link-row">' +
+      '<div class="pair-link" id="pair-link">' + syncEsc(link) + '</div>' +
+      '<button type="button" class="btn btn-primary" data-action="pair-copy">复制</button>' +
+    '</div>' +
+    '<div class="sync-hint">这条链接等同于密码，只发给你自己的设备。别人拿到它就能读到你的记录。</div>' +
+    '<div class="modal-actions"><button type="button" class="btn btn-ghost" data-action="modal-backdrop">完成</button></div>';
+  openModalShell(panel, { kind: "pair" });
+  if (!paintQR(document.getElementById("pair-qr"), link)) showModalError("二维码生成失败，请改用下面的链接");
+}
+
+function copyPairLink() {
+  var box = document.getElementById("pair-link");
+  if (!box) return;
+  var text = String(box.textContent || "").trim();
+  function fallback() {
+    try {
+      var rng = document.createRange();
+      rng.selectNodeContents(box);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(rng);
+      showToast(document.execCommand("copy") ? "已复制链接" : "请长按选中后复制");
+    } catch (e) { showToast("请长按选中后复制"); }
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { showToast("已复制链接"); }, fallback);
+  } else fallback();
+}
+
+function fillRandomCode() {
+  var input = document.getElementById("sync-code");
+  if (!input) return;
+  input.value = genPairCode();
+  showModalError("");
+  showToast("已生成，点「启用并同步」生效");
+}
+
+/* 读取 ?pair= / #pair= ，配对成功后立刻把参数从地址栏抹掉（不留历史、不传给外部） */
+function readPairParam() {
+  var q = "", h = "";
+  try { q = String(location.search || ""); } catch (e) {}
+  try { h = String(location.hash || ""); } catch (e) {}
+  var m = /[?&]pair=([^&#]+)/.exec(q) || /[#&]pair=([^&#]+)/.exec(h);
+  if (!m) return "";
+  var v = "";
+  try { v = decodeURIComponent(m[1]); } catch (e) { v = m[1]; }
+  return String(v || "").trim();
+}
+
+function stripPairParam() {
+  try {
+    var q = String(location.search || "").replace(/([?&])pair=[^&#]*/g, "$1");
+    q = q.replace(/[?&]+$/, "");
+    if (q === "?") q = "";
+    var h = String(location.hash || "").replace(/([#&])pair=[^&#]*/g, "$1").replace(/[#&]+$/, "");
+    var url = location.pathname + q + h;
+    if (window.history && history.replaceState) history.replaceState(null, "", url);
+  } catch (e) {}
+}
+
+function applyPairFromUrl() {
+  var code = readPairParam();
+  if (!code) return false;
+  loadSyncCfg();   /* 必须先读本机已有配置，否则判断不出「这台已经配对了」 */
+  stripPairParam();
+  if (!/^[A-Za-z0-9._~-]+$/.test(code) || code.length < SYNC_MIN_CODE) {
+    showToast("配对链接无效，请重新扫码");
+    return true;
+  }
+  if (syncCfg.enabled && syncCfg.code === code) {
+    showToast("这台设备已经配对了");
+    return true;
+  }
+  syncCfg.code = code;
+  syncCfg.enabled = true;
+  syncCfg.lastRev = 0;
+  persistSyncCfg();
+  /* 本机已有记录：视为待上行，走合并，云端不会覆盖掉 */
+  syncRt.dirty = hasAnySegment(state);
+  SYNC_PAIRED_NOW = true;
+  renderFooterNote();
+  renderSyncBar();
+  showToast("已配对，正在同步…");
+  runSync(true).then(function () {
+    if (syncRt.err) showToast("配对成功，但同步失败：" + syncRt.err);
+    else showToast("已配对，同步完成");
+  });
+  return true;
+}
+
+function renderSyncBar() {
+
+  var el = document.getElementById("sync-bar");
+  if (!el) return;
+  if (!syncCfg.enabled) {
+    el.innerHTML = '<button type="button" class="sync-bar" data-action="sync-open">' +
+      '<span class="sync-dot"></span>' +
+      '<span class="sync-text">跨设备同步 · 未启用</span>' +
+      '<span class="sync-arrow">›</span></button>';
+    return;
+  }
+  var dot = "sync-dot", text;
+  if (syncRt.running) { dot += " sync-dot-busy"; text = "同步中…"; }
+  else if (syncRt.err) { dot += " sync-dot-err"; text = "同步失败 · " + syncRt.err; }
+  else { dot += " sync-dot-on"; text = "已同步 · " + syncAgoText(); }
+  el.innerHTML = '<button type="button" class="sync-bar" data-action="sync-open">' +
+    '<span class="' + dot + '"></span>' +
+    '<span class="sync-text">' + syncEsc(text) + '</span>' +
+    '<span class="sync-arrow">›</span></button>';
+}
+
+function renderFooterNote() {
+  var el = document.getElementById("footer-note-text");
+  if (!el) return;
+  el.textContent = syncCfg.enabled ? "数据保存在本机浏览器 · 已开启跨设备同步" : "数据保存在本机浏览器";
+}
+
+function openSyncModal() {
+  var enabled = syncCfg.enabled;
+  var panel =
+    '<div class="modal-title">跨设备同步</div>' +
+    '<div class="modal-desc">用同一个同步码，在电脑和手机上看到同一份记录。数据存在你自己的数据库里，关掉同步不影响本地记录。</div>' +
+    '<label class="modal-label" for="sync-code">同步码（至少 ' + SYNC_MIN_CODE + ' 位）</label>' +
+    '<input class="modal-input" id="sync-code" type="text" autocomplete="off" spellcheck="false" placeholder="例如 ok-7f3k2m9q-x8v4" value="' + syncEsc(syncCfg.code) + '">' +
+    '<div class="sync-hint">两台设备输入完全相同的同步码即可。同步码只保存在各自设备上，服务器只存它的哈希，不存明文。</div>' +
+    (enabled ? '' : '<div class="sync-gen"><button type="button" class="btn btn-ghost" data-action="sync-gen">随机生成一个</button></div>') +
+    (enabled ? '<div class="sync-meta">上次同步：' + (syncCfg.lastAt ? new Date(syncCfg.lastAt).toLocaleString() : "尚未") + (syncRt.err ? "（上次失败：" + syncEsc(syncRt.err) + "）" : "") + '</div>' : '') +
+    '<div class="modal-error" id="modal-error"></div>' +
+    (enabled ? '<div class="pair-entry"><button type="button" class="btn btn-ghost" data-action="pair-open">配对一台新设备 ›</button></div>' : '') +
+    '<div class="modal-actions">' +
+      (enabled ? '<button type="button" class="btn btn-ghost" data-action="sync-off">关闭同步</button>' : '') +
+      '<button type="button" class="btn btn-ghost" data-action="modal-backdrop">取消</button>' +
+      '<button type="button" class="btn btn-primary" data-action="sync-save">' + (enabled ? "保存并同步" : "启用并同步") + '</button>' +
+    '</div>';
+  openModalShell(panel, { kind: "sync" });
+}
+
+function saveSyncFromModal() {
+  var input = document.getElementById("sync-code");
+  var code = input ? String(input.value || "").trim() : "";
+  if (code.length < SYNC_MIN_CODE) { showModalError("同步码至少 " + SYNC_MIN_CODE + " 位"); return; }
+  var wasEnabled = syncCfg.enabled;
+  var changed = (code !== syncCfg.code);
+  syncCfg.code = code;
+  syncCfg.enabled = true;
+  if (changed) syncCfg.lastRev = 0;
+  persistSyncCfg();
+  /* 首次启用：本地已有记录 -> 视为待上行，走合并而不是被云端覆盖 */
+  syncRt.dirty = hasAnySegment(state);
+  closeModal();
+  renderFooterNote();
+  renderSyncBar();
+  showToast("正在同步…");
+  runSync(true).then(function () {
+    if (syncRt.err) { showToast("同步失败：" + syncRt.err); return; }
+    if (!wasEnabled) {
+      /* 首次启用：直接把配对码递到眼前，手机扫一下就完事 */
+      showToast("已启用同步，用手机扫这个码");
+      openPairModal();
+      return;
+    }
+    showToast(changed ? "已启用同步" : "同步完成");
+  });
+}
+
+function disableSync() {
+  syncCfg.enabled = false;
+  persistSyncCfg();
+  closeModal();
+  renderSyncBar();
+  renderFooterNote();
+  showToast("已关闭同步，本地记录不受影响");
+}
+
+function hasAnySegment(st) {
+  var days = (st && st.days) ? st.days : {};
+  for (var dk in days) {
+    if (!Object.prototype.hasOwnProperty.call(days, dk)) continue;
+    var b = days[dk];
+    if (!b || typeof b !== "object") continue;
+    for (var pid in b) {
+      if (!Object.prototype.hasOwnProperty.call(b, pid)) continue;
+      if (Array.isArray(b[pid]) && b[pid].length) return true;
+    }
+  }
+  return false;
+}
+
+function initSync() {
+  loadSyncCfg();
+  renderSyncBar();
+  renderFooterNote();
+  if (syncCfg.enabled && !SYNC_PAIRED_NOW) {
+    window.setTimeout(function () { runSync(false); }, 700);
+  }
+  /* 回到前台 / 恢复网络时补一次 */
+  window.addEventListener("online", function () {
+    if (syncCfg.enabled && (syncRt.dirty || syncRt.err)) runSync(false);
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && syncCfg.enabled && (syncRt.dirty || syncRt.err)) runSync(false);
+  });
+  /* 兜底：失败重试 + 刷新「N 分钟前」 */
+  window.setInterval(function () {
+    if (syncCfg.enabled && !syncRt.running && (syncRt.dirty || syncRt.err)) runSync(false);
+    else renderSyncBar();
+  }, 15000);
+}
+
 /* -------------------- 八、初始化 -------------------- */
 
 function init() {
@@ -3135,14 +4384,18 @@ function init() {
     normalizeDayRollover(k);
     save();
   }
+  historyDayKey = bjTodayKey();
   render();
   /* 事件委托：只在 document 上绑定一次，render 重建 DOM 不重复绑定 */
   document.addEventListener("click", onDocumentClick);
   document.addEventListener("keydown", onDocumentKeydown);
+  document.addEventListener("change", onDocumentChange);
   /* 约 30 秒轮询，仅检测是否跨天，不刷新任何数字 */
   window.setInterval(checkDayAndRefresh, 30000);
   /* 1s 只更新状态条上的「已计时」数字，绝不整页 render（避免打断菜单/弹层/输入焦点） */
   window.setInterval(tickRunningElapsed, 1000);
+  applyPairFromUrl();
+  initSync();
 }
 
 init();
@@ -3159,7 +4412,43 @@ window.TTR = {
   splitSegmentByMidnight: splitSegmentByMidnight,
   PALETTE: PALETTE,
   STORAGE_KEY: STORAGE_KEY,
-  openCardPreview: openCardPreview
+  openCardPreview: openCardPreview,
+  bjTodayKey: bjTodayKey,
+  bjDayKeyOf: bjDayKeyOf,
+  shiftDayKey: shiftDayKey,
+  renderHistory: renderHistory,
+  shiftHistoryDay: shiftHistoryDay,
+  normalizeHistoryDate: normalizeHistoryDate,
+  defaultAddRangeForDay: defaultAddRangeForDay,
+  openAddHourRecordModal: openAddHourRecordModal,
+  saveHourRecord: saveHourRecord,
+  toggleAddInlineNew: toggleAddInlineNew,
+  setAddInlineGroup: setAddInlineGroup,
+  isAddInlineNew: isAddInlineNew,
+  createProjectInline: createProjectInline,
+  currentAddInlineGroup: currentAddInlineGroup,
+  getHistoryDayKey: function () { return historyDayKey; },
+  setHistoryDayKey: function (k) { historyDayKey = normalizeHistoryDate(k) || bjTodayKey(); renderHistory(); },
+  syncCfg: function () { return syncCfg; },
+  syncRt: function () { return syncRt; },
+  runSync: runSync,
+  mergeRemote: mergeRemote,
+  markSyncDirty: markSyncDirty,
+  openSyncModal: openSyncModal,
+  saveSyncFromModal: saveSyncFromModal,
+  disableSync: disableSync,
+  applyRemoteState: applyRemoteState,
+  hasAnySegment: hasAnySegment,
+  SYNC_URL: SYNC_URL,
+  SYNC_KEY: SYNC_KEY,
+  SYNC_CFG_KEY: SYNC_CFG_KEY,
+  genPairCode: genPairCode,
+  pairLinkFor: pairLinkFor,
+  openPairModal: openPairModal,
+  applyPairFromUrl: applyPairFromUrl,
+  readPairParam: readPairParam,
+  paintQR: paintQR,
+  QRCore: (typeof QRCore !== 'undefined' ? QRCore : null)
 };
 </script>
 </body>
