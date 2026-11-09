@@ -203,7 +203,19 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .app-version{display:inline-block;margin-left:8px;font-size:11px;font-weight:600;color:#AEB8C8;letter-spacing:.6px;vertical-align:1px;}
 
 /* ========== 跨设备同步条（v0.3A） ========== */
-#sync-bar{margin:16px 0 0;}
+#sync-bar{margin:16px 0 0;display:flex;align-items:stretch;gap:8px;}
+#sync-bar .sync-bar{flex:1 1 0;min-width:0;width:auto;}
+/* v0.3H：立即同步 —— 与设置入口并排的独立按钮，仅启用同步时出现 */
+.sync-now{
+  flex:0 0 auto;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:5px;
+  min-width:44px;min-height:44px;padding:0 13px;
+  border:1px solid #D9E6FB;border-radius:14px;background:#F2F7FF;color:var(--blue);
+  font-size:13px;font-weight:600;line-height:1;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
+}
+.sync-now:active{background:#E7F0FF;transform:scale(.99);}
+.sync-now:disabled{opacity:.5;cursor:default;transform:none;}
+.sync-now-ico{font-size:17px;line-height:1;}
 .sync-bar{
   display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;
   padding:11px 14px;border:1px solid #E4EAF3;border-radius:14px;background:#fff;
@@ -242,6 +254,8 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .pair-link-row .btn{flex:0 0 auto;align-self:center;padding-left:16px;padding-right:16px;}
 @media (max-width:360px){
   .sync-bar{padding:10px 12px;font-size:13px;border-radius:12px;}
+  .sync-now{padding:0 9px;font-size:12px;border-radius:12px;}
+  .sync-now-ico{font-size:15px;}
 }
 
 /* ========== Toast ========== */
@@ -305,10 +319,16 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .rec-btns .icon-btn{width:32px;height:32px;flex:0 0 32px;border-radius:9px;font-size:20px;}
 .rec-edit{color:#6E7C93;}
 .rec-edit:active{color:var(--blue);background:#EEF3FB;}
-.edit-time-row{display:flex;gap:10px;}
+/* v0.3D：iOS Safari 的 input[type=time] 有原生固有最小宽度，flex 两列会被顶破；
+   grid 的 minmax(0,1fr) 是硬约束，列宽不可能超过容器。 */
+.edit-time-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
 .edit-time-field{flex:1 1 0;min-width:0;}
 .edit-time-field label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px;}
-.edit-time-field .modal-input{height:48px;text-align:center;}
+.edit-time-field .modal-input{
+  height:48px;text-align:center;padding:0 8px;
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  -webkit-appearance:none;appearance:none;font-variant-numeric:tabular-nums;
+}
 .edit-note-label{display:block;font-size:14px;color:var(--muted);margin:12px 0 6px;}
 .edit-preview{font-size:14px;color:var(--blue);margin-top:10px;line-height:1.4;min-height:20px;}
 .edit-preview.invalid{color:#E0453B;}
@@ -425,8 +445,63 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .group-add{flex:0 0 30px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:9px;background:#EAF2FF;color:var(--blue);font-size:20px;font-weight:600;line-height:1;}
 .group-add:active{background:#D6E6FF;}
 .group-empty{font-size:13px;color:#B4BDCB;padding:10px 2px;}
+/* 项目折叠（v0.3E）：每组只显示前 N 项，其余经这行按钮就地展开；与卡片右侧的 ⋯ 菜单区分 */
+.group-more{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;min-height:44px;margin-top:8px;box-sizing:border-box;
+  background:#F4F8FF;border:1px dashed #C9DAF7;border-radius:12px;
+  color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;
+  font-family:inherit;-webkit-tap-highlight-color:transparent;
+}
+.group-more:active{background:#E6F0FF;}
+.group-more.open{background:#EEF4FF;border-style:solid;}
+.group-more .gm-count{background:#E1ECFF;border-radius:10px;padding:1px 8px;font-size:12px;font-weight:700;}
+.group-more .gm-arrow{font-size:18px;line-height:1;}
 .chore-cards{margin-top:6px;border-top:1px solid var(--line);padding-top:2px;}
-@media (max-width:360px){.group-summary{font-size:11px;}.group-add{flex-basis:28px;width:28px;height:28px;font-size:18px;}}
+@media (max-width:360px){.group-summary{font-size:11px;}.group-add{flex-basis:28px;width:28px;height:28px;font-size:18px;}.group-more{font-size:13px;min-height:42px;}}
+/* ===== 项目搜索（v0.3F）=====
+ * 搜索框是 #project-list 之外的静态 DOM，局部重绘项目列表不会重建它，输入焦点得以保留。 */
+.proj-search{
+  display:flex;align-items:center;gap:8px;
+  height:40px;margin:0 0 12px;padding:0 10px;box-sizing:border-box;
+  background:#F4F8FF;border:1px solid #DCE7F8;border-radius:11px;
+}
+.proj-search:focus-within{border-color:var(--blue);background:#fff;}
+.proj-search-icon{flex:0 0 auto;color:#9AA9BE;}
+.proj-search-input{
+  flex:1 1 0;min-width:0;height:100%;border:0;outline:none;background:transparent;
+  color:var(--text);font-size:16px;font-family:inherit;
+  -webkit-appearance:none;appearance:none;
+}
+.proj-search-input::placeholder{color:#A7B4C6;font-size:14px;}
+.proj-search-clear{
+  flex:0 0 26px;width:26px;height:26px;border:0;border-radius:50%;padding:0;
+  background:#E1ECFF;color:var(--blue);font-size:16px;line-height:1;
+  display:none;align-items:center;justify-content:center;cursor:pointer;
+  font-family:inherit;-webkit-tap-highlight-color:transparent;
+}
+.proj-search.has-value .proj-search-clear{display:inline-flex;}
+.proj-search-result{font-size:12px;color:var(--muted);margin:0 0 10px;line-height:1.5;}
+.proj-search-empty{padding:24px 10px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7;}
+@media (max-width:360px){.proj-search{height:38px;}.proj-search-input::placeholder{font-size:13px;}}
+
+/* ===== 项目热度排序（v0.3G）=====
+ * 排序切换按钮位于「我的项目」标题行；次数徽标放在卡片右侧 .proj-today 列内，
+ * 不参与 .proj-top 的 flex 伸缩，避免窄屏下唯一可收缩的 .proj-name 被挤没。 */
+.sort-mode-btn{
+  margin-left:auto;margin-right:6px;padding:5px 10px;border-radius:999px;
+  border:1px solid #C9DAF7;background:#F4F8FF;color:#7C93B4;
+  font-size:12px;font-weight:700;font-family:inherit;white-space:nowrap;line-height:1;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.sort-mode-btn.hot{background:#E1ECFF;border-color:#A9C9F7;color:var(--blue);}
+.sort-mode-btn:active{opacity:.65;}
+.proj-uses{
+  display:block;font-size:10px;font-weight:600;color:#93A6C0;
+  line-height:1.3;letter-spacing:.2px;font-variant-numeric:tabular-nums;
+}
+@media (max-width:360px){.sort-mode-btn{font-size:11px;padding:5px 8px;margin-right:4px;}}
+
 
 /* 圆形图标：两组统一为环形进度；未设目标/上限时显示虚线加号 */
 .goal-orb{
@@ -486,6 +561,11 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .group-choice-btn{flex:1 1 0;min-width:0;height:96px;border-radius:16px;background:#F2F6FD;border:1.5px solid #E1EAF7;color:var(--text);font-size:16px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
 .group-choice-btn .gc-sub{font-size:12px;font-weight:400;color:var(--muted);}
 .group-choice-btn:active{background:#E3EDFF;border-color:var(--blue);}
+/* ========== 项目移动分组（v0.3C）：当前组置灰不可点 ========== */
+.group-choice-btn.disabled{opacity:.45;pointer-events:none;}
+/* 移动弹窗的副标题可能比新建弹窗长：允许两行，靠 stretch 让三个按钮始终等高 */
+.modal-panel.choice-modal .group-choice-btn{height:auto;min-height:96px;padding:10px 6px;}
+.modal-panel.choice-modal .group-choice-btn .gc-sub{line-height:1.4;}
 /* 三选一弹窗窄屏适配：三个并排按钮在 320px 下仍可点、不换行、不横向滚动 */
 @media (max-width:360px){
   .group-choice-row{gap:8px;}
@@ -551,7 +631,14 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card">
       <div class="section-head">
         <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
+        <button type="button" class="sort-mode-btn" id="sort-mode-btn" data-action="toggle-sort-mode" title="当前按调用次数排序，点击切回新建顺序">⇅ 按热度</button>
         <button class="head-action" data-action="add-project">＋ 新建项目</button>
+      </div>
+      <!-- 项目搜索（v0.3F）：静态 DOM，位于 #project-list 之外，局部重绘不会重建它 -->
+      <div class="proj-search" id="proj-search">
+        <svg class="proj-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.8 10.8 L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="proj-search-input" class="proj-search-input" type="text" inputmode="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="搜项目名，直接点开始" aria-label="搜索项目">
+        <button type="button" class="proj-search-clear" data-action="search-clear" aria-label="清空搜索">×</button>
       </div>
       <div data-page-node-id="0AZjBDLAkQjL4TOI2yQDXz" id="project-list"></div>
     </section>
@@ -610,7 +697,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3B</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3H</span></div>
   </div>
 </div>
 
@@ -1070,6 +1157,53 @@ function formatOrbTarget(mins) {
 
 /** 列表显示顺序：普通项目按 sortIndex 降序；重复值按原数组先后（索引小者靠前）；
  *  事来则应固定追加到末尾。返回副本，不改动 state.projects 原数组。 */
+/* ---------- 项目热度排序（v0.3G）----------
+ * 次数不存成计数器，而是从 state.days 的记录段现算：
+ *   - 同步合并按段 id 去重、两端独有的段都保留，所以次数天然是两端之和，一次都不会少；
+ *   - 上线即刻按历史记录排出热度，老数据零迁移；删记录次数自动减。
+ * sortMode 只存独立 localStorage，不进 state、不参与同步，刷新保留，各设备可有自己的偏好。 */
+var SORT_MODE_KEY = "my-time-records:sort-mode:v1";
+var SORT_MODE_HOT = "hot", SORT_MODE_INDEX = "index";
+var sortMode = (function () {
+  try {
+    var v = window.localStorage.getItem(SORT_MODE_KEY);
+    return v === SORT_MODE_INDEX ? SORT_MODE_INDEX : SORT_MODE_HOT;
+  } catch (e) { return SORT_MODE_HOT; }
+})();
+
+/** 遍历所有天的所有记录段，返回 {pid: 段数}；纯读，不改 state、不触发 save。 */
+function useCountMap() {
+  var counts = {};
+  var days = state.days || {};
+  var dks = Object.keys(days);
+  for (var i = 0; i < dks.length; i++) {
+    var bucket = days[dks[i]];
+    if (!bucket || typeof bucket !== "object" || Array.isArray(bucket)) continue;
+    var pids = Object.keys(bucket);
+    for (var j = 0; j < pids.length; j++) {
+      var arr = bucket[pids[j]];
+      if (Array.isArray(arr)) counts[pids[j]] = (counts[pids[j]] || 0) + arr.length;
+    }
+  }
+  return counts;
+}
+
+function toggleSortMode() {
+  sortMode = (sortMode === SORT_MODE_HOT) ? SORT_MODE_INDEX : SORT_MODE_HOT;
+  try { window.localStorage.setItem(SORT_MODE_KEY, sortMode); } catch (e) {}
+  updateSortModeBtn();
+  refreshProjectList();   /* 只局部重绘，不触发 save / 同步钩子 */
+}
+
+function updateSortModeBtn() {
+  var b = document.getElementById("sort-mode-btn");
+  if (!b) return;
+  var hot = sortMode === SORT_MODE_HOT;
+  b.textContent = hot ? "⇅ 按热度" : "⇅ 按顺序";
+  b.classList.toggle("hot", hot);
+  b.title = hot ? "当前按调用次数排序，点击切回新建顺序" : "当前按新建顺序，点击改为按调用次数排序";
+}
+
 function orderedProjectsForDisplay() {
   var ps = Array.isArray(state.projects) ? state.projects : [];
   var normal = [], chore = [];
@@ -1078,8 +1212,13 @@ function orderedProjectsForDisplay() {
     if (isChoreProject(ps[i])) chore.push(entry);
     else normal.push(entry);
   }
+  /* 热度模式：主键调用次数降序，次数相同时回退 sortIndex 降序（新建 / 移动仍是「0 次区」第一），
+     再相同回退原始下标保证稳定；顺序模式完全沿用原来的 sortIndex 降序。系统项目始终沉底。 */
+  var counts = (sortMode === SORT_MODE_HOT) ? useCountMap() : null;
   normal.sort(function (a, b) {
-    var d = sortIndexOf(b.p) - sortIndexOf(a.p);
+    var d = 0;
+    if (counts) d = (counts[b.p.id] || 0) - (counts[a.p.id] || 0);
+    if (d === 0) d = sortIndexOf(b.p) - sortIndexOf(a.p);
     return d !== 0 ? d : (a.idx - b.idx);
   });
   var out = [];
@@ -2131,12 +2270,19 @@ function goalOrbHTML(p, limitByPid, minutesByPid) {
 }
 
 /** 单张项目卡片：沿用原有单行结构，只按组决定圆形图标与右侧小字；无记录时右侧首行留空 */
-function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey) {
+function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey, useCounts) {
   var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
   var hasSegments = segs.length > 0;
   var isRunning = !!running && running.projectId === p.id;
   var lastInt = lastInterruptionFor(state, dayKey, p.id);
   var pid = esc(p.id);
+  /* v0.3G：次数徽标放进右侧「今日合计」列，不参与 .proj-top 的 flex 伸缩，
+     否则 320px 窄屏下唯一可收缩的 .proj-name 会被挤没。系统项目不显示。 */
+  var usesHTML = "";
+  if (!isChoreProject(p) && useCounts) {
+    var usesN = useCounts[p.id] || 0;
+    usesHTML = '<span class="proj-uses" title="累计调用 ' + usesN + ' 次">累计 ' + usesN + ' 次</span>';
+  }
   /* more 组 / 事来则应不显示任何上限相关信息；「上次中断」位置规则不变 */
   var limitRow = (groupOf(p) === GROUP_LESS) ? limitByPid[p.id] : null;
   return '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
@@ -2148,6 +2294,7 @@ function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey) {
         '<span class="proj-spacer"></span>' +
         goalOrbHTML(p, limitByPid, minutesByPid) +
         '<span class="proj-today">' +
+          usesHTML +
           '<span class="proj-today-main">' + (hasSegments ? "今日合计 " + formatMinutes(minutesByPid[p.id] || 0) : "") + '</span>' +
           '<span class="today-sub">' + limitNoteHTML(limitRow, lastInt) + '</span>' +
         '</span>' +
@@ -2157,15 +2304,89 @@ function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey) {
   '</div>';
 }
 
+/* ---------- 项目折叠（v0.3E） ----------
+ * 每组常驻显示前 GROUP_VISIBLE_COUNT 项，进行中的项目即使在折叠区也强制可见。
+ * expandedGroups 是纯 UI 状态：只在内存里，刷新回到收起，不写 state / localStorage / 同步。 */
+var GROUP_VISIBLE_COUNT = 3;
+var expandedGroups = {};
+
+function toggleGroupExpanded(group) {
+  expandedGroups[group] = !expandedGroups[group];
+  /* 只重绘项目列表，其他模块位置完全不动（与「今日记录」折叠同一套路） */
+  var now = Date.now(), dk = dayKeyOf(now);
+  renderProjectList(computeDayStats(state, dk, now), findRunningSegment(state), dk);
+}
+
+/* ---------- 项目搜索（v0.3F） ----------
+ * searchQuery 是纯 UI 状态：只在内存里，刷新清空，不写 state / localStorage / 同步。
+ * 搜索框是 #project-list 之外的静态 DOM，这里只局部重绘项目列表（与折叠按钮同一套路），
+ * 因此边打字边过滤不会丢输入焦点，也不触发 save() / 同步钩子。 */
+var SEARCH_MAX_RESULTS = 20;
+var searchQuery = "";
+
+function searchMatch(p, words) {
+  var name = String(p.name || "").toLowerCase();
+  for (var i = 0; i < words.length; i++) {
+    if (name.indexOf(words[i]) < 0) return false;
+  }
+  return true;
+}
+
+function refreshProjectList() {
+  var now = Date.now(), dk = dayKeyOf(now);
+  renderProjectList(computeDayStats(state, dk, now), findRunningSegment(state), dk);
+}
+
+function setSearchQuery(raw) {
+  searchQuery = String(raw || "").trim();
+  var box = document.getElementById("proj-search");
+  if (box) box.classList.toggle("has-value", searchQuery.length > 0);
+  refreshProjectList();
+}
+
+function clearSearch() {
+  var input = document.getElementById("proj-search-input");
+  if (input) input.value = "";
+  setSearchQuery("");
+  if (input) { try { input.focus(); } catch (e) {} }
+}
+
 function renderProjectList(stats, running, dayKey) {
   var host = document.getElementById("project-list");
   var projects = orderedProjectsForDisplay();
+  var useCounts = useCountMap();   /* v0.3G：一次遍历供所有卡片复用，纯读 */
   var bucket = (state.days && state.days[dayKey]) || {};
   var minutesByPid = {};
   for (var m = 0; m < stats.perProject.length; m++) minutesByPid[stats.perProject[m].projectId] = stats.perProject[m].minutes;
   var limitByPid = {};
   var lrows = limitRowsForDay(dayKey, stats.now);
   for (var li = 0; li < lrows.length; li++) limitByPid[lrows[li].projectId] = lrows[li];
+
+  /* 搜索模式（v0.3F）：忽略分组标题与每组 3 项折叠，跨三组平铺所有名称匹配项。
+     清空关键词立刻回到原有分组 + 折叠视图，expandedGroups 的展开状态原样保留。 */
+  if (searchQuery) {
+    var words = searchQuery.toLowerCase().split(/\s+/).filter(function (w) { return !!w; });
+    var hits = [];
+    for (var qi = 0; qi < projects.length; qi++) {
+      if (searchMatch(projects[qi], words)) hits.push(projects[qi]);
+    }
+    var sr;
+    if (hits.length === 0) {
+      sr = '<div class="proj-search-empty">没有找到「' + esc(searchQuery) + '」' +
+        '<span class="empty-hint">换个词试试，或清空搜索后新建项目</span></div>';
+    } else {
+      sr = '<div class="proj-search-result">找到 ' + hits.length + ' 项' +
+        (hits.length > SEARCH_MAX_RESULTS
+          ? ' · 仅显示前 ' + SEARCH_MAX_RESULTS + ' 项，补充关键词可缩小范围' : '') +
+        '</div><div class="group-cards">';
+      for (var hk = 0; hk < Math.min(hits.length, SEARCH_MAX_RESULTS); hk++) {
+        sr += projectCardHTML(hits[hk], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
+      }
+      sr += '</div>';
+    }
+    host.innerHTML = sr;
+    return;
+  }
 
   /* 按现有显示顺序过滤分组：组内相对顺序与升级前完全一致，不重新排序 */
   var more = [], less = [], flow = [], chore = [];
@@ -2190,9 +2411,35 @@ function renderProjectList(stats, running, dayKey) {
       html += '<div class="group-empty">还没有项目</div>';
     } else {
       if (list.length > 0) {
+        /* 折叠：按现有顺序取前 N 项；进行中的项目即使在折叠区也强制可见（否则点不到停止）。
+           组内相对顺序、组汇总（用完整 list 计算）都不变，只改画出来的卡片数量。 */
+        var isOpen = expandedGroups[group] === true;
+        var shown = [], hiddenCount = 0, si;
+        if (isOpen) {
+          shown = list;
+        } else {
+          for (si = 0; si < list.length; si++) {
+            var runningHere = !!running && running.projectId === list[si].id;
+            /* v0.3G：新建 / 移动后的高亮项目也强制可见。热度排序下 0 次项目会沉进折叠区，
+               若卡片不生成，applyReveal() 的浅蓝高亮与自动滚动都会失效。 */
+            var revealingHere = !!revealPid && list[si].id === revealPid;
+            if (si < GROUP_VISIBLE_COUNT || runningHere || revealingHere) shown.push(list[si]);
+            else hiddenCount++;
+          }
+        }
         html += '<div class="group-cards">';
-        for (var k = 0; k < list.length; k++) {
-          html += projectCardHTML(list[k], bucket, minutesByPid, limitByPid, running, dayKey);
+        for (var k = 0; k < shown.length; k++) {
+          html += projectCardHTML(shown[k], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
+        }
+        /* 超过 N 项才有按钮；展开态显示「收起」。系统项目在下方 chore-cards，不参与折叠 */
+        if (list.length > GROUP_VISIBLE_COUNT) {
+          html += '<button type="button" class="group-more' + (isOpen ? ' open' : '') +
+            '" data-action="toggle-group-more" data-group="' + group + '">' +
+            (isOpen
+              ? '<span>⋯</span><span>收起</span><span class="gm-arrow">⌃</span>'
+              : '<span>⋯</span><span>还有 <span class="gm-count">' + hiddenCount +
+                '</span> 项</span><span class="gm-arrow">›</span>') +
+            '</button>';
         }
         html += '</div>';
       }
@@ -2201,7 +2448,7 @@ function renderProjectList(stats, running, dayKey) {
       if (appendCards.length > 0) {
         html += '<div class="chore-cards">';
         for (var c = 0; c < appendCards.length; c++) {
-          html += projectCardHTML(appendCards[c], bucket, minutesByPid, limitByPid, running, dayKey);
+          html += projectCardHTML(appendCards[c], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
         }
         html += '</div>';
       }
@@ -2376,6 +2623,13 @@ function onDocumentChange(e) {
   }
 }
 
+/** input 事件委托：项目搜索框边打字边过滤（v0.3F）；其它输入框不受影响 */
+function onDocumentInput(e) {
+  var t = e.target;
+  if (!t || t.id !== "proj-search-input") return;
+  setSearchQuery(t.value);
+}
+
 /** 一次 render 只取一次 now，向下传递，保证所有合计同源 */
 function render() {
   var now = Date.now();
@@ -2492,15 +2746,23 @@ function onDocumentClick(e) {
     case "edit-nickname": openNicknameModal(); break;
     case "add-project": openGroupChoiceModal(); break;
     case "add-project-group": openProjectModal(el.getAttribute("data-group")); break;
+    case "toggle-group-more": toggleGroupExpanded(el.getAttribute("data-group")); break;
+    case "toggle-sort-mode": toggleSortMode(); break;
+    case "search-clear": clearSearch(); break;
     case "choose-group":
       closeModal();
       openProjectModal(el.getAttribute("data-group"));
+      break;
+    case "move-group":
+      closeModal();
+      moveProjectToGroup(el.getAttribute("data-pid"), el.getAttribute("data-group"));
       break;
     case "start": startTimer(id); break;
     case "interrupt": openInterruptSheet(id); break;
     case "finish": stopTimer(id, "finished"); break;
     case "menu": toggleProjMenu(id, el); break;
     case "menu-target": closeProjMenu(); openTargetModal(id); break;
+    case "menu-move": closeProjMenu(); openMoveGroupModal(id); break;
     case "menu-delete": closeProjMenu(); openDeleteProjectModal(id); break;
     case "menu-clear-chore":
       closeProjMenu();
@@ -2522,6 +2784,7 @@ function onDocumentClick(e) {
     case "add-inline-group": setAddInlineGroup(el.getAttribute("data-group")); break;
     case "history-add": openHistoryAddModal(); break;
     case "sync-open": openSyncModal(); break;
+    case "sync-now": doSyncNow(); break;
     case "sync-save": saveSyncFromModal(); break;
     case "sync-off": disableSync(); break;
     case "sync-gen": fillRandomCode(); break;
@@ -2551,6 +2814,7 @@ function onDocumentKeydown(e) {
     closeProjMenu();
     if (sheetState) { var sp = sheetState.pid; closeSheet(); doInterrupt(sp, "only", ""); }
     else if (modalState) closeModal();
+    else if (searchQuery) clearSearch();
   }
   if (e.key === "Enter" && modalState && modalState.kind !== "preview" && modalState.kind !== "pair") {
     var t = e.target;
@@ -2564,8 +2828,16 @@ var modalState = null;
 var toastTimer = null;
 
 function closeModal() {
+  /* v0.3G：新建项目后紧接的「设置目标」面板会盖住浅蓝高亮（1.3s 就过期），
+     关掉面板时重新高亮一次，避免热度排序下新项目沉进折叠区后看不见。 */
+  var wasTargetPid = (modalState && modalState.kind === "target") ? targetModalPid : null;
   modalState = null;
   document.getElementById("modal-root").innerHTML = "";
+  if (wasTargetPid) {
+    markReveal(wasTargetPid);
+    refreshProjectList();
+    applyReveal();
+  }
 }
 
 function openModalShell(panelHTML, config) {
@@ -2666,6 +2938,66 @@ function openGroupChoiceModal() {
   if (panelEl) panelEl.classList.add("choice-modal");
 }
 
+/* ---------- 项目移动分组（v0.3C）：more / less / flow 互移，数值原数搬 ---------- */
+var MOVE_GROUP_LABELS = { more: "多多益善", less: "适可而止", flow: "如实知见" };
+
+function openMoveGroupModal(pid) {
+  var p = getProject(pid);
+  if (!p || isSystemChore(p)) return;
+  var cur = groupOf(p) || GROUP_MORE;
+  var hasTm = (typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0);
+  var hasDl = (typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0);
+  function subFor(g) {
+    if (g === GROUP_LESS && hasTm) return "目标转上限 · " + formatOrbTarget(p.targetMinutes);
+    if (g === GROUP_MORE && hasDl) return "上限转目标 · " + formatOrbTarget(p.dailyLimit);
+    if (g === GROUP_FLOW && (hasTm || hasDl)) return "会清空目标与上限";
+    if (g === GROUP_MORE) return "至少投入多少";
+    if (g === GROUP_LESS) return "别超过多少";
+    return "只记流水";
+  }
+  function btn(g) {
+    var isCur = (g === cur);
+    return '<button class="group-choice-btn' + (isCur ? " disabled" : "") + '"' +
+      ' data-action="move-group" data-pid="' + esc(pid) + '" data-group="' + g + '"' +
+      (isCur ? " disabled" : "") + ">" + MOVE_GROUP_LABELS[g] +
+      '<span class="gc-sub">' + (isCur ? "当前分组" : subFor(g)) + "</span></button>";
+  }
+  var panel =
+    '<div class="modal-title">移到哪一组？</div>' +
+    '<div class="modal-desc">' + esc(p.name) + ' · 当前在「' + MOVE_GROUP_LABELS[cur] +
+    '」。记录一条不动，过去日期的完成率与超额会按新分组重新计算。</div>' +
+    '<div class="group-choice-row">' + btn(GROUP_MORE) + btn(GROUP_LESS) + btn(GROUP_FLOW) + '</div>';
+  openModalShell(panel, { kind: "group-choice", onConfirm: null });
+  var panelEl = document.querySelector(".modal-panel");
+  if (panelEl) panelEl.classList.add("choice-modal");
+}
+
+function moveProjectToGroup(pid, g) {
+  var p = getProject(pid);
+  if (!p || isSystemChore(p)) return false;
+  var ng = (g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_MORE;
+  if (ng === groupOf(p)) return false;
+  var hasTm = (typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0);
+  var hasDl = (typeof p.dailyLimit === "number" && Number.isFinite(p.dailyLimit) && p.dailyLimit > 0);
+  /* 数值按原数搬：目标 <-> 上限互转；如实知见两个字段都清空（与加载时的规整规则一致） */
+  if (ng === GROUP_LESS) {
+    if (hasTm) p.dailyLimit = p.targetMinutes;
+    p.targetMinutes = null;
+  } else if (ng === GROUP_MORE) {
+    if (hasDl) p.targetMinutes = p.dailyLimit;
+    p.dailyLimit = null;
+  } else {
+    p.targetMinutes = null;
+    p.dailyLimit = null;
+  }
+  p.group = ng;
+  p.sortIndex = nextSortIndex();   /* 移入新组排在最前 */
+  markReveal(pid);
+  save(); render();
+  showToast("《" + p.name + "》已移到「" + MOVE_GROUP_LABELS[ng] + "」");
+  return true;
+}
+
 function openProjectModal(group) {
   var g = (group === GROUP_LESS) ? GROUP_LESS : ((group === GROUP_FLOW) ? GROUP_FLOW : GROUP_MORE);
   openInputModal({
@@ -2689,6 +3021,13 @@ function openProjectModal(group) {
         targetMinutes: null, dailyLimit: null, createdAt: Date.now(),
         sortIndex: nextSortIndex(), group: g
       });
+      /* v0.3G：若此刻还停在搜索视图，新建的卡片不一定匹配关键词、不会出现在结果里，
+         applyReveal() 会找不到它。先静默清空搜索词（不聚焦，避免弹键盘），回到分组视图再高亮。 */
+      if (searchQuery) {
+        var psiNew = document.getElementById("proj-search-input");
+        if (psiNew) psiNew.value = "";
+        setSearchQuery("");
+      }
       markReveal(pid);
       save(); render();
       /* 「如实知见」组只记流水、不设目标与上限：输完名字即创建完成，跳过设置面板；
@@ -3286,9 +3625,11 @@ function toggleProjMenu(pid, anchorEl) {
   menu.innerHTML = isSystemChore(mp)
     ? '<button class="menu-item" data-action="menu-clear-chore" data-id="' + esc(pid) + '">清空今日记录</button>'
     : (groupOf(mp) === GROUP_FLOW
-        ? '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>'
+        ? '<button class="menu-item" data-action="menu-move" data-id="' + esc(pid) + '">移到其它分组</button>' +
+          '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>'
         : '<button class="menu-item" data-action="menu-target" data-id="' + esc(pid) + '">' +
             (groupOf(mp) === GROUP_LESS ? "设置每日上限" : "设置每日目标") + '</button>' +
+          '<button class="menu-item" data-action="menu-move" data-id="' + esc(pid) + '">移到其它分组</button>' +
           '<button class="menu-item danger" data-action="menu-delete" data-id="' + esc(pid) + '">删除项目</button>');
   card.appendChild(menu);
 }
@@ -4265,7 +4606,25 @@ function renderSyncBar() {
   el.innerHTML = '<button type="button" class="sync-bar" data-action="sync-open">' +
     '<span class="' + dot + '"></span>' +
     '<span class="sync-text">' + syncEsc(text) + '</span>' +
-    '<span class="sync-arrow">›</span></button>';
+    '<span class="sync-arrow">›</span></button>' +
+    '<button type="button" class="sync-now" data-action="sync-now"' +
+      (syncRt.running ? ' disabled' : '') +
+      ' title="立即同步：从云端拉取最新记录" aria-label="立即同步">' +
+      '<span class="sync-now-ico" aria-hidden="true">⟳</span>' +
+      '<span class="sync-now-txt">立即同步</span></button>';
+}
+
+/* v0.3H：一键从云端拉取最新，不刷新页面。
+   runSync() 内部本来就无条件先 syncPull()，且 rev 变化 + 本地无改动时会 applyRemoteState()
+   重绘，所以这里不必改 runSync / initSync。刻意不做自动轮询：流量与整页重绘都由用户主动触发。 */
+function doSyncNow() {
+  if (!syncCfg.enabled) return;
+  if (syncRt.running) { showToast("正在同步…"); return; }
+  showToast("正在同步…");
+  runSync(true).then(function () {
+    if (syncRt.err) { showToast("同步失败：" + syncRt.err); return; }
+    showToast("已同步到最新");
+  });
 }
 
 function renderFooterNote() {
@@ -4385,11 +4744,16 @@ function init() {
     save();
   }
   historyDayKey = bjTodayKey();
+  /* 搜索框是静态 DOM，浏览器刷新可能恢复表单值，这里显式清空以保证「刷新即清空」 */
+  var psi0 = document.getElementById("proj-search-input");
+  if (psi0) psi0.value = "";
+  updateSortModeBtn();   /* v0.3G：按 localStorage 里的偏好还原排序按钮文案与状态 */
   render();
   /* 事件委托：只在 document 上绑定一次，render 重建 DOM 不重复绑定 */
   document.addEventListener("click", onDocumentClick);
   document.addEventListener("keydown", onDocumentKeydown);
   document.addEventListener("change", onDocumentChange);
+  document.addEventListener("input", onDocumentInput);
   /* 约 30 秒轮询，仅检测是否跨天，不刷新任何数字 */
   window.setInterval(checkDayAndRefresh, 30000);
   /* 1s 只更新状态条上的「已计时」数字，绝不整页 render（避免打断菜单/弹层/输入焦点） */
@@ -4448,7 +4812,18 @@ window.TTR = {
   applyPairFromUrl: applyPairFromUrl,
   readPairParam: readPairParam,
   paintQR: paintQR,
-  QRCore: (typeof QRCore !== 'undefined' ? QRCore : null)
+  QRCore: (typeof QRCore !== 'undefined' ? QRCore : null),
+  openMoveGroupModal: openMoveGroupModal,
+  moveProjectToGroup: moveProjectToGroup,
+  toggleProjMenu: toggleProjMenu,
+  useCountMap: useCountMap,
+  getSortMode: function () { return sortMode; },
+  setSortModeForTest: function (m) {
+    sortMode = (m === SORT_MODE_INDEX) ? SORT_MODE_INDEX : SORT_MODE_HOT;
+    updateSortModeBtn(); refreshProjectList();
+  },
+  SORT_MODE_KEY: SORT_MODE_KEY,
+  toggleSortMode: toggleSortMode
 };
 </script>
 </body>
