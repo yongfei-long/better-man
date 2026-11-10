@@ -102,21 +102,28 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 #stat-percent-text{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;background:#EAF2FF;color:var(--blue);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;}
 #stat-remaining{font-size:13px;color:var(--muted);}
 
-/* ========== 今日时间分布：24 格 × 1 小时，格内按比例填充 ========== */
+/* ========== 今日时间分布：24 格 × 1 小时（v0.3M 方案 B：去边框细格，一格一色，深浅=投入） ========== */
 .tl-wrap{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
 .tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;}
 .tl-title{font-size:13px;font-weight:700;}
 .tl-hint{font-size:11px;color:var(--muted);}
-.tl-ticks{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums;margin:0 1px 5px;}
-.tl-track{display:flex;gap:2px;height:34px;}
-.tl-cell{position:relative;display:block;flex:1 1 0;min-width:0;padding:0;border:1px solid var(--line);border-radius:3px;background:var(--soft);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.tl-track{display:flex;gap:3px;height:28px;}
+.tl-cell{position:relative;display:block;flex:1 1 0;min-width:0;padding:0;border:0;border-radius:5px;background:#EDF1F7;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .tl-cell:hover,.tl-cell.is-open{outline:2px solid var(--blue);outline-offset:1px;z-index:2;}
+/* :focus-visible 单独成条：与上面的选择器合并会在不支持该伪类的旧 WebKit 上整条失效 */
+.tl-cell:focus-visible{outline:2px solid var(--blue);outline-offset:1px;z-index:2;}
+.tl-fill{position:absolute;top:0;bottom:0;left:0;right:0;border-radius:5px;pointer-events:none;}
+.tl-ticks{display:flex;justify-content:space-between;color:#A7B2C4;font-size:10.5px;font-variant-numeric:tabular-nums;margin:5px 1px 0;}
+/* v0.3M 起格子内不再铺多段色块/斜纹；保留定义给图例与明细空白行复用 */
 .tl-blk,.tl-gap{position:absolute;top:0;bottom:0;border-radius:2px;pointer-events:none;}
 .tl-gap{background:repeating-linear-gradient(45deg,#F4F6FA,#F4F6FA 4px,#E4E9F1 4px,#E4E9F1 8px);}
-.tl-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:11px;color:var(--muted);}
-.tl-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px;border:1px solid var(--line);}
+.tl-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:9px;font-size:11px;color:var(--muted);}
+.tl-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px;border:1px solid var(--line);}
 .tl-legend i.tl-gap-mark{background:repeating-linear-gradient(45deg,#F4F6FA,#F4F6FA 3px,#E4E9F1 3px,#E4E9F1 6px);}
-.tl-blank{margin-top:8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;}
+.tl-legend i.tl-cell-mark{background:#9FB6DC;border-color:#9FB6DC;}
+.tl-legend i.tl-empty-mark{background:#EDF1F7;border:1px solid #E2E8F2;}
+.tl-legend .tl-legend-note{color:#A7B2C4;}
+.tl-blank{margin-top:7px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;}
 .tl-detail{margin-top:10px;padding:10px 12px;border-radius:10px;background:#F7F9FC;}
 .tl-detail-title{font-size:12px;font-weight:700;margin-bottom:6px;font-variant-numeric:tabular-nums;}
 .tl-detail-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line);font-size:12px;}
@@ -132,6 +139,15 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .tl-detail-foot .tl-detail-close{margin:0;}
 .tl-add-btn{flex:0 0 auto;border:0;background:var(--blue);color:#fff;font-size:12px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;white-space:nowrap;}
 .tl-add-btn:active{background:#1E6BE0;}
+/* v0.3L：今日记录合并进小时明细——记录行复用 .record-row / .rec-btns，备注超长省略、不折叠 */
+.tl-detail .record-row{padding:8px 0;gap:8px;}
+.tl-detail .record-row .rec-name{font-size:13.5px;}
+.tl-detail .record-row .rec-time{font-size:12.5px;}
+.tl-detail .record-row .rec-line2{font-size:12px;display:flex;align-items:center;min-width:0;overflow:hidden;white-space:nowrap;}
+.tl-detail .record-row:last-of-type{border-bottom:0;}
+.tl-detail .rec-btns .icon-btn{width:30px;height:30px;flex:0 0 30px;font-size:19px;}
+.tl-detail .tl-note{max-width:38%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;}
+.tl-detail .tl-detail-row{padding:8px 0;font-size:12.5px;}
 .modal-select{text-align:left;padding-right:10px;}
 
 /* ========== 项目卡片 ========== */
@@ -622,6 +638,34 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   .add-group-chip{font-size:12px;padding:0 2px;}
   .add-inline-hint{font-size:11px;}
 }
+/* ===== v0.3K：补记 / 编辑弹窗内「可搜索项目选择器」 =====
+   候选列表放在文档流内（不用绝对定位浮层），避开 .modal-panel 的 overflow-y:auto 裁剪；
+   搜索词只存在于弹窗 DOM，不写 state / localStorage，不触发 save / 同步。 */
+.proj-picker{position:relative}
+.proj-picker.picker-disabled{opacity:.45;pointer-events:none}
+.picker-search{margin-bottom:0}
+.picker-chosen{margin-top:8px;padding:8px 11px;border-radius:9px;background:#F4F7FC;color:var(--muted);font-size:13px;line-height:1.5;display:flex;align-items:center;gap:7px}
+.picker-chosen.has-value{background:#EAF1FF;color:var(--blue);font-weight:700}
+.picker-chosen .pc-ck{width:16px;height:16px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;line-height:16px;text-align:center;flex:0 0 auto}
+.picker-chosen .pc-name{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-chosen .pc-hint{margin-left:auto;font-size:11px;font-weight:500;color:#7B93C4;flex:0 0 auto}
+.picker-list{margin-top:8px;border:1px solid #E3EAF6;border-radius:11px;max-height:196px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fff}
+.picker-list-hd{padding:8px 11px;font-size:12px;color:var(--muted);border-bottom:1px solid #EEF2F8;position:sticky;top:0;background:#fff;z-index:1}
+.picker-item{display:flex;align-items:center;gap:8px;padding:10px 11px;font-size:14.5px;color:var(--text);border-bottom:1px solid #F2F5FA;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.picker-item:last-child{border-bottom:0}
+.picker-item:active{background:#F4F8FF}
+.picker-item.on{background:#EAF1FF;color:var(--blue);font-weight:800}
+.picker-item .pi-name{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.picker-item .pi-grp{flex:0 0 auto;font-size:11px;color:#8A97AC;background:#F2F5FA;border-radius:5px;padding:2px 7px}
+.picker-item.on .pi-grp{background:#DBE7FF;color:var(--blue)}
+.picker-item .pi-tick{flex:0 0 auto;color:var(--blue);font-size:14px}
+.picker-empty{padding:18px 11px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
+.picker-empty .pe-hint{display:block;font-size:12px;color:#A7B4C6;margin-top:3px}
+@media (max-width:360px){
+  .picker-list{max-height:172px}
+  .picker-item{font-size:13.5px;padding:9px 10px}
+  .picker-chosen .pc-hint{display:none}
+}
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -641,14 +685,6 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
         <button type="button" class="proj-search-clear" data-action="search-clear" aria-label="清空搜索">×</button>
       </div>
       <div data-page-node-id="0AZjBDLAkQjL4TOI2yQDXz" id="project-list"></div>
-    </section>
-
-    <section data-page-node-id="Zt3xRikFXQhN4meWgK0mTf" class="card">
-      <div class="section-head">
-        <div data-page-node-id="CBrYJPhpGfOEZJ9NqtjFFD" class="section-title"><!--pnid:mprXCi0SR6kdCNeUth98Qv-->今日记录</div>
-        <span id="records-head-action"></span>
-      </div>
-      <div data-page-node-id="kCHpM4iiguhm2UD7FKqYzy" id="record-list"></div>
     </section>
 
     <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
@@ -671,8 +707,8 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
       </div>
       <div class="tl-wrap" id="timeline-wrap">
         <div class="tl-head"><span class="tl-title">今日时间分布</span><span class="tl-hint" id="timeline-hint">点格子看这一小时</span></div>
-        <div class="tl-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
         <div class="tl-track" id="timeline-track"></div>
+        <div class="tl-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
         <div class="tl-legend" id="timeline-legend"></div>
         <div class="tl-blank" id="timeline-blank"></div>
         <div class="tl-detail" id="timeline-detail" style="display:none"></div>
@@ -697,7 +733,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3H</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3M</span></div>
   </div>
 </div>
 
@@ -1327,16 +1363,8 @@ function ensureChoreProject(st) {
   return changed;
 }
 
-/* ---- 备注折叠：>8 字折叠，点整行展开/收起 ---- */
-var expandedNoteIds = {};
+/* 备注/输入字数：按 Unicode 码点计数（中文、emoji 都算 1 个），多处输入截断复用 */
 function noteChars(text) { return Array.from(String(text === null || text === undefined ? "" : text)); }
-function noteShort(text) { return noteChars(text).slice(0, 8).join("") + "…"; }
-function toggleNote(segId) {
-  if (expandedNoteIds[segId]) delete expandedNoteIds[segId];
-  else expandedNoteIds[segId] = true;
-  var now = Date.now();
-  renderRecordList(computeDayStats(state, dayKeyOf(now), now));
-}
 
 /* ---- 顶部状态条「事来则应已记录 XX 分钟」浮现提示 ---- */
 var choreNoticeText = "", choreNoticeTimer = null;
@@ -1515,18 +1543,10 @@ function clearChoreToday() {
 
 /* -------------------- 模块顺序 / 记录列表折叠 / 导出 / 滚动（增量新增） -------------------- */
 
-/** 「今日记录」展开状态：纯 UI 状态，不写入 state / localStorage，展开收起不改任何数据 */
+/** 记录列表 / 历史记录共用：默认可见条数；纯 UI，不写入 state / localStorage */
 var RECORDS_PAGE_SIZE = 5;
-var recordsExpanded = false;
 /** 时间分布：当前展开的小时（0–23），null = 收起；纯 UI 状态，不写入 state / localStorage */
 var timelineHour = null;
-
-function toggleRecordsExpanded() {
-  recordsExpanded = !recordsExpanded;
-  /* 只重绘记录列表这一块，不整页 render，其他模块位置完全不动 */
-  var now = Date.now();
-  renderRecordList(computeDayStats(state, dayKeyOf(now), now));
-}
 
 /** 点某个小时格：展开/收起该小时明细；沿用「只重绘单块」范式，不整页 render */
 function toggleTimelineHour(hour) {
@@ -2053,7 +2073,9 @@ function computeTimeline(stats, dayKey, now) {
       start: a, end: b,
       color: r.colorHex || colorOf(r.project && r.project.colorIndex),
       name: r.projectName || (r.project && r.project.name) || "",
-      isRunning: (s.endType === "running" || s.end === null || s.end === undefined)
+      isRunning: (s.endType === "running" || s.end === null || s.end === undefined),
+      /* v0.3L：明细行要挂编辑 / 删除，带上原始段与统计行引用（纯内存派生，数据结构不变） */
+      rec: r
     });
   }
   segs.sort(function (x, y) { return x.start - y.start; });
@@ -2099,43 +2121,49 @@ function renderTimeline(stats, dayKey, now) {
   var t = computeTimeline(stats, dayKey, now);
   var html = "";
   for (var h = 0; h < 24; h++) {
-    var lo = h * 60, hi = lo + 60, blocks = "";
-    /* 先铺活动区间内的空白斜纹，再铺记录色块（色块自然盖在斜纹之上） */
-    for (var b = 0; b < t.blanks.length; b++) {
-      var g0 = Math.max(t.blanks[b].start, lo), g1 = Math.min(t.blanks[b].end, hi);
-      if (g1 > g0) blocks += '<span class="tl-gap" style="left:' + tlPct(g0 - lo) +
-        '%;width:' + tlPct(g1 - g0) + '%"></span>';
-    }
-    var inHour = 0;
+    var lo = h * 60, hi = lo + 60;
+    /* v0.3M 方案 B：一格一色。覆盖率 = 该小时记录区间的并集长度（重叠段不重复计），
+       主色 = 该小时占时最长的段；不再铺格内多段比例色块与空白斜纹。 */
+    var parts = [], inHour = 0, best = 0, mainColor = "";
     for (var i = 0; i < t.segs.length; i++) {
       var sg = t.segs[i];
       var s0 = Math.max(sg.start, lo), e0 = Math.min(sg.end, hi);
       if (e0 > s0) {
         inHour++;
-        blocks += '<span class="tl-blk" style="left:' + tlPct(s0 - lo) +
-          '%;width:' + tlPct(e0 - s0) + '%;background:' + esc(sg.color) + '"></span>';
+        parts.push([s0, e0]);
+        if (e0 - s0 > best) { best = e0 - s0; mainColor = sg.color; }
       }
     }
+    parts.sort(function (x, y) { return x[0] - y[0]; });
+    var cover = 0, curA = -1, curB = -1;
+    for (var p = 0; p < parts.length; p++) {
+      if (parts[p][0] > curB) {
+        if (curB > curA) cover += curB - curA;
+        curA = parts[p][0]; curB = parts[p][1];
+      } else if (parts[p][1] > curB) curB = parts[p][1];
+    }
+    if (curB > curA) cover += curB - curA;
+    var alpha = cover > 0 ? (0.28 + 0.72 * Math.min(1, cover / 60)) : 0;
+    var fill = (cover > 0 && mainColor)
+      ? '<span class="tl-fill" style="background:' + esc(mainColor) + ';opacity:' +
+        (Math.round(alpha * 100) / 100) + '"></span>'
+      : "";
     var open = (timelineHour === h);
     html += '<button type="button" class="tl-cell' + (open ? ' is-open' : '') + '"' +
       ' data-action="toggle-hour" data-hour="' + h + '"' +
       ' aria-expanded="' + (open ? 'true' : 'false') + '"' +
       ' aria-label="' + timelineClock(lo) + '–' + timelineClock(hi) + '，' + inHour + ' 段记录，点击查看">' +
-      blocks + '</button>';
+      fill + '</button>';
   }
   track.innerHTML = html;
 
-  /* 图例：今天出现过记录的项目（按名称+颜色去重）+ 空白 */
+  /* v0.3M 方案 B：图例压成一行，只解释「有记录 / 空白 / 深浅」，
+     不再逐项列出十几种项目色。项目名与颜色在点开的小时明细里逐行给出，信息不丢。 */
   var legend = document.getElementById("timeline-legend");
   if (legend) {
-    var seen = {}, items = "";
-    for (var g = 0; g < t.segs.length; g++) {
-      var key = t.segs[g].name + "|" + t.segs[g].color;
-      if (seen[key]) continue;
-      seen[key] = true;
-      items += '<span><i style="background:' + esc(t.segs[g].color) + '"></i>' + esc(t.segs[g].name) + '</span>';
-    }
-    if (t.blanks.length) items += '<span><i class="tl-gap-mark"></i>空白</span>';
+    var items = '<span><i class="tl-cell-mark"></i>有记录</span>';
+    if (t.blanks.length) items += '<span><i class="tl-empty-mark"></i>空白</span>';
+    items += '<span class="tl-legend-note">深浅 = 这一小时的投入</span>';
     legend.innerHTML = items;
   }
 
@@ -2167,16 +2195,38 @@ function renderTimeline(stats, dayKey, now) {
       var h2 = timelineHour, lo2 = h2 * 60, hi2 = lo2 + 60, rows = "", count = 0;
       for (var r2 = 0; r2 < t.segs.length; r2++) {
         var sg2 = t.segs[r2];
-        var s2 = Math.max(sg2.start, lo2), e2 = Math.min(sg2.end, hi2);
-        if (!(e2 > s2)) continue;
+        var ovS = Math.max(sg2.start, lo2), ovE = Math.min(sg2.end, hi2);
+        if (!(ovE > ovS)) continue;
         count++;
-        rows += '<div class="tl-detail-row">' +
+        var rr = sg2.rec || {}, seg3 = rr.segment || {};
+        var isRun = !!sg2.isRunning;
+        /* 推荐①：显示真实起止与整段分钟，和编辑弹窗里看到的完全一致。
+           跨小时的段会在两个格子里各出现一次，但都指向同一个 seg（同一段，不是两段） */
+        var realTime = (typeof seg3.start === "number")
+          ? (formatTime(seg3.start) + "–" + (isRun ? "现在" : formatTime(seg3.end)))
+          : (timelineClock(ovS) + "–" + (isRun ? "现在" : timelineClock(ovE)));
+        var tag3 = isRun ? '<span class="tag tag-running">计时中</span>'
+          : (seg3.endType === "interrupted" ? '<span class="tag">中断</span>' : "");
+        var note3 = (typeof seg3.note === "string") ? seg3.note : "";
+        var src3 = (typeof seg3.sourceProject === "string") ? seg3.sourceProject : "";
+        /* 推荐②：备注只显示、超长由 CSS 省略，不做折叠（明细行空间小） */
+        var noteHTML3 = note3 ? '<span class="rec-note tl-note">' + esc(note3) + '</span>' : "";
+        var fromHTML3 = src3 ? '<span class="rec-from">← ' + esc(src3) + '</span>' : "";
+        var sid3 = esc(String(seg3.id === undefined || seg3.id === null ? "" : seg3.id));
+        rows += '<div class="record-row">' +
           '<span class="dot" style="background:' + esc(sg2.color) + '"></span>' +
-          '<span class="tl-detail-name">' + esc(sg2.name) + '</span>' +
-          '<span class="tl-detail-time">' + timelineClock(s2) + '–' +
-            (sg2.isRunning ? "现在" : timelineClock(e2)) + '</span>' +
-          '<span class="tl-detail-min">' + Math.max(1, Math.round(e2 - s2)) + ' 分</span>' +
-          '</div>';
+          '<div class="rec-main">' +
+            '<div class="rec-line1">' +
+              '<span class="rec-name ellipsis">' + esc(sg2.name) + '</span>' +
+              '<span class="rec-time">' + realTime + '</span>' +
+            '</div>' +
+            '<div class="rec-line2">' + (rr.minutes || 0) + ' 分钟' + tag3 + fromHTML3 + noteHTML3 + '</div>' +
+          '</div>' +
+          '<div class="rec-btns">' +
+            (isRun ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' + sid3 + '" aria-label="编辑本段">✎</button>') +
+            '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + sid3 + '" aria-label="删除本段">×</button>' +
+          '</div>' +
+        '</div>';
       }
       for (var b2 = 0; b2 < t.blanks.length; b2++) {
         var s3 = Math.max(t.blanks[b2].start, lo2), e3 = Math.min(t.blanks[b2].end, hi2);
@@ -2466,69 +2516,15 @@ function renderProjectList(stats, running, dayKey) {
   host.innerHTML = html;
 }
 
-function renderRecordList(stats) {
-  var host = document.getElementById("record-list");
-  var head = document.getElementById("records-head-action");
-  if (head) head.innerHTML = "";
-  if (stats.records.length === 0) {
-    host.innerHTML = '<div class="empty-block">今天还没有记录' +
-      '<span class="empty-hint">去上方「我的项目」点「开始」就能记下第一段时间</span></div>';
-    return;
-  }
-  var total = stats.records.length;
-  /* 默认只显示最近 5 条（computeDayStats 已按 start 从新到旧排序）；展开/收起不改任何数据 */
-  var visible = (recordsExpanded || total <= RECORDS_PAGE_SIZE) ? total : RECORDS_PAGE_SIZE;
-  var html = "";
-  for (var i = 0; i < visible; i++) {
-    var rec = stats.records[i];
-    var seg = rec.segment;
-    var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
-    var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
-    var tag = isRunning ? '<span class="tag tag-running">计时中</span>'
-      : (seg.endType === "interrupted" ? '<span class="tag">中断</span>' : "");
-    /* 备注小灰字标签 + 承接来源标记 + 超 8 字折叠 */
-    var note = (typeof seg.note === "string") ? seg.note : "";
-    var src = (typeof seg.sourceProject === "string") ? seg.sourceProject : "";
-    var longNote = noteChars(note).length > 8;
-    var expanded = !!expandedNoteIds[seg.id];
-    var noteLabel = (longNote && !expanded) ? noteShort(note) : note;
-    var noteHTML = note
-      ? '<span class="rec-note">' + esc(noteLabel) +
-        (longNote ? '<span class="rec-note-hint">' + (expanded ? " 收起" : " 展开") + '</span>' : "") +
-        '</span>'
-      : "";
-    var fromHTML = src ? '<span class="rec-from">← ' + esc(src) + '</span>' : "";
-    var rowAttrs = longNote
-      ? ' class="record-row rec-expandable" data-action="toggle-note" data-id="' + esc(seg.id) + '"'
-      : ' class="record-row"';
-    html += '<div' + rowAttrs + '>' +
-      '<span class="dot" style="background:' + (rec.colorHex || colorOf(rec.project.colorIndex)) + '"></span>' +
-      '<div class="rec-main">' +
-        '<div class="rec-line1">' +
-          '<span class="rec-name ellipsis">' + esc(rec.project.name) + '</span>' +
-          '<span class="rec-time">' + timeText + '</span>' +
-        '</div>' +
-        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
-      '</div>' +
-      '<div class="rec-btns">' +
-        (isRunning ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' + esc(seg.id) + '" aria-label="编辑本段">✎</button>') +
-        '<button class="icon-btn rec-del" data-action="delete-record" data-id="' + esc(seg.id) + '" aria-label="删除本段">×</button>' +
-      '</div>' +
-    '</div>';
-  }
-  if (total > RECORDS_PAGE_SIZE) {
-    if (head) head.innerHTML = '<button class="head-action" data-action="toggle-records">' +
-      (recordsExpanded ? "收起" : "查看全部") + '</button>';
-    html += '<button class="records-toggle" data-action="toggle-records">' +
-      (recordsExpanded ? "收起" : "展开全部（共 " + total + " 条）") + '</button>';
-  }
-  host.innerHTML = html;
-}
+/* v0.3L：「今日记录」卡已合并进「今日概览」的小时明细，renderRecordList() 整段移除。
+   记录行 / 编辑 / 删除 / 备注样式仍被明细与历史记录复用，弹窗链路零改动。 */
 
 /* -------------------- 历史记录（只读查看 + 按北京时间的日期选择） -------------------- */
 
 /** 当前查看的日期：纯 UI 状态，不写入 state / localStorage */
 var historyDayKey = null;
+/** v0.3I：历史记录展开状态，与「今日记录」同款纯 UI 状态；只存内存，不写 state / localStorage / 不同步 */
+var historyExpanded = false;
 
 function normalizeHistoryDate(v) {
   var t = String(v === null || v === undefined ? "" : v).trim();
@@ -2544,6 +2540,7 @@ function shiftHistoryDay(n) {
   var today = bjTodayKey();
   if (next > today) next = today;
   historyDayKey = next;
+  historyExpanded = false; /* 换一天自动收起，避免一上来又是一整屏 */
   renderHistory();
 }
 
@@ -2586,8 +2583,10 @@ function renderHistory() {
   }
   /* 按时间从早到晚展示（computeDayStats 的 records 是 start 降序） */
   var recs = stats.records.slice().reverse();
+  /* v0.3I：与「今日记录」统一，默认只显示前 RECORDS_PAGE_SIZE 条，其余由底部按钮展开 */
+  var visible = (historyExpanded || recs.length <= RECORDS_PAGE_SIZE) ? recs.length : RECORDS_PAGE_SIZE;
   var html = "";
-  for (var i = 0; i < recs.length; i++) {
+  for (var i = 0; i < visible; i++) {
     var rec = recs[i], seg = rec.segment;
     var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
     var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
@@ -2608,7 +2607,17 @@ function renderHistory() {
       '</div>' +
     '</div>';
   }
+  if (recs.length > RECORDS_PAGE_SIZE) {
+    html += '<button class="records-toggle" data-action="toggle-history">' +
+      (historyExpanded ? "收起" : "展开全部（共 " + recs.length + " 条）") + '</button>';
+  }
   list.innerHTML = html;
+}
+
+/** v0.3I：切换历史记录展开/收起；只重绘历史卡片，不整页 render、不触发保存与同步 */
+function toggleHistoryExpanded() {
+  historyExpanded = !historyExpanded;
+  renderHistory();
 }
 
 /** change 事件委托：只处理日期选择器（click / keydown 委托保持不变） */
@@ -2619,6 +2628,7 @@ function onDocumentChange(e) {
     var dk = normalizeHistoryDate(t.value);
     if (!dk) { t.value = historyDayKey || bjTodayKey(); return; }
     historyDayKey = dk;
+    historyExpanded = false; /* 换日期自动收起 */
     renderHistory();
   }
 }
@@ -2641,7 +2651,6 @@ function render() {
   renderOverview(stats);
   renderTimeline(stats, dayKey, now);
   renderProjectList(stats, running, dayKey);
-  renderRecordList(stats);
   renderLimitSummary(dayKey, now);
   renderHistory();
   applyReveal();
@@ -2776,12 +2785,13 @@ function onDocumentClick(e) {
     case "target": openTargetModal(id); break;
     case "delete-record": openDeleteRecordModal(id); break;
     case "edit-record": openEditRecordModal(id); break;
-    case "toggle-note": toggleNote(id); break;
-    case "toggle-records": toggleRecordsExpanded(); break;
+    case "toggle-history": toggleHistoryExpanded(); break;
     case "toggle-hour": toggleTimelineHour(el.getAttribute("data-hour")); break;
     case "add-hour-record": openAddHourRecordModal(el.getAttribute("data-hour")); break;
     case "add-inline-new": toggleAddInlineNew(); break;
     case "add-inline-group": setAddInlineGroup(el.getAttribute("data-group")); break;
+    case "pick-project": pickProject(el.getAttribute("data-pid")); break;
+    case "picker-clear": clearPickerSearch(); break;
     case "history-add": openHistoryAddModal(); break;
     case "sync-open": openSyncModal(); break;
     case "sync-now": doSyncNow(); break;
@@ -2818,6 +2828,8 @@ function onDocumentKeydown(e) {
   }
   if (e.key === "Enter" && modalState && modalState.kind !== "preview" && modalState.kind !== "pair") {
     var t = e.target;
+    /* v0.3K：可搜索项目选择器的输入框按 Enter 只选中第一个候选，绝不触发保存 */
+    if (t && t.id === "add-project-search") { e.preventDefault(); pickerConfirmFirst(); return; }
     if (t && t.tagName === "INPUT") { e.preventDefault(); handleModalConfirm(); }
   }
 }
@@ -3214,7 +3226,9 @@ function refreshEditPreview() {
   box.className = "edit-preview";
 }
 
-/** 打开「编辑这段时间」弹窗：同一个 openModalShell，两个 time 输入 + 备注 + 实时时长预览 */
+/** 打开「编辑这段时间」弹窗：同一个 openModalShell，项目下拉 + 两个 time 输入 + 备注 + 实时时长预览。
+    v0.3J：新增「所属项目」选择，复用补记弹窗的 projectOptionsHTML / 内联新建组件；
+    系统项目「事来则应」的记录锁死归属（段带 sourceProject，挪走会语义错乱）。 */
 function openEditRecordModal(segId) {
   var now = Date.now();
   var dayKey = dayKeyOf(now);
@@ -3227,9 +3241,21 @@ function openEditRecordModal(segId) {
   }
   var p = getProject(found.pid);
   var pname = p ? p.name : "";
+  var locked = isSystemChore(p) || found.pid === CHORE_ID;
+  /* 复用补记弹窗同一套 id 与 data-action，内联新建相关函数零改动直接可用 */
+  var projectHTML = locked
+    ? ""
+    : '<label class="edit-note-label" for="add-project-search">项目（可改到别的项目）</label>' +
+      projectPickerHTML({ includeChore: false, selectedPid: found.pid, disabled: false }) +
+      inlineNewProjectHTML(false,
+        "将创建这个项目，并把这一段改到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。");
+  var desc = locked
+    ? esc(pname) + ' · 只改今天的钟点，日期不变（系统项目不可改归属）'
+    : esc(pname) + ' · 可改钟点、备注与所属项目，日期不变';
   var panel =
     '<div class="modal-title">编辑这段时间</div>' +
-    '<div class="modal-desc">' + esc(pname) + ' · 只改今天的钟点，日期不变</div>' +
+    '<div class="modal-desc">' + desc + '</div>' +
+    projectHTML +
     '<div class="edit-time-row">' +
       '<div class="edit-time-field"><label for="edit-start">开始时间</label>' +
         '<input id="edit-start" class="modal-input" type="time" value="' + formatTime(seg.start) + '"></div>' +
@@ -3250,20 +3276,25 @@ function openEditRecordModal(segId) {
     onConfirm: function () {
       var root = document.getElementById("modal-root");
       if (!root) return false;
-      var st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end"), nt = root.querySelector("#edit-note");
+      var sel = root.querySelector("#add-project"),
+          st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end"), nt = root.querySelector("#edit-note");
       return saveRecordEdit(segId,
-        st ? st.value : "", en ? en.value : "", nt ? nt.value : "");
+        st ? st.value : "", en ? en.value : "", nt ? nt.value : "",
+        sel ? sel.value : "", isAddInlineNew());
     }
   });
   var stEl = document.getElementById("edit-start"), enEl = document.getElementById("edit-end");
   if (stEl) stEl.oninput = refreshEditPreview;
   if (enEl) enEl.oninput = refreshEditPreview;
   refreshEditPreview();
+  initProjectPicker();
 }
 
-/** 保存编辑：校验 → 原地写 start/end/note → 派生数字自动重算。
-    校验：结束 > 开始、都在今天、结束不晚于现在；备注截断 50 字（与 sanitizeSegment 一致）。*/
-function saveRecordEdit(segId, startStr, endStr, noteStr) {
+/** 保存编辑：校验 → 原地写 start/end/note →（v0.3J）必要时换所属项目桶 → 派生数字自动重算。
+    校验：结束 > 开始、都在今天、结束不晚于现在；备注截断 50 字（与 sanitizeSegment 一致）。
+    换项目时保持同一个 seg 对象与 id / endType / sourceProject 不变，只改它所在的桶，不改日期；
+    系统项目「事来则应」的记录锁死归属；内联新建在所有校验通过后才创建，失败不残留空项目。 */
+function saveRecordEdit(segId, startStr, endStr, noteStr, newPid, inlineNew) {
   var now = Date.now();
   syncRolloverForNow(now);
   var dayKey = dayKeyOf(now);
@@ -3273,6 +3304,23 @@ function saveRecordEdit(segId, startStr, endStr, noteStr) {
   if (seg.endType === "running" || seg.end === null || seg.end === undefined) {
     showModalError("进行中的记录不能编辑，请先结束"); return false;
   }
+  var oldPid = found.pid;
+  var locked = isSystemChore(getProject(oldPid)) || oldPid === CHORE_ID;
+  var inline = !!inlineNew;
+  var targetPid = oldPid;
+  if (locked) {
+    if (inline || (newPid && newPid !== oldPid)) {
+      showModalError("「" + CHORE_NAME + "」的记录不能改所属项目"); return false;
+    }
+  } else if (!inline) {
+    targetPid = String(newPid === null || newPid === undefined ? "" : newPid);
+    if (!targetPid) { showModalError("请选择项目"); return false; }
+    var chosen = getProject(targetPid);
+    if (!chosen) { showModalError("所选项目不存在，请刷新后重试"); return false; }
+    if (isSystemChore(chosen) || targetPid === CHORE_ID) {
+      showModalError("不能改到「" + CHORE_NAME + "」"); return false;
+    }
+  }
   var a = parseClockHM(startStr), b = parseClockHM(endStr);
   if (!a || !b) { showModalError("请填写有效的开始和结束时间"); return false; }
   var midnight = midnightOf(dayKey);
@@ -3281,24 +3329,36 @@ function saveRecordEdit(segId, startStr, endStr, noteStr) {
   if (endTs <= startTs) { showModalError("结束时间必须晚于开始时间"); return false; }
   if (endTs > now) { showModalError("结束时间不能晚于现在"); return false; }
   var note = Array.from(String(noteStr === null || noteStr === undefined ? "" : noteStr)).slice(0, 50).join("");
-  var pid = found.pid;
-  /* 编辑前该项目超额量：用于「从没超额变超额」的橙条提示判断 */
+  /* 所有校验通过后才内联新建项目，保证「保存失败不会残留空项目」 */
+  if (inline) {
+    var created = createProjectInline();
+    if (!created) return false;
+    targetPid = created;
+  }
+  /* 改动前目标项目的超额量：用于「从没超额变超额」的橙条提示判断 */
   var before = limitRowsForDay(dayKey, now), oldOver = 0;
-  for (var i = 0; i < before.length; i++) if (before[i].projectId === pid) { oldOver = before[i].over; break; }
-  /* 原地改写，保持 id / endType / sourceProject / 所属项目 / 桶不变 */
+  for (var i = 0; i < before.length; i++) if (before[i].projectId === targetPid) { oldOver = before[i].over; break; }
+  /* 原地改写，保持 id / endType / sourceProject 不变 */
   seg.start = startTs;
   seg.end = endTs;
   seg.note = note;
+  /* v0.3J：换桶只挪同一个段对象，不改数据结构、不改日期 */
+  var moved = (targetPid !== oldPid);
+  if (moved) {
+    removeSegmentRaw(state, dayKey, oldPid, seg);
+    ensureBucket(state.days, dayKey, targetPid).push(seg);
+  }
   state.currentDayKey = dayKey;
   save();
   render();
   /* 编辑后若「适可而止」项目从没超额变超额，弹一次橙色提示条（只提示，不阻断） */
-  var p = getProject(pid);
+  var p = getProject(targetPid);
   if (p && groupOf(p) === GROUP_LESS) {
     var after = limitRowsForDay(dayKey, now), newOver = 0;
-    for (var j = 0; j < after.length; j++) if (after[j].projectId === pid) { newOver = after[j].over; break; }
+    for (var j = 0; j < after.length; j++) if (after[j].projectId === targetPid) { newOver = after[j].over; break; }
     if (oldOver <= 0 && newOver > 0) showLimitNotice("《" + p.name + "》今天已超 " + newOver + " 分钟");
   }
+  if (moved && p) showToast("这一段已改到《" + p.name + "》");
   return true;
 }
 
@@ -3365,6 +3425,10 @@ function toggleAddInlineNew() {
   var open = !box.classList.contains("open");
   if (open) box.classList.add("open"); else box.classList.remove("open");
   if (sel) sel.disabled = open;
+  var picker = root.querySelector("#proj-picker"),
+      sInput = root.querySelector("#add-project-search");
+  if (picker) { if (open) picker.classList.add("picker-disabled"); else picker.classList.remove("picker-disabled"); }
+  if (sInput) sInput.disabled = open;
   if (btn) btn.textContent = open ? "收起新建项目" : "＋ 直接新建项目";
   if (open && input && typeof input.focus === "function") { try { input.focus(); } catch (e) {} }
 }
@@ -3408,8 +3472,11 @@ function createProjectInline() {
   return pid;
 }
 
-/** 补记弹窗的项目下拉：按三组 optgroup 分组 + 事来则应；组内沿用 sortIndex 降序；只读 state。 */
-function projectOptionsHTML() {
+/** 补记 / 编辑共用的项目下拉：按三组 optgroup 分组 + 事来则应；组内沿用 sortIndex 降序；只读 state。
+    v0.3J：可选 opts.selectedPid 指定默认选中项，opts.excludeChore 隐藏「事来则应」（编辑弹窗不能挪进去）。
+    不传参数时行为与补记弹窗原有调用完全一致。 */
+function projectOptionsHTML(opts) {
+  var o = opts || {};
   var ps = Array.isArray(state.projects) ? state.projects : [];
   var defs = [
     { key: GROUP_MORE, label: "多多益善" },
@@ -3427,16 +3494,168 @@ function projectOptionsHTML() {
   }
   var html = "";
   for (var j = 0; j < defs.length; j++) {
+    if (o.excludeChore && defs[j].key === "chore") continue;
     var items = buckets[defs[j].key];
     if (!items.length) continue;
     items.sort(function (x, y) { return sortIndexOf(y) - sortIndexOf(x); });
     html += '<optgroup label="' + esc(defs[j].label) + '">';
     for (var m = 0; m < items.length; m++) {
-      html += '<option value="' + esc(items[m].id) + '">' + esc(items[m].name) + '</option>';
+      html += '<option value="' + esc(items[m].id) + '"' +
+        (o.selectedPid === items[m].id ? ' selected' : '') + '>' + esc(items[m].name) + '</option>';
     }
     html += '</optgroup>';
   }
   return html;
+}
+
+/* -------------------- v0.3K：补记 / 编辑弹窗共用「可搜索项目选择器」 --------------------
+ * 1) 保留 #add-project 这个 id，改成 hidden 字段存 pid —— 两个 onConfirm / saveHourRecord /
+ *    saveRecordEdit / 超额提示全部零改动；补记默认空白（value=""），未选中时保存走既有校验。
+ * 2) 候选列表放在文档流内，避开 .modal-panel 的 overflow-y:auto 裁剪。
+ * 3) 搜索词只存在于弹窗 DOM，关弹窗即消失；不写 state / localStorage，不触发 save / 同步。
+ * 4) 局部重绘只改列表容器，不重建输入框，输入焦点不丢。 */
+
+/** 按现有下拉同款顺序（三组 + 事来则应，组内 sortIndex 降序）返回候选项目；
+    includeChore 控制是否含系统项目（补记含、编辑不含）。 */
+function pickerProjectList(includeChore) {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var defs = [
+    { key: GROUP_MORE, label: GROUP_LABEL.more },
+    { key: GROUP_LESS, label: GROUP_LABEL.less },
+    { key: GROUP_FLOW, label: GROUP_LABEL.flow },
+    { key: "chore", label: "系统" }
+  ];
+  var buckets = {};
+  for (var d = 0; d < defs.length; d++) buckets[defs[d].key] = [];
+  for (var i = 0; i < ps.length; i++) {
+    var p = ps[i];
+    var k = (isSystemChore(p) || isChoreProject(p)) ? "chore" : groupOf(p);
+    if (!k || !buckets[k]) k = GROUP_MORE;
+    buckets[k].push(p);
+  }
+  var out = [];
+  for (var j = 0; j < defs.length; j++) {
+    if (!includeChore && defs[j].key === "chore") continue;
+    var items = buckets[defs[j].key];
+    items.sort(function (x, y) { return sortIndexOf(y) - sortIndexOf(x); });
+    for (var m = 0; m < items.length; m++) out.push({ p: items[m], grp: defs[j].label });
+  }
+  return out;
+}
+
+/** 生成选择器静态骨架；候选内容由 refreshProjectPicker() 填充。
+    selectedPid 为空表示「默认空白、不预选」，编辑弹窗传当前段所属项目。 */
+function projectPickerHTML(opts) {
+  var o = opts || {};
+  var sel = o.selectedPid ? String(o.selectedPid) : "";
+  return '<div class="proj-picker' + (o.disabled ? " picker-disabled" : "") + '" id="proj-picker"' +
+      ' data-chore="' + (o.includeChore === false ? "0" : "1") + '">' +
+      '<div class="proj-search picker-search" id="picker-search">' +
+        '<svg class="proj-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.8 10.8 L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' +
+        '<input id="add-project-search" class="proj-search-input" type="text" inputmode="search" ' +
+          'autocomplete="off" autocapitalize="off" spellcheck="false" ' +
+          'placeholder="搜项目名，点一下即选中" aria-label="搜索项目">' +
+        '<button type="button" class="proj-search-clear" data-action="picker-clear" aria-label="清空搜索">×</button>' +
+      '</div>' +
+      '<div class="picker-chosen" id="picker-chosen"></div>' +
+      '<div class="picker-list" id="picker-list">' +
+        '<div class="picker-list-hd" id="picker-list-hd"></div>' +
+        '<div id="picker-items"></div>' +
+      '</div>' +
+      '<input type="hidden" id="add-project" value="' + esc(sel) + '">' +
+    '</div>';
+}
+
+/** 只重绘候选区与「已选」条，绝不重建输入框 —— 边打字边过滤不丢焦点。 */
+function refreshProjectPicker() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var wrap = root.querySelector("#proj-picker");
+  if (!wrap) return;
+  var input = root.querySelector("#add-project-search"),
+      chosen = root.querySelector("#picker-chosen"),
+      hd = root.querySelector("#picker-list-hd"),
+      items = root.querySelector("#picker-items"),
+      hidden = root.querySelector("#add-project"),
+      sbox = root.querySelector("#picker-search");
+  if (!input || !chosen || !hd || !items || !hidden) return;
+  var kw = String(input.value || "").trim();
+  if (sbox) { if (kw) sbox.classList.add("has-value"); else sbox.classList.remove("has-value"); }
+  var pid = String(hidden.value || "");
+  var selP = pid ? getProject(pid) : null;
+  if (selP) {
+    chosen.className = "picker-chosen has-value";
+    chosen.innerHTML = '<span class="pc-ck">✓</span><span class="pc-name">已选 · ' + esc(selP.name) +
+      '</span><span class="pc-hint">重新搜索或点其它行可改</span>';
+  } else {
+    chosen.className = "picker-chosen";
+    chosen.textContent = "未选择项目 · 请在下方点选或搜索";
+  }
+  var includeChore = wrap.getAttribute("data-chore") !== "0";
+  var all = pickerProjectList(includeChore);
+  var words = kw.toLowerCase().split(/\s+/).filter(function (w) { return !!w; });
+  var hits = [];
+  for (var i = 0; i < all.length; i++) {
+    if (!words.length || searchMatch(all[i].p, words)) hits.push(all[i]);
+  }
+  if (!hits.length) {
+    hd.textContent = kw ? "没有找到「" + kw + "」" : "暂无可选项目";
+    items.innerHTML = '<div class="picker-empty">没有匹配的项目' +
+      '<span class="pe-hint">' + (kw ? "换个词试试，或点下方「＋ 直接新建项目」" : "请在下方「＋ 直接新建项目」创建") + '</span></div>';
+    return;
+  }
+  var shown = Math.min(hits.length, SEARCH_MAX_RESULTS);
+  hd.textContent = (kw ? "找到 " : "共 ") + hits.length + " 项 · 点一行即选中" +
+    (hits.length > SEARCH_MAX_RESULTS ? "（仅显示前 " + SEARCH_MAX_RESULTS + " 项）" : "");
+  var html = "";
+  for (var j = 0; j < shown; j++) {
+    var it = hits[j], p = it.p, on = (p.id === pid);
+    html += '<div class="picker-item' + (on ? " on" : "") + '" data-action="pick-project" data-pid="' + esc(p.id) + '">' +
+      '<span class="pi-name">' + esc(p.name) + '</span>' +
+      '<span class="pi-grp">' + esc(it.grp) + '</span>' +
+      (on ? '<span class="pi-tick">✓</span>' : '') + '</div>';
+  }
+  items.innerHTML = html;
+}
+
+/** 弹窗打开后调用：绑定输入、渲染首屏候选。 */
+function initProjectPicker() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var input = root.querySelector("#add-project-search");
+  var wrap = root.querySelector("#proj-picker");
+  if (input) input.oninput = refreshProjectPicker;
+  if (input && wrap) input.disabled = wrap.classList.contains("picker-disabled");
+  refreshProjectPicker();
+}
+
+function pickProject(pid) {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var wrap = root.querySelector("#proj-picker");
+  if (!wrap || wrap.classList.contains("picker-disabled")) return;
+  var p = getProject(pid);
+  if (!p) return;
+  var hidden = root.querySelector("#add-project");
+  if (hidden) hidden.value = p.id;
+  refreshProjectPicker();
+}
+
+function clearPickerSearch() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var input = root.querySelector("#add-project-search");
+  if (input) input.value = "";
+  refreshProjectPicker();
+  if (input) { try { input.focus(); } catch (e) {} }
+}
+
+/** 输入框按 Enter / iOS 键盘「搜索」：选中第一个候选，绝不触发保存。 */
+function pickerConfirmFirst() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var first = root.querySelector("#picker-items .picker-item");
+  if (first) pickProject(first.getAttribute("data-pid"));
 }
 
 /** 补记弹窗内实时预览：沿用「不足 1 分钟按 1 分钟」口径，与编辑弹窗同款样式 */
@@ -3462,25 +3681,11 @@ function refreshAddPreview() {
   box.className = "edit-preview";
 }
 
-/** 打开「补记一段时间」弹窗：复用编辑弹窗同一套布局，多一个项目下拉与「日期」字段。
-    hour 为 0–23：从时间轴某个空白小时进入（默认时段取该小时最长空白）；
-    hour 传 null：从「历史记录」进入（默认时段取所选日期当天最长空白）。
-    dayKey 默认北京时间今天，可改到过去：补到哪天就算在哪天，不计入今天。
-    第二十一轮：项目下拉下方增加「＋ 直接新建项目」内联区，可在弹窗内建项目并一次保存。 */
-function openAddHourRecordModal(hour, dayKey) {
-  var h = (hour === null || hour === undefined || hour === "") ? null : Number(hour);
-  if (h !== null && (!Number.isInteger(h) || h < 0 || h > 23)) return;
-  var opts = projectOptionsHTML();
-  var autoInline = !opts; /* 一个可选项目都没有时，直接展开内联新建区，不再把人赶走 */
-  var today = bjTodayKey();
-  var dk = isValidDayKey(dayKey) ? dayKey : today;
-  if (dk > today) dk = today;
-  var range = (h === null) ? defaultAddRangeForDay(dk) : defaultAddRange(h, dk);
-  var desc = (h === null)
-    ? "日期默认今天，可改到过去 · 补到哪天算哪天"
-    : (timelineClock(h * 60) + "–" + timelineClock((h + 1) * 60) + " · 可改日期，补到哪天算哪天");
-  var inlineHTML =
-    '<button type="button" class="add-inline-toggle" id="add-inline-toggle" data-action="add-inline-new">' +
+/** v0.3J：补记 / 编辑弹窗共用的「直接新建项目」内联区。
+    id 与 data-action 保持原样，isAddInlineNew / toggleAddInlineNew / createProjectInline 零改动复用；
+    hint 由调用方定制，说明新建后这一段「记到」还是「改到」它名下。 */
+function inlineNewProjectHTML(autoInline, hint) {
+  return '<button type="button" class="add-inline-toggle" id="add-inline-toggle" data-action="add-inline-new">' +
       (autoInline ? "收起新建项目" : "＋ 直接新建项目") + '</button>' +
     '<div class="add-inline-box' + (autoInline ? " open" : "") + '" id="add-inline-box">' +
       '<label class="edit-note-label" for="add-new-name">新项目名称（最多 10 个字，不可重名）</label>' +
@@ -3491,16 +3696,36 @@ function openAddHourRecordModal(hour, dayKey) {
         '<button type="button" class="add-group-chip" data-action="add-inline-group" data-group="less">适可而止</button>' +
         '<button type="button" class="add-group-chip" data-action="add-inline-group" data-group="flow">如实知见</button>' +
       '</div>' +
-      '<div class="add-inline-hint">将同时创建这个项目，并把这一段记到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。</div>' +
+      '<div class="add-inline-hint">' + esc(hint) + '</div>' +
     '</div>';
+}
+
+/** 打开「补记一段时间」弹窗：复用编辑弹窗同一套布局，多一个项目下拉与「日期」字段。
+    hour 为 0–23：从时间轴某个空白小时进入（默认时段取该小时最长空白）；
+    hour 传 null：从「历史记录」进入（默认时段取所选日期当天最长空白）。
+    dayKey 默认北京时间今天，可改到过去：补到哪天就算在哪天，不计入今天。
+    第二十一轮：项目下拉下方增加「＋ 直接新建项目」内联区，可在弹窗内建项目并一次保存。 */
+function openAddHourRecordModal(hour, dayKey) {
+  var h = (hour === null || hour === undefined || hour === "") ? null : Number(hour);
+  if (h !== null && (!Number.isInteger(h) || h < 0 || h > 23)) return;
+  var pickerList = pickerProjectList(true);
+  var autoInline = pickerList.length === 0; /* 一个可选项目都没有时，直接展开内联新建区 */
+  var today = bjTodayKey();
+  var dk = isValidDayKey(dayKey) ? dayKey : today;
+  if (dk > today) dk = today;
+  var range = (h === null) ? defaultAddRangeForDay(dk) : defaultAddRange(h, dk);
+  var desc = (h === null)
+    ? "日期默认今天，可改到过去 · 补到哪天算哪天"
+    : (timelineClock(h * 60) + "–" + timelineClock((h + 1) * 60) + " · 可改日期，补到哪天算哪天");
+  var inlineHTML = inlineNewProjectHTML(autoInline,
+    "将同时创建这个项目，并把这一段记到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。");
   var panel =
     '<div class="modal-title">补记一段时间</div>' +
     '<div class="modal-desc">' + desc + ' · 日期按北京时间</div>' +
     '<label class="edit-note-label" for="add-date">日期（默认今天，可改到过去）</label>' +
     '<input id="add-date" class="modal-input add-date-input" type="date" value="' + esc(dk) + '" max="' + esc(today) + '">' +
-    '<label class="edit-note-label" for="add-project">事项（项目）</label>' +
-    '<select id="add-project" class="modal-input modal-select"' + (autoInline ? ' disabled' : '') + '>' +
-      (opts || '<option value="">（暂无可选项目，请在下方新建）</option>') + '</select>' +
+    '<label class="edit-note-label" for="add-project-search">事项（项目）</label>' +
+    projectPickerHTML({ includeChore: true, selectedPid: "", disabled: autoInline }) +
     inlineHTML +
     '<div class="edit-time-row">' +
       '<div class="edit-time-field"><label for="add-start">开始时间</label>' +
@@ -3547,6 +3772,7 @@ function openAddHourRecordModal(hour, dayKey) {
   if (stEl) stEl.oninput = refreshAddPreview;
   if (enEl) enEl.oninput = refreshAddPreview;
   refreshAddPreview();
+  initProjectPicker();
 }
 
 /** 保存补记：校验 → 往「所选日期」该项目桶追加一段 finished 段 → save()/render()。
@@ -4786,6 +5012,11 @@ window.TTR = {
   defaultAddRangeForDay: defaultAddRangeForDay,
   openAddHourRecordModal: openAddHourRecordModal,
   saveHourRecord: saveHourRecord,
+  pickerProjectList: pickerProjectList,
+  refreshProjectPicker: refreshProjectPicker,
+  pickProject: pickProject,
+  clearPickerSearch: clearPickerSearch,
+  pickerConfirmFirst: pickerConfirmFirst,
   toggleAddInlineNew: toggleAddInlineNew,
   setAddInlineGroup: setAddInlineGroup,
   isAddInlineNew: isAddInlineNew,
