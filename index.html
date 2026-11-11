@@ -88,7 +88,8 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .status-text{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600;color:var(--blue);}
 .status-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%;box-shadow:0 0 0 4px rgba(47,125,246,.10);}
 
-/* ========== 今日概览：单一焦点 40px 今日累计 + 8px 细进度条 ========== */
+/* v0.3T：以下「今日累计 / 进度条」样式对应的 DOM 已删除，保留为兼容样式，不参与渲染 */
+/* ========== 今日概览：原单一焦点 40px 今日累计 + 8px 细进度条 ========== */
 .ov-label{font-size:13px;color:var(--muted);}
 .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px;display:inline-block;}
 .ov-total{padding:2px 0 14px;}
@@ -103,10 +104,11 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 #stat-remaining{font-size:13px;color:var(--muted);}
 
 /* ========== 今日时间分布：24 格 × 1 小时（v0.3M 方案 B：去边框细格，一格一色，深浅=投入） ========== */
-.tl-wrap{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
-.tl-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px;}
-.tl-title{font-size:13px;font-weight:700;}
+/* v0.3T：删掉二级标题与分隔线；提示上移到「今日概览」标题行右侧，只作用于概览卡 */
+.tl-wrap{margin-top:2px;}
 .tl-hint{font-size:11px;color:var(--muted);}
+#overview-card > .section-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+#overview-card > .section-title .tl-hint{white-space:nowrap;}
 .tl-track{display:flex;gap:3px;height:28px;}
 .tl-cell{position:relative;display:block;flex:1 1 0;min-width:0;padding:0;border:0;border-radius:5px;background:#EDF1F7;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .tl-cell:hover,.tl-cell.is-open{outline:2px solid var(--blue);outline-offset:1px;z-index:2;}
@@ -349,6 +351,22 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .edit-preview{font-size:14px;color:var(--blue);margin-top:10px;line-height:1.4;min-height:20px;}
 .edit-preview.invalid{color:#E0453B;}
 
+/* ========== v0.3S：备注「最近用过」候选（方案 A：常驻浅蓝胶囊） ==========
+   只在两个弹窗的备注输入框下方出现；没有候选时整个容器 :empty 不占位。 */
+.note-sug{margin:10px 0 0;}
+.note-sug:empty{display:none;}
+.note-sug-hd{font-size:12px;color:var(--muted);line-height:1.3;margin:0 0 7px;}
+.note-sug-list{display:flex;flex-wrap:wrap;gap:6px;}
+.note-chip{
+  display:block;max-width:100%;padding:6px 11px;border:1px solid #CFE0FB;border-radius:999px;
+  background:#F1F6FF;color:#2F5FA8;font-size:13px;line-height:1.35;font-family:inherit;
+  text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  -webkit-appearance:none;appearance:none;
+}
+.note-chip:active{background:#DDEBFF;}
+.note-chip.on{background:#DCEBFF;border-color:#9EC2FA;color:#1F4E96;}
+.note-chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
 /* ========== 中断原因底部面板 ========== */
 #sheet-root{position:fixed;inset:0;z-index:120;}
 .sheet-backdrop{position:absolute;inset:0;background:rgba(20,35,60,.42);}
@@ -428,6 +446,25 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .ov-chore{font-size:12px;color:var(--muted);margin-top:2px;}
 /* 所有时长数字等宽 */
 .ov-numbers,#stat-total,#stat-target,.proj-today,.proj-today-main,.rec-time,#status-elapsed{font-variant-numeric:tabular-nums;}
+/* v0.3O：「已计时」数字可点，进入「调整开始时间」。✎ 用伪元素，
+   因为 1s 定时器只改 #status-elapsed 的 textContent，不会冲掉伪元素。 */
+.status-right{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;min-width:0;}
+.status-elapsed{display:inline-flex;align-items:center;gap:4px;margin:0;padding:2px 0;
+  background:none;border:0;font-family:inherit;font-size:13px;font-weight:700;
+  color:var(--blue);font-variant-numeric:tabular-nums;cursor:pointer;}
+.status-elapsed::after{content:"✎";font-size:12px;font-weight:600;opacity:.7;}
+.status-elapsed:active{opacity:.6;}
+.status-elapsed:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px;}
+.status-badge{font-size:11px;font-weight:600;color:var(--blue);background:#DCE9FF;
+  border-radius:5px;padding:2px 6px;white-space:nowrap;}
+.adjust-cur{background:#F5F8FE;border-radius:10px;padding:10px 12px;font-size:13px;
+  color:var(--muted);line-height:1.6;margin:10px 0 2px;}
+.adjust-cur b{color:var(--text);font-variant-numeric:tabular-nums;}
+.adjust-chips{display:flex;gap:8px;margin-top:12px;}
+.adjust-chip{flex:1 1 0;min-width:0;height:36px;border:1px solid #C9DBFB;border-radius:9px;
+  background:#F4F8FF;color:var(--blue);font-size:13px;font-weight:700;cursor:pointer;}
+.adjust-chip:active{opacity:.65;}
+.adjust-chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
 
 /* ===== 每日上限 dailyLimit（第七轮增量）===== */
 .limit-note{font-size:11px;color:var(--muted);line-height:1.25;}
@@ -475,6 +512,24 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .group-more .gm-arrow{font-size:18px;line-height:1;}
 .chore-cards{margin-top:6px;border-top:1px solid var(--line);padding-top:2px;}
 @media (max-width:360px){.group-summary{font-size:11px;}.group-add{flex-basis:28px;width:28px;height:28px;font-size:18px;}.group-more{font-size:13px;min-height:42px;}}
+
+/* ===== 分组标题美化（v0.3P · 方案 B 淡彩分组头）=====
+ * 覆盖第八轮 .group-head 的视觉层；display / align-items / flex 布局、
+ * .group-summary 的省略号规则、.group-add 的尺寸与点击态全部沿用原值，不重复声明。
+ * 语义色按 data-group 取：more=品牌蓝（进取/目标）、less=暖琥珀（限度/提醒）、
+ * flow=石板灰蓝（如实/中立）。分组身份仍由文字承担，颜色只作辅助识别。 */
+.group-block{margin-bottom:16px;}
+.group-head{
+  --g-accent:#2F7DF6;--g-tint:#F1F6FF;
+  gap:8px;padding:9px 8px 9px 12px;margin-bottom:8px;
+  border:0;border-left:3px solid var(--g-accent);
+  border-radius:9px;background:var(--g-tint);
+}
+.group-head[data-group="less"]{--g-accent:#E8912D;--g-tint:#FFF6EA;}
+.group-head[data-group="flow"]{--g-accent:#65789B;--g-tint:#F3F5FA;}
+.group-name{font-size:15px;font-weight:800;color:var(--g-accent);letter-spacing:.3px;}
+.group-summary{font-size:11px;color:#98A3B4;}
+@media (max-width:360px){.group-head{padding:9px 6px 9px 9px;gap:6px;}}
 /* ===== 项目搜索（v0.3F）=====
  * 搜索框是 #project-list 之外的静态 DOM，局部重绘项目列表不会重建它，输入焦点得以保留。 */
 .proj-search{
@@ -519,7 +574,8 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 @media (max-width:360px){.sort-mode-btn{font-size:11px;padding:5px 8px;margin-right:4px;}}
 
 
-/* 圆形图标：两组统一为环形进度；未设目标/上限时显示虚线加号 */
+/* 圆形图标：两组统一为环形进度。v0.3Q 起未设目标/上限不再产出占位圈，
+   下方 .orb-empty 保留为兼容样式（当前渲染路径不再使用） */
 .goal-orb{
   flex:0 0 42px;width:42px;height:42px;border-radius:50%;
   display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
@@ -666,12 +722,96 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   .picker-item{font-size:13.5px;padding:9px 10px}
   .picker-chosen .pc-hint{display:none}
 }
+
+/* ===== v0.3U：我的项目 · 清单呼吸（方案 A）=====
+ * 只改视觉层：把「名字 + 实心蓝开始 + 环形圈 + 今日合计 + 累计次数 + ⋯」挤在一行的卡片，
+ * 改成两行——第一行只留名字与极轻的开始动作，第二行放数据并用中点分隔。
+ * 不动 DOM / JS / 数据结构 / 同步协议；开始、环形圈、⋯ 菜单、目标设置入口全部保留。
+ * 选择器统一加 #project-list 提高特异性覆盖旧规则；旧规则原样保留，便于回退。
+ * 计时中态用 :has(.proj-actions:empty) 判定（计时中 actionsHTML 返回空），不新增 JS。
+ */
+#project-list .group-block{margin-bottom:18px;}
+#project-list .group-head{
+  border:0;border-bottom:1px solid #E7EBF2;border-radius:0;background:transparent;
+  padding:0 2px 9px;margin-bottom:2px;gap:8px;
+}
+#project-list .group-name{font-size:12px;font-weight:700;color:#7E8BA1;letter-spacing:2px;}
+#project-list .group-summary{font-size:11px;color:#AEB8C7;}
+#project-list .group-add{
+  background:transparent;border:1px solid #DDE4EF;color:#9AA6B8;
+  font-size:17px;border-radius:50%;
+}
+
+/* 卡片：不再一行到底，改为两行网格；名字前一个 7px 项目色圆点 */
+#project-list .project-card{padding:0 0 0 16px;min-height:0;border-bottom:1px solid #F0F2F7;}
+#project-list .project-card:not(:last-child){border-bottom:1px solid #F0F2F7;}
+#project-list .proj-stripe{
+  left:1px;top:22px;bottom:auto;width:7px;height:7px;border-radius:50%;
+}
+#project-list .proj-top{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto auto;
+  grid-template-areas:"name start orb menu" "meta meta meta meta";
+  align-items:center;column-gap:9px;row-gap:3px;
+  min-height:0;padding:11px 2px 11px 0;
+}
+#project-list .proj-name{grid-area:name;font-size:16px;font-weight:600;letter-spacing:.2px;}
+
+/* 开始：实心蓝块 → 细描边胶囊，降低视觉重量 */
+#project-list .proj-actions{grid-area:start;}
+#project-list .proj-actions .btn{
+  width:auto;min-width:0;height:29px;min-height:29px;padding:0 13px;border-radius:999px;
+  background:transparent;color:#3B5BA9;border:1px solid #D8E0EC;
+  font-size:12px;font-weight:600;box-shadow:none;
+}
+#project-list .proj-spacer{display:none;}
+#project-list .goal-orb{grid-area:orb;flex:0 0 34px;width:34px;height:34px;}
+#project-list .goal-orb .ring-num{font-size:11px;}
+#project-list .goal-orb .ring-sub{font-size:7px;}
+#project-list .menu-btn{grid-area:menu;font-size:19px;flex:0 0 30px;width:30px;}
+
+/* 数据整行降到第二行，用中点分隔，不再和名字抢视线 */
+#project-list .proj-today{
+  grid-area:meta;flex-direction:row;align-items:baseline;text-align:left;
+  gap:0;font-size:11px;color:#9AA6B8;white-space:normal;
+}
+#project-list .proj-today > span{white-space:nowrap;}
+#project-list .proj-today span:not(:empty) + span:not(:empty)::before{
+  content:"·";margin:0 7px;color:#CBD3DF;
+}
+#project-list .proj-today-main{font-size:11px;color:#7E8BA1;}
+/* 一点数据都没有时，第二行整行不占位 */
+#project-list .proj-today:not(:has(span:not(:empty))){display:none;}
+
+/* ⋯ 菜单按卡片实际高度下移，避免盖住第二行 */
+#project-list .proj-menu{top:calc(100% - 2px);}
+
+/* 计时中：圆点加光环、名字转靛蓝（不依赖 JS） */
+#project-list .project-card:has(.proj-actions:empty) .proj-stripe{
+  box-shadow:0 0 0 3px rgba(59,91,169,.14);
+}
+#project-list .project-card:has(.proj-actions:empty) .proj-name{color:#3B5BA9;}
+
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
 <div data-page-node-id="PxD6YnMqZiSJB92k1X2TUS" id="app">
   <header data-page-node-id="UDOlncxaWheaJ2hNm8FTBq" id="app-header"></header>
   <div data-page-node-id="ZuJqvnEOuQ2S9LEKNxX23n" class="wrap">
+    <!-- v0.3R：今日概览置顶、我的项目次之；只调卡片顺序，样式与逻辑不变 -->
+    <!-- v0.3S：补记 / 编辑弹窗的备注框新增「最近用过」候选，只读已有记录，不改数据结构 -->
+    <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
+      <div data-page-node-id="kSz1dUhH1pjGOxkEFF9jhu" class="section-title"><!--pnid:s2PycIDVRAD5xzuwV5xdDh-->今日概览<span class="tl-hint" id="timeline-hint">每格1小时·点开看明细</span></div>
+      <!-- v0.3T：删除「今日累计 / 目标 / 完成度 / 进度条 / 适可而止超额汇总」整块与「今日时间分布」二级标题；提示上移到主标题行右侧 -->
+      <div class="tl-wrap" id="timeline-wrap">
+        <div class="tl-track" id="timeline-track"></div>
+        <div class="tl-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+        <div class="tl-legend" id="timeline-legend"></div>
+        <div class="tl-blank" id="timeline-blank"></div>
+        <div class="tl-detail" id="timeline-detail" style="display:none"></div>
+      </div>
+    </section>
+
     <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card">
       <div class="section-head">
         <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
@@ -685,34 +825,6 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
         <button type="button" class="proj-search-clear" data-action="search-clear" aria-label="清空搜索">×</button>
       </div>
       <div data-page-node-id="0AZjBDLAkQjL4TOI2yQDXz" id="project-list"></div>
-    </section>
-
-    <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
-      <div data-page-node-id="kSz1dUhH1pjGOxkEFF9jhu" class="section-title"><!--pnid:s2PycIDVRAD5xzuwV5xdDh-->今日概览</div>
-      <div data-page-node-id="IGAyYQ37TCh05JvIkQ3OQe" class="ov-total">
-        <div class="ov-headline">
-          <span class="ov-label">今日累计</span>
-          <span data-page-node-id="5L685nf7t7XOcU1e7oyrvh" id="stat-target"><!--pnid:jPSuWA5eIC1mSAeb69DYsP-->未设置目标</span>
-        </div>
-        <div data-page-node-id="Od4TGvuzesIpnWyQ7vztTD" class="ov-numbers">
-          <span data-page-node-id="oailLwJB02s8D87PmpmJ5F" id="stat-total"><!--pnid:Kepr8xD6ws4L4fem31yLjr-->00:00</span>
-        </div>
-        <div data-page-node-id="MnpSPs9JoGLbVjE7zK6QU9" class="ov-chore" id="stat-chore-line" style="display:none"></div>
-        <div id="ov-limit-summary"></div>
-      </div>
-      <div class="ov-progress-track"><div class="ov-progress-fill" id="stat-progress-fill"></div></div>
-      <div data-page-node-id="WoWi2yn2k2CSOFRwmcT5gm" class="ov-progress-text">
-        <span data-page-node-id="FnunyhpxeSmjgpDaEjJvMt" id="stat-percent-text"><!--pnid:7QFcjcKcc6g1I370063ZdZ-->完成 0%</span>
-        <span data-page-node-id="AK0AcCs3xdLQuLKFDJlpID" id="stat-remaining"><!--pnid:N8sriVcbSQjJbPhDmL6zUZ-->设置目标后查看完成情况</span>
-      </div>
-      <div class="tl-wrap" id="timeline-wrap">
-        <div class="tl-head"><span class="tl-title">今日时间分布</span><span class="tl-hint" id="timeline-hint">点格子看这一小时</span></div>
-        <div class="tl-track" id="timeline-track"></div>
-        <div class="tl-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
-        <div class="tl-legend" id="timeline-legend"></div>
-        <div class="tl-blank" id="timeline-blank"></div>
-        <div class="tl-detail" id="timeline-detail" style="display:none"></div>
-      </div>
     </section>
 
     <section class="card" id="history-card">
@@ -733,7 +845,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3M</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3U</span></div>
   </div>
 </div>
 
@@ -1989,11 +2101,20 @@ function renderStatusBar(running) {
     var p = getProject(running.projectId);
     if (p) {
       var id = esc(p.id);
+      var seg0 = running.seg;
+      var adjusted = typeof seg0.originStart === "number" && isFinite(seg0.originStart) &&
+                     Number(seg0.originStart) !== Number(seg0.start);
       html += '<div class="status-line1">' +
           '<span class="status-dot" style="background:' + projectColor(p) + '"></span>' +
           '<span class="status-name">' + esc(p.name) + '</span>' +
           '<span class="status-tag">· 计时中</span>' +
-          '<span class="status-elapsed" id="status-elapsed">已计时 ' + formatMinutes(minutesOfSegment(running.seg, Date.now())) + '</span>' +
+          '<div class="status-right">' +
+            '<button type="button" class="status-elapsed" id="status-elapsed" ' +
+              'data-action="adjust-start" aria-label="调整开始时间" ' +
+              'title="点这里把起点改回真正开始的时刻">已计时 ' +
+              formatMinutes(minutesOfSegment(seg0, Date.now())) + '</button>' +
+            (adjusted ? '<span class="status-badge">起点已调整</span>' : '') +
+          '</div>' +
         '</div>' +
         '<div class="status-line2">' +
           '<button class="btn btn-outline status-btn" data-action="interrupt" data-id="' + id + '">中断</button>' +
@@ -2012,9 +2133,13 @@ function renderOverview(stats) {
   /* 今日总计不变；完成度口径改为只算「多多益善」组里设了目标的项目 */
   /* 第十六轮：全天无记录时也保留概览卡（内为全空白时间轴与补记入口），保证第一条记录也能补记 */
   if (ovCard) ovCard.style.display = "";
-  document.getElementById("stat-total").textContent = formatMinutes(stats.totalMinutes);
-  document.getElementById("stat-target").textContent = stats.moreHasTarget ? "目标 " + formatMinutes(stats.moreTargetMinutes) : "未设置目标";
-  document.getElementById("stat-percent-text").textContent = "完成 " + stats.morePercent + "%";
+  /* v0.3T：今日累计整块已删除，以下节点可能不存在，逐处加空值保护，避免整页渲染中断 */
+  var elTotal = document.getElementById("stat-total");
+  if (elTotal) elTotal.textContent = formatMinutes(stats.totalMinutes);
+  var elTarget = document.getElementById("stat-target");
+  if (elTarget) elTarget.textContent = stats.moreHasTarget ? "目标 " + formatMinutes(stats.moreTargetMinutes) : "未设置目标";
+  var elPercent = document.getElementById("stat-percent-text");
+  if (elPercent) elPercent.textContent = "完成 " + stats.morePercent + "%";
 
   /* 沿用原有三个判断分支（无目标 / 已完成 / 已超出），仅把「N 分钟」改成「X 小时 Y 分」 */
   var remaining;
@@ -2026,7 +2151,8 @@ function renderOverview(stats) {
     else if (diff === 0) remaining = "已完成目标";
     else remaining = "已超出 " + remainingText(-diff);
   }
-  document.getElementById("stat-remaining").textContent = remaining;
+  var elRemaining = document.getElementById("stat-remaining");
+  if (elRemaining) elRemaining.textContent = remaining;
   /* 其中事来则应 XX 分钟：没有事来则应记录时不显示 */
   var choreLine = document.getElementById("stat-chore-line");
   if (choreLine) {
@@ -2248,7 +2374,7 @@ function renderTimeline(stats, dayKey, now) {
     }
   }
   var hint = document.getElementById("timeline-hint");
-  if (hint) hint.textContent = (timelineHour === null) ? "点格子看这一小时" : "再点一次收起";
+  if (hint) hint.textContent = (timelineHour === null) ? "每格1小时·点开看明细" : "再点一次收起";
 }
 
 /* 项目行内只放「开始」小胶囊；计时中的「中断 / 结束」上浮到状态条活动卡（方案 A）。
@@ -2281,7 +2407,9 @@ function groupSummaryText(group, minutesByPid, list) {
 }
 
 /** 圆形图标：more / less 两组统一环形进度；more 按「已投入/目标」填充（达标保持满环、不变红），
- *  less 按「已用/上限」填充（超额红环填满）；未设目标/上限显示虚线加号；
+ *  less 按「已用/上限」填充（超额红环填满）。
+ *  v0.3Q：未设目标 / 上限时不再显示虚线加号占位圈；设置入口走 ⋯ 菜单的
+ *  「设置每日目标 / 上限」，以及新建项目后自动弹出的设置面板。
  *  事来则应与「如实知见」组不显示任何圆形图标 */
 function goalOrbHTML(p, limitByPid, minutesByPid) {
   var g = groupOf(p);
@@ -2290,8 +2418,7 @@ function goalOrbHTML(p, limitByPid, minutesByPid) {
   if (g === GROUP_LESS) {
     var lr = limitByPid[p.id] || { limit: null, used: 0, over: 0 };
     if (!lr.limit) {
-      return '<button class="goal-orb orb-empty" data-action="target" data-id="' + pid +
-        '" aria-label="设置每日上限">＋</button>';
+      return ""; /* v0.3Q：未设上限不显示占位圈，入口在 ⋯ 菜单 */
     }
     var over = lr.over > 0;
     /* 环形进度：按 已用/上限 填充；超额时填满整环并变红 */
@@ -2305,8 +2432,7 @@ function goalOrbHTML(p, limitByPid, minutesByPid) {
   }
   var tm = (typeof p.targetMinutes === "number" && Number.isFinite(p.targetMinutes) && p.targetMinutes > 0) ? p.targetMinutes : 0;
   if (tm <= 0) {
-    return '<button class="goal-orb orb-empty" data-action="target" data-id="' + pid +
-      '" aria-label="设置每日目标">＋</button>';
+    return ""; /* v0.3Q：未设目标不显示占位圈，入口在 ⋯ 菜单 */
   }
   /* 环形进度：按 今日已投入/目标 填充；多多益善达标后保持满环，不变红 */
   var used = Math.max(0, Math.floor(Number((minutesByPid && minutesByPid[p.id]) || 0)));
@@ -2451,7 +2577,8 @@ function renderProjectList(stats, running, dayKey) {
   function block(group, list, appendCards) {
     appendCards = appendCards || [];
     var html = '<div class="group-block">' +
-      '<div class="group-head">' +
+      /* v0.3P：data-group 供分组标题语义色取值；事件分发只读按钮自身的 data-group，互不影响 */
+      '<div class="group-head" data-group="' + group + '">' +
         '<span class="group-name">' + GROUP_LABEL[group] + '</span>' +
         '<span class="group-summary">' + esc(groupSummaryText(group, minutesByPid, list)) + '</span>' +
         '<button class="group-add" data-action="add-project-group" data-group="' + group +
@@ -2682,7 +2809,9 @@ function startTimer(pid) {
   var still = findRunningSegment(state);
   if (still && still.projectId === pid) { save(); render(); return; } /* 防御：不重复开段 */
   var b = ensureBucket(state.days, dayKey, pid);
-  b.push({ id: newId("s"), start: now, end: null, endType: "running", note: "", sourceProject: "" });
+  /* v0.3O：originStart 记录「最初点开始」的时刻，之后调整 start 也不改它，
+     供 mergeRemote() 在多端之间认出这是同一段（可选字段，旧数据没有就走原逻辑）。 */
+  b.push({ id: newId("s"), start: now, originStart: now, end: null, endType: "running", note: "", sourceProject: "" });
   state.currentDayKey = dayKey;
   save();
   render();
@@ -2699,6 +2828,123 @@ function stopTimer(pid, endType) {
   render();
   /* 结束那一刻：若今天累计超过上限，顶部橙条提示一次（只提示，不阻断） */
   checkLimitNotice(pid, dayKeyOf(now), now, true);
+}
+
+/* -------------------- v0.3O：计时中「调整开始时间」（纯增量） --------------------
+   场景：实际 10:00 开始，10:30 才想起点「开始」——把起点改回 10:00。
+   只写 seg.start 一个字段；originStart 保持最初起点，供跨端合并认身份。 */
+
+function openAdjustStartModal() {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var running = findRunningSegment(state);
+  if (!running || running.seg.endType !== "running" || running.seg.end !== null) {
+    showToast("当前没有正在计时的记录"); return;
+  }
+  if (running.dayKey !== dayKeyOf(now)) {
+    showToast("跨天的计时中段请先结束，再补记调整"); return;
+  }
+  var startText = formatTime(running.seg.start);
+  var elapsed = formatMinutes(minutesOfSegment(running.seg, now));
+  var panel =
+    '<div class="modal-title">调整开始时间</div>' +
+    '<div class="modal-desc">想起点开始时已经过去一会儿？把起点改回真正开始的时刻，已计时会自动跟着变。</div>' +
+    '<div class="adjust-cur">当前：<b>' + startText + '</b> 开始 · 已计时 <b>' + elapsed + '</b></div>' +
+    '<label class="edit-note-label" for="adjust-start">改成几点开始</label>' +
+    '<div class="edit-time-field" style="width:100%">' +
+      '<input id="adjust-start" class="modal-input" type="time" step="60" value="' + startText + '">' +
+    '</div>' +
+    '<div class="adjust-chips">' +
+      '<button type="button" class="adjust-chip" data-action="adjust-quick" data-minutes="15">−15 分钟</button>' +
+      '<button type="button" class="adjust-chip" data-action="adjust-quick" data-minutes="30">−30 分钟</button>' +
+      '<button type="button" class="adjust-chip" data-action="adjust-quick" data-minutes="60">−1 小时</button>' +
+    '</div>' +
+    '<div class="edit-preview" id="adjust-preview"></div>' +
+    '<div class="modal-error" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
+    '</div>';
+  openModalShell(panel, {
+    kind: "adjust-start",
+    onConfirm: function () { return saveAdjustStart(); }
+  });
+  var inp = document.getElementById("adjust-start");
+  if (inp) inp.oninput = refreshAdjustPreview;
+  refreshAdjustPreview();
+}
+
+/** 弹窗内实时预览：把「改完后已计时多久」算给用户看，不写 state */
+function refreshAdjustPreview() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var inp = root.querySelector("#adjust-start");
+  var box = root.querySelector("#adjust-preview");
+  if (!inp || !box) return;
+  var a = parseClockHM(inp.value), text = "", invalid = true;
+  if (!a) text = "请填写有效的开始时间";
+  else {
+    var now = Date.now();
+    var st = midnightOf(dayKeyOf(now)) + (a.h * 60 + a.m) * 60000;
+    if (st >= now) text = "开始时间必须早于现在";
+    else {
+      invalid = false;
+      text = "将改为 " + inp.value + " 开始 · 已计时 " +
+             formatMinutes(Math.max(0, Math.floor((now - st) / 60000)));
+    }
+  }
+  box.textContent = text;
+  if (box.classList) box.classList.toggle("invalid", invalid);
+}
+
+/** 快捷按钮：以输入框「当前值」为基准往前挪 N 分钟，下限是今天 0 点 */
+function applyAdjustQuick(mins) {
+  var root = document.getElementById("modal-root");
+  var inp = root && root.querySelector("#adjust-start");
+  if (!inp) return;
+  var a = parseClockHM(inp.value);
+  if (!a) { showModalError("请先填写有效的开始时间"); return; }
+  var now = Date.now();
+  var midnight = midnightOf(dayKeyOf(now));
+  var cur = midnight + (a.h * 60 + a.m) * 60000;
+  var next = cur - Number(mins) * 60000;
+  if (next < midnight) next = midnight;
+  if (next >= now) { showModalError("已经到今天 0 点了，不能再往前调"); return; }
+  inp.value = formatTime(next);
+  showModalError("");
+  refreshAdjustPreview();
+}
+
+/** 保存：校验 → 补写 originStart（兼容旧段）→ 只改 start → save() 自动同步 */
+function saveAdjustStart() {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var running = findRunningSegment(state);
+  if (!running || running.seg.endType !== "running" || running.seg.end !== null) {
+    showModalError("当前没有正在计时的记录"); return false;
+  }
+  if (running.dayKey !== dayKeyOf(now)) {
+    showModalError("跨天的计时中段不能调整，请先结束"); return false;
+  }
+  var root = document.getElementById("modal-root");
+  var inp = root && root.querySelector("#adjust-start");
+  var a = parseClockHM(inp ? inp.value : "");
+  if (!a) { showModalError("请填写有效的开始时间"); return false; }
+  var midnight = midnightOf(running.dayKey);
+  var startTs = midnight + (a.h * 60 + a.m) * 60000;
+  if (startTs < midnight) { showModalError("开始时间不能早于今天 0 点"); return false; }
+  if (startTs >= now) { showModalError("开始时间必须早于现在"); return false; }
+  var seg = running.seg;
+  if (startTs === Number(seg.start)) return true; /* 没变化：直接关闭，不触发无谓同步 */
+  if (typeof seg.originStart !== "number" || !isFinite(seg.originStart)) {
+    seg.originStart = Number(seg.start); /* v0.3N 及更早的旧段：用当前起点补写身份 */
+  }
+  seg.start = startTs;
+  state.currentDayKey = dayKeyOf(now);
+  save();
+  render();
+  showToast("起点已调为 " + pad2(a.h) + ":" + pad2(a.m) + "，已计时按新起点计算");
+  return true;
 }
 
 function deleteRecordById(segId) {
@@ -2769,6 +3015,8 @@ function onDocumentClick(e) {
     case "start": startTimer(id); break;
     case "interrupt": openInterruptSheet(id); break;
     case "finish": stopTimer(id, "finished"); break;
+    case "adjust-start": openAdjustStartModal(); break;
+    case "adjust-quick": applyAdjustQuick(el.getAttribute("data-minutes")); break;
     case "menu": toggleProjMenu(id, el); break;
     case "menu-target": closeProjMenu(); openTargetModal(id); break;
     case "menu-move": closeProjMenu(); openMoveGroupModal(id); break;
@@ -2791,6 +3039,7 @@ function onDocumentClick(e) {
     case "add-inline-new": toggleAddInlineNew(); break;
     case "add-inline-group": setAddInlineGroup(el.getAttribute("data-group")); break;
     case "pick-project": pickProject(el.getAttribute("data-pid")); break;
+    case "note-pick": pickNote(el); break;
     case "picker-clear": clearPickerSearch(); break;
     case "history-add": openHistoryAddModal(); break;
     case "sync-open": openSyncModal(); break;
@@ -3265,6 +3514,7 @@ function openEditRecordModal(segId) {
     '<label class="edit-note-label" for="edit-note">备注（最多 50 字，可留空）</label>' +
     '<input id="edit-note" class="modal-input" type="text" maxlength="50" ' +
       'value="' + esc(seg.note || "") + '" placeholder="可留空" autocomplete="off">' +
+    noteSuggestBoxHTML("edit-note", found.pid, segId) +
     '<div class="edit-preview" id="edit-preview"></div>' +
     '<div class="modal-error" id="modal-error"></div>' +
     '<div class="modal-actions">' +
@@ -3288,6 +3538,7 @@ function openEditRecordModal(segId) {
   if (enEl) enEl.oninput = refreshEditPreview;
   refreshEditPreview();
   initProjectPicker();
+  refreshNoteSuggest(); /* v0.3S */
 }
 
 /** 保存编辑：校验 → 原地写 start/end/note →（v0.3J）必要时换所属项目桶 → 派生数字自动重算。
@@ -3431,6 +3682,7 @@ function toggleAddInlineNew() {
   if (sInput) sInput.disabled = open;
   if (btn) btn.textContent = open ? "收起新建项目" : "＋ 直接新建项目";
   if (open && input && typeof input.focus === "function") { try { input.focus(); } catch (e) {} }
+  refreshNoteSuggest(); /* v0.3S：内联新建新项目时隐藏候选 */
 }
 /** 当前选中的新建分组：只读 DOM，默认「多多益善」 */
 function currentAddInlineGroup() {
@@ -3506,6 +3758,107 @@ function projectOptionsHTML(opts) {
     html += '</optgroup>';
   }
   return html;
+}
+
+/* -------------------- v0.3S：备注「最近用过」候选（方案 A） --------------------
+ * 1) 只读 state.days 里已有段的 note，不新增存储字段 / localStorage key / 同步字段，
+ *    别的设备同步过来的备注自然进入候选。
+ * 2) 口径「按当前项目」：补记弹窗选好项目后才出现，编辑弹窗用该段所属项目；
+ *    换项目随 pickProject() 即时刷新；内联新建项目（尚无记录）不显示。
+ * 3) 排除系统自动生成的中断备注、排除正在编辑的这一段、同一句去重，
+ *    按段 start 倒序取最近 3 条。没有候选时整块不显示。
+ * 4) 点候选只是把文字填进原来的 input 并聚焦，照常能改 / 能清空 / 能整句重打。 */
+var NOTE_SUGGEST_MAX = 3;
+
+/** 系统自动生成的备注（「因《X》中断…」）不是手打的，不进候选 */
+function isAutoGeneratedNote(text) {
+  var t = String(text === null || text === undefined ? "" : text).trim();
+  return t.indexOf("因《") === 0 && t.indexOf("》中断") > 0;
+}
+
+/** 某项目最近用过的手写备注，最多 3 条；返回原始字符串数组（按段 start 倒序）。 */
+function recentNotesForProject(pid, excludeSegId) {
+  if (!pid) return [];
+  var days = (state && state.days) || {};
+  var dks = Object.keys(days), gathered = [];
+  for (var i = 0; i < dks.length; i++) {
+    var bucket = days[dks[i]];
+    if (!bucket || !Array.isArray(bucket[pid])) continue;
+    var arr = bucket[pid];
+    for (var j = 0; j < arr.length; j++) {
+      var seg = arr[j];
+      if (!seg || typeof seg.note !== "string") continue;
+      var raw = seg.note, key = raw.trim();
+      if (!key || isAutoGeneratedNote(key)) continue;
+      if (excludeSegId && String(seg.id) === String(excludeSegId)) continue;
+      gathered.push({ note: raw, key: key, start: Number(seg.start) || 0, dayKey: dks[i] });
+    }
+  }
+  gathered.sort(function (a, b) {
+    if (b.start !== a.start) return b.start - a.start;
+    return String(b.dayKey).localeCompare(String(a.dayKey));
+  });
+  var seen = {}, out = [];
+  for (var k = 0; k < gathered.length && out.length < NOTE_SUGGEST_MAX; k++) {
+    var g = gathered[k];
+    if (seen[g.key]) continue;
+    seen[g.key] = true;
+    out.push(g.note);
+  }
+  return out;
+}
+
+/** 候选容器骨架；内容由 refreshNoteSuggest() 填充（换项目时可局部重绘）。 */
+function noteSuggestBoxHTML(inputId, pid, excludeSegId) {
+  return '<div class="note-sug" id="note-sug" role="group" aria-label="最近用过的备注"' +
+    ' data-input="' + esc(inputId) + '"' +
+    ' data-pid="' + esc(pid || "") + '"' +
+    ' data-exclude="' + esc(excludeSegId || "") + '"></div>';
+}
+
+/** 重绘候选区：优先读项目选择器当前值，锁死归属的编辑弹窗回退到 data-pid。 */
+function refreshNoteSuggest() {
+  var root = document.getElementById("modal-root");
+  var box = document.getElementById("note-sug");
+  if (!root || !box) return;
+  var hidden = root.querySelector("#add-project");
+  var pid = hidden ? String(hidden.value || "") : "";
+  if (!pid) pid = String(box.getAttribute("data-pid") || "");
+  /* 内联新建的项目还没落地，没有历史备注可复用 */
+  if (!pid || isAddInlineNew()) { box.innerHTML = ""; return; }
+  var p = getProject(pid);
+  var notes = p ? recentNotesForProject(pid, String(box.getAttribute("data-exclude") || "")) : [];
+  if (!notes.length) { box.innerHTML = ""; return; }
+  var html = '<div class="note-sug-hd">最近用过 · ' + esc(p.name) + '</div><div class="note-sug-list">';
+  for (var i = 0; i < notes.length; i++) {
+    html += '<button type="button" class="note-chip" data-action="note-pick" data-note="' +
+      esc(notes[i]) + '" title="' + esc(notes[i]) + '">' + esc(notes[i]) + '</button>';
+  }
+  box.innerHTML = html + '</div>';
+}
+
+/** 点候选：填入备注输入框、光标放末尾、该条高亮；继续打字即取消高亮。 */
+function pickNote(el) {
+  var box = document.getElementById("note-sug");
+  if (!box) return;
+  var input = document.getElementById(String(box.getAttribute("data-input") || ""));
+  if (!input) return;
+  var text = el.getAttribute("data-note");
+  input.value = Array.from(String(text === null || text === undefined ? "" : text)).slice(0, 50).join("");
+  var chips = box.querySelectorAll(".note-chip");
+  for (var i = 0; i < chips.length; i++) chips[i].classList.remove("on");
+  el.classList.add("on");
+  if (!input.getAttribute("data-note-sug-bound")) {
+    input.setAttribute("data-note-sug-bound", "1");
+    input.addEventListener("input", function () {
+      var b = document.getElementById("note-sug");
+      if (!b) return;
+      var on = b.querySelectorAll(".note-chip.on");
+      for (var j = 0; j < on.length; j++) on[j].classList.remove("on");
+    });
+  }
+  try { input.focus(); } catch (e) {}
+  try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
 }
 
 /* -------------------- v0.3K：补记 / 编辑弹窗共用「可搜索项目选择器」 --------------------
@@ -3639,6 +3992,7 @@ function pickProject(pid) {
   var hidden = root.querySelector("#add-project");
   if (hidden) hidden.value = p.id;
   refreshProjectPicker();
+  refreshNoteSuggest(); /* v0.3S：换项目后候选区跟着换 */
 }
 
 function clearPickerSearch() {
@@ -3736,6 +4090,7 @@ function openAddHourRecordModal(hour, dayKey) {
     '<label class="edit-note-label" for="add-note">备注（最多 50 字，可留空）</label>' +
     '<input id="add-note" class="modal-input" type="text" maxlength="50" ' +
       'placeholder="可留空" autocomplete="off">' +
+    noteSuggestBoxHTML("add-note", "", "") +
     '<div class="edit-preview" id="add-preview"></div>' +
     '<div class="modal-error" id="modal-error"></div>' +
     '<div class="modal-actions">' +
@@ -3773,6 +4128,7 @@ function openAddHourRecordModal(hour, dayKey) {
   if (enEl) enEl.oninput = refreshAddPreview;
   refreshAddPreview();
   initProjectPicker();
+  refreshNoteSuggest(); /* v0.3S */
 }
 
 /** 保存补记：校验 → 往「所选日期」该项目桶追加一段 finished 段 → save()/render()。
@@ -4489,6 +4845,51 @@ function applyRemoteState(payload) {
   renderSyncBar();
 }
 
+/**
+ * v0.3N：同 id + 同起点的两段，是「同一段」而不是两段。
+ * 场景：电脑开始计时，手机同步后点结束，电脑这边稍后又点了一次结束——
+ * 两端各自把同一个 seg 闭合成不同时长的 finished，合并时若按「内容不同就是撞号」
+ * 处理，就会变成两条记录（今日记录里出现两条几乎一样的条目）。
+ * 取舍：协议里没有「谁后改」的时间戳，因此按可解释的优先级取一方：
+ *   计时中 vs 已结束      -> 取已结束的（更完整）
+ *   两端都结束了          -> 取 end 较晚的（最后一次结束更接近真实）
+ *   两端都还在计时        -> 保留本地（当前正在跑的那条）
+ * 备注 / 来源项目取非空的一侧：宁可多留信息，也不把另一端填过的内容清掉。
+ */
+function mergeSameSegment(cloudSeg, localSeg) {
+  var cEnd = (cloudSeg.end === null || cloudSeg.end === undefined) ? null : Number(cloudSeg.end);
+  var lEnd = (localSeg.end === null || localSeg.end === undefined) ? null : Number(localSeg.end);
+  var pickLocal;
+  if (cEnd === null && lEnd === null) pickLocal = true;
+  else if (cEnd === null) pickLocal = true;        /* 云端还在跑、本地已结束 */
+  else if (lEnd === null) pickLocal = false;       /* 本地还在跑、云端已结束 */
+  else pickLocal = lEnd >= cEnd;                   /* 两端都结束：取更晚的 */
+
+  var win = pickLocal ? localSeg : cloudSeg;
+  var lose = pickLocal ? cloudSeg : localSeg;
+  var out = syncClone(win);
+  out.id = win.id;
+  /* v0.3O：被「调整开始时间」改过的一侧带 originStart 且 start ≠ originStart。
+     合并后采用被调整过的 start（两端都改过取更早的），别把用户改回的真实起点丢掉；
+     两侧都没改过时保持 v0.3N 原行为 win.start，历史回归不受影响。 */
+  var cAdj = isFinite(Number(cloudSeg.originStart)) &&
+             Number(cloudSeg.start) !== Number(cloudSeg.originStart);
+  var lAdj = isFinite(Number(localSeg.originStart)) &&
+             Number(localSeg.start) !== Number(localSeg.originStart);
+  if (cAdj && lAdj) out.start = Math.min(Number(cloudSeg.start), Number(localSeg.start));
+  else if (cAdj) out.start = Number(cloudSeg.start);
+  else if (lAdj) out.start = Number(localSeg.start);
+  else out.start = Number(win.start);
+  if (isFinite(Number(win.originStart))) out.originStart = Number(win.originStart);
+  else if (isFinite(Number(lose.originStart))) out.originStart = Number(lose.originStart);
+  var note = String(win.note == null ? "" : win.note) || String(lose.note == null ? "" : lose.note);
+  var src = String(win.sourceProject == null ? "" : win.sourceProject) ||
+            String(lose.sourceProject == null ? "" : lose.sourceProject);
+  out.note = note;
+  out.sourceProject = src;
+  return out;
+}
+
 /* ---------- 合并：远端为基底，把本地独有的项目/段补进去 ---------- */
 function mergeRemote(localS, remoteS) {
   var out = syncClone(remoteS);
@@ -4546,14 +4947,27 @@ function mergeRemote(localS, remoteS) {
         var seg = arr[b];
         if (!seg || !seg.id) continue;
         if (!seen[seg.id]) { target.push(syncClone(seg)); seen[seg.id] = true; continue; }
-        /* 同 id：内容一致视为同一条；不一致说明两端各自生成撞号，改名后都保留 */
+        /* 同 id 先判「段身份」，再决定合一条还是留两条（v0.3N）：
+           · 同 id + 同 start：同一段被一端更新过（结束 / 改时间 / 改备注），合并成一条；
+           · 同 id + 不同 start：两端各自新建、撞了同一个 id，改名后两条都留，
+             宁可多一条也不丢数据。 */
         var exist = null, t;
         for (t = 0; t < target.length; t++) if (target[t].id === seg.id) { exist = target[t]; break; }
-        var diff = !exist
-          || Number(exist.start) !== Number(seg.start)
-          || Number(exist.end === null ? -1 : exist.end) !== Number(seg.end === null ? -1 : seg.end)
-          || String(exist.note == null ? "" : exist.note) !== String(seg.note == null ? "" : seg.note);
-        if (diff) {
+        if (!exist) continue;
+        /* v0.3O：一端调整过 start 时，靠可选 originStart 认回同一段。
+           旧段没有该字段：Number(undefined) = NaN，isFinite 为 false，
+           判定退化为「start 相同」，与 v0.3N 行为完全一致。 */
+        var exOrigin = Number(exist.originStart), lgOrigin = Number(seg.originStart);
+        var sameIdentity = Number(exist.start) === Number(seg.start) ||
+          (isFinite(exOrigin) && exOrigin === Number(seg.start)) ||
+          (isFinite(lgOrigin) && lgOrigin === Number(exist.start)) ||
+          /* 两端都调整过起点：originStart 相同说明源自同一次「点开始」，仍是同一段 */
+          (isFinite(exOrigin) && isFinite(lgOrigin) && exOrigin === lgOrigin);
+        if (sameIdentity) {
+          for (t = 0; t < target.length; t++) {
+            if (target[t].id === seg.id) { target[t] = mergeSameSegment(exist, seg); break; }
+          }
+        } else {
           var nsid = seg.id + "_m", c = 1;
           while (seen[nsid]) { c++; nsid = seg.id + "_m" + c; }
           var ns = syncClone(seg); ns.id = nsid;
@@ -4942,7 +5356,16 @@ function initSync() {
     if (syncCfg.enabled && (syncRt.dirty || syncRt.err)) runSync(false);
   });
   document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState === "visible" && syncCfg.enabled && (syncRt.dirty || syncRt.err)) runSync(false);
+    if (document.visibilityState !== "visible" || !syncCfg.enabled) return;
+    if (syncRt.dirty || syncRt.err) { runSync(false); return; }
+    /* v0.3N：本机有计时中的段，切回前台就主动拉一次。另一台设备可能已经把它结束了，
+       不拉就会一直显示「还在计时」，用户再点一次结束就多出一条记录。
+       这不是常驻轮询：只在「有计时中 + 页面重新可见」时触发一次；
+       弹窗开着时不拉，避免重绘打断正在填的内容。 */
+    if (!findRunningSegment(state)) return;
+    var mroot = document.getElementById("modal-root");
+    if (mroot && mroot.innerHTML) return;
+    runSync(false);
   });
   /* 兜底：失败重试 + 刷新「N 分钟前」 */
   window.setInterval(function () {
@@ -4954,7 +5377,7 @@ function initSync() {
 /* -------------------- 八、初始化 -------------------- */
 
 function init() {
-  /* 刷新 / 重新打开一律回到最顶部（「我的项目」），不恢复上次的滚动位置 */
+  /* 刷新 / 重新打开一律回到最顶部（「今日概览」），不恢复上次的滚动位置 */
   try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (e) {}
   try { window.scrollTo(0, 0); } catch (e) {}
   state = load();
@@ -5028,6 +5451,11 @@ window.TTR = {
   syncRt: function () { return syncRt; },
   runSync: runSync,
   mergeRemote: mergeRemote,
+  mergeSameSegment: mergeSameSegment,
+  openAdjustStartModal: openAdjustStartModal,
+  saveAdjustStart: saveAdjustStart,
+  refreshAdjustPreview: refreshAdjustPreview,
+  applyAdjustQuick: applyAdjustQuick,
   markSyncDirty: markSyncDirty,
   openSyncModal: openSyncModal,
   saveSyncFromModal: saveSyncFromModal,
