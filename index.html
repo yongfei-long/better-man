@@ -531,7 +531,9 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .group-summary{font-size:11px;color:#98A3B4;}
 @media (max-width:360px){.group-head{padding:9px 6px 9px 9px;gap:6px;}}
 /* ===== 项目搜索（v0.3F）=====
- * 搜索框是 #project-list 之外的静态 DOM，局部重绘项目列表不会重建它，输入焦点得以保留。 */
+ * 搜索框是 #project-list 之外的静态 DOM，局部重绘项目列表不会重建它，输入焦点得以保留。
+ * v0.3Y：点「开始」由 clearSearchQuietly() 静默清空并回到默认分组视图；
+ * × / Esc 走 clearSearch() 仍保留焦点，两个入口分工不变。 */
 .proj-search{
   display:flex;align-items:center;gap:8px;
   height:40px;margin:0 0 12px;padding:0 10px;box-sizing:border-box;
@@ -649,7 +651,11 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .ov-limit-head{display:block;width:100%;text-align:left;padding:6px 0;color:var(--muted);font-size:12px;font-weight:600;}
 .ov-limit-head .ov-less-over{color:#E0453B;font-weight:700;}
 
-/* ========== 历史记录（按北京时间选日期，只读查看） ========== */
+/* ========== 历史记录（按北京时间选日期，可逐条编辑 / 删除） ==========
+ * v0.3W：每条右侧复用今日明细的「✎ 编辑 + × 删除」，按钮带 data-day；
+ * 编辑 / 删除链路按 dayKey 参数化（不传时默认今天），今日概览零改动。
+ * 弹层文案保持今日原样，历史进入时不额外标出日期。
+ */
 .hist-pick{display:flex;align-items:center;gap:8px;}
 .hist-date{
   flex:1 1 auto;min-width:0;width:100%;height:42px;padding:0 10px;
@@ -792,6 +798,66 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 }
 #project-list .project-card:has(.proj-actions:empty) .proj-name{color:#3B5BA9;}
 
+/* ===== v0.3V：船上穿插（方案 B）=====
+ * 语义：一件事可以「在船上做」——船继续走，船上这件事另记一段，段上带 parent 指向船段。
+ * 只加「船上一行」与状态条副行；卡片主结构、按钮、菜单、统计口径全部不动。
+ * 净时长 = 船已计时 − 船上合计（不会算成负数）。
+ */
+#project-list .proj-top{
+  grid-template-areas:"name start orb menu" "meta meta meta meta" "boat boat boat boat";
+}
+#project-list .boat-sub{
+  grid-area:boat;display:flex;align-items:baseline;gap:6px;min-width:0;
+  font-size:11.5px;color:#7E8BA1;padding:0 2px 10px;margin-top:-2px;
+}
+#project-list .boat-sub .boat-ico{flex:0 0 auto;color:#B9C4D6;}
+#project-list .boat-sub .boat-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#project-list .boat-sub .boat-net{
+  flex:0 0 auto;margin-left:auto;color:#3B5BA9;font-weight:600;font-variant-numeric:tabular-nums;
+}
+/* 状态条：船上这件事单独一行，虚线分隔，右侧「收」只结束这一件 */
+#status-bar .status-parallel{
+  display:flex;flex-direction:column;gap:2px;
+  padding-top:8px;margin-top:2px;border-top:1px dashed #CFE2FF;
+}
+#status-bar .sp-row{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#5A6A85;padding:3px 0;}
+#status-bar .sp-dot{flex:0 0 7px;width:7px;height:7px;border-radius:50%;}
+#status-bar .sp-name{
+  flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-weight:600;color:#1F2A44;
+}
+#status-bar .sp-tag{flex:0 0 auto;color:#8FA0BC;font-size:11px;}
+#status-bar .sp-elapsed{
+  margin-left:auto;flex:0 0 auto;font-variant-numeric:tabular-nums;
+  font-weight:700;color:#3B5BA9;font-size:12.5px;
+}
+#status-bar .sp-finish{
+  flex:0 0 auto;border:1px solid #C9D8EE;background:#fff;color:#3B5BA9;
+  border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:600;cursor:pointer;
+}
+#status-bar .sp-finish:active{background:#E7F0FF;}
+
+
+/* ===== v0.3Z：我的项目 · 分类作筛选 + 清单默认 3 条 ===== */
+.cat-chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px;}
+.cat-chip{
+  padding:6px 9px;border-radius:999px;border:1px solid #E2E8F2;background:#fff;
+  color:#65728A;font-size:11.5px;font-family:inherit;cursor:pointer;white-space:nowrap;
+}
+.cat-chip.on{background:#EAF2FF;border-color:#A9C9F7;color:#2F7DF6;font-weight:700;}
+.cat-chip:focus-visible,.flat-more:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.cat-filter-sum{font-size:12px;color:#7E8BA1;margin:0 2px 10px;font-variant-numeric:tabular-nums;}
+.flat-wrap{margin-top:0;}
+.flat-more{
+  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  min-height:40px;margin-top:6px;background:transparent;border:0;border-radius:10px;
+  color:#7E8BA1;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.flat-more:hover{background:#F4F8FF;color:var(--blue);}
+@media (max-width:360px){
+  .cat-chip{padding:6px 9px;font-size:11px;}
+}
+
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -845,7 +911,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3U</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3Z</span></div>
   </div>
 </div>
 
@@ -1130,14 +1196,21 @@ function sanitizeSegment(raw, fallbackIndex) {
   var note = (typeof raw.note === "string") ? Array.from(raw.note).slice(0, 50).join("") : "";
   var sourceProject = (typeof raw.sourceProject === "string") ? Array.from(raw.sourceProject).slice(0, 10).join("") : "";
   var endType = raw.endType;
+  /* v0.3V：船上穿插的段带 parent（指向船段 id）。旧数据没有这个字段就完全不写，
+     数据形状保持原样；只有真的挂在船上时才多一个键。 */
+  var parentId = (typeof raw.parent === "string" && raw.parent)
+    ? Array.from(raw.parent).slice(0, 40).join("") : "";
+  var seg;
   if (endType === "running") {
-    return { id: id, start: start, end: null, endType: "running", note: note, sourceProject: sourceProject };
-  }
-  if (endType === "interrupted" || endType === "finished") {
+    seg = { id: id, start: start, end: null, endType: "running", note: note, sourceProject: sourceProject };
+  } else if (endType === "interrupted" || endType === "finished") {
     if (typeof raw.end !== "number" || !Number.isFinite(raw.end) || raw.end < start) return null;
-    return { id: id, start: start, end: raw.end, endType: endType, note: note, sourceProject: sourceProject };
+    seg = { id: id, start: start, end: raw.end, endType: endType, note: note, sourceProject: sourceProject };
+  } else {
+    return null;
   }
-  return null;
+  if (parentId) seg.parent = parentId;
+  return seg;
 }
 
 /** 轻量校验 + 迁移：字段缺失补默认值、非法值丢弃；schemaVersion 预留升级位 */
@@ -1485,7 +1558,7 @@ function showChoreNotice(text) {
   if (choreNoticeTimer !== null) { clearTimeout(choreNoticeTimer); choreNoticeTimer = null; }
   choreNoticeTimer = setTimeout(function () {
     choreNoticeText = ""; choreNoticeTimer = null;
-    renderStatusBar(findRunningSegment(state));
+    renderStatusBar(findBoatSegment(state));
   }, 3000);
 }
 
@@ -1620,14 +1693,20 @@ function doInterrupt(pid, mode, noteText) {
   var p = getProject(pid);
   var pname = p ? p.name : "";
   var note = noteChars(noteText).slice(0, 50).join("");
-  var running = findRunningSegment(state);
-  if (running && running.projectId === pid) {
-    closeRunningAt(running, now, "interrupted", { note: note });
+  /* v0.3V：中断船时船上那件事一并中断；只中断船上那件事时船照走 */
+  var all = findAllRunningSegments(state);
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].projectId === pid) {
+      closeRunningWithChildren(all[i], now, "interrupted", { note: note });
+    }
   }
   if (mode === "chore") {
     var chore = getChoreProject();
-    var still = findRunningSegment(state);
-    if (chore && (!still || still.projectId !== chore.id)) startChoreSegment(now, pname, note);
+    var runningNow = findAllRunningSegments(state), choreRunning = false;
+    for (var k = 0; k < runningNow.length; k++) {
+      if (chore && runningNow[k].projectId === chore.id) choreRunning = true;
+    }
+    if (chore && !choreRunning) startChoreSegment(now, pname, note);
   }
   state.currentDayKey = dayKeyOf(now);
   save();
@@ -1960,6 +2039,51 @@ function findRunningSegment(st) {
   return all.length > 0 ? all[0] : null;
 }
 
+/* -------------------- v0.3V：船上穿插（纯增量读函数） --------------------
+ * 「船」= 没有 parent、且不是系统「事来则应」的进行中段（同一时刻最多一条）。
+ * 「船上」= parent 指向这条船段的进行中段（同一时刻最多一条，开新的会顶掉旧的）。
+ * 只读 state，不改任何统计口径：今日合计、完成度、上限、CSV 全部沿用原算法。 */
+
+function findBoatSegment(st) {
+  var all = findAllRunningSegments(st);
+  for (var i = 0; i < all.length; i++) {
+    if (!all[i].seg.parent && !isChoreProject(getProject(all[i].projectId))) return all[i];
+  }
+  /* 兜底：数据显示异常（只剩船上的段、或其父段已被别的端删掉）时，
+     退化成「最早开始的那一段当主段」，状态条不会空着，也不会漏掉一个在跑的计时 */
+  return all.length ? all[all.length - 1] : null;
+}
+
+/** 某条船上的进行中段（正常只有 1 条） */
+function runningChildrenOf(st, boatSegId) {
+  var out = [], all = findAllRunningSegments(st);
+  if (!boatSegId) return out;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].seg.parent === boatSegId) out.push(all[i]);
+  }
+  return out;
+}
+
+/** 船上做过的事（含已结束的）+ 合计分钟，供卡片「船上 · X · 净」一行使用 */
+function boatChildrenInfo(st, dayKey, boatSeg) {
+  var info = { minutes: 0, parts: [] };
+  if (!boatSeg || !boatSeg.id) return info;
+  var bucket = (st.days && st.days[dayKey]) || {};
+  var pids = Object.keys(bucket), now = Date.now();
+  for (var p = 0; p < pids.length; p++) {
+    var arr = Array.isArray(bucket[pids[p]]) ? bucket[pids[p]] : [];
+    for (var i = 0; i < arr.length; i++) {
+      var seg = arr[i];
+      if (!seg || seg.parent !== boatSeg.id) continue;
+      var m = minutesOfSegment(seg, now);
+      info.minutes += m;
+      var pr = getProject(pids[p]);
+      info.parts.push((pr ? pr.name : "") + " " + formatMinutes(m));
+    }
+  }
+  return info;
+}
+
 /** 「上次中断」由数据推导：今天所有已闭合段中 end 最大者若 interrupted 则显示 */
 function lastInterruptionFor(st, dayKey, pid) {
   var bucket = (st.days && st.days[dayKey]) || {};
@@ -2000,6 +2124,7 @@ function normalizeDayRollover(newDayKey) {
   var todayMidnight = midnightOf(newDayKey);
   var runnings = findAllRunningSegments(state);
   var changed = false;
+  var idMap = {};   /* v0.3V：旧船段 id → 新的进行中段 id */
   for (var i = 0; i < runnings.length; i++) {
     var r = runnings[i];
     if (r.seg.start >= todayMidnight) continue; /* 仍在同一天：保持原样，不拆分 */
@@ -2012,12 +2137,36 @@ function normalizeDayRollover(newDayKey) {
         note: r.seg.note || "", sourceProject: r.seg.sourceProject || "" });
     }
     var b2 = ensureBucket(state.days, newDayKey, r.projectId);
-    b2.push({ id: newId("s"), start: todayMidnight, end: null, endType: "running",
-      note: r.seg.note || "", sourceProject: r.seg.sourceProject || "" });
+    var newRun = { id: newId("s"), start: todayMidnight, end: null, endType: "running",
+      note: r.seg.note || "", sourceProject: r.seg.sourceProject || "" };
+    if (r.seg.parent) newRun.parent = r.seg.parent;   /* 先照抄旧船 id，下面统一迁移 */
+    b2.push(newRun);
+    /* v0.3V：船段换了新 id，船上那一段的 parent 要跟着换，否则第二天就认不回船 */
+    idMap[r.seg.id] = newRun.id;
     changed = true;
   }
+  if (changed) remapRunningParents(idMap);
   state.currentDayKey = newDayKey;
   return changed;
+}
+
+/** v0.3V：跨天拆分后把「船上」段的 parent 从旧船 id 迁到新船 id（只改仍在跑的段） */
+function remapRunningParents(idMap) {
+  if (!idMap) return;
+  var days = (state && state.days) || {};
+  var dks = Object.keys(days);
+  for (var d = 0; d < dks.length; d++) {
+    var bucket = days[dks[d]] || {};
+    var pids = Object.keys(bucket);
+    for (var p = 0; p < pids.length; p++) {
+      var arr = Array.isArray(bucket[pids[p]]) ? bucket[pids[p]] : [];
+      for (var i = 0; i < arr.length; i++) {
+        var seg = arr[i];
+        if (!seg || seg.end !== null) continue;
+        if (typeof seg.parent === "string" && idMap[seg.parent]) seg.parent = idMap[seg.parent];
+      }
+    }
+  }
 }
 
 /** 业务操作开头调用：若已跨天，先做数据规范化（不弹窗、不打扰） */
@@ -2061,6 +2210,20 @@ function closeRunningAt(running, endTs, endType, extra) {
   }
 }
 
+/**
+ * v0.3V：结束一段。若这段是「船」，连船上正在做的那件事一起结束——
+ * 船靠岸了，船上的人自然下船；此时不单独弹「某某已记录 X 分钟」，避免两句提示。
+ */
+function closeRunningWithChildren(running, endTs, endType, extra) {
+  if (!running || !running.seg || running.seg.end !== null) return;
+  var kids = runningChildrenOf(state, running.seg.id);
+  for (var i = 0; i < kids.length; i++) {
+    if (kids[i].seg === running.seg || kids[i].seg.end !== null) continue;
+    closeRunningAt(kids[i], endTs, endType);
+  }
+  closeRunningAt(running, endTs, endType, extra);
+}
+
 /* -------------------- 四、渲染（一次 now，全量重渲染） -------------------- */
 
 function renderHeader() {
@@ -2080,14 +2243,26 @@ function remainingText(mins) {
 
 /* 1s 定时器：只更新状态条上的已计时数字，绝不调用 render()（避免打断菜单/弹层/输入焦点） */
 function tickRunningElapsed() {
-  var el = document.getElementById("status-elapsed");
-  if (!el) return;
-  var running = findRunningSegment(state);
-  if (!running) return;
+  var boat = findBoatSegment(state);
+  if (!boat) return;
   var t = Date.now();
-  el.textContent = "已计时 " + formatMinutes(minutesOfSegment(running.seg, t));
+  var el = document.getElementById("status-elapsed");
+  if (el) el.textContent = "已计时 " + formatMinutes(minutesOfSegment(boat.seg, t));
+  /* v0.3V：船上的事也各有一行数字，一起走（只改 textContent，绝不 render） */
+  var nodes = document.querySelectorAll("#status-bar .sp-elapsed[data-pid]");
+  if (nodes.length) {
+    var kids = runningChildrenOf(state, boat.seg.id);
+    for (var n = 0; n < nodes.length; n++) {
+      var pid = nodes[n].getAttribute("data-pid");
+      for (var k = 0; k < kids.length; k++) {
+        if (kids[k].projectId === pid) {
+          nodes[n].textContent = formatMinutes(minutesOfSegment(kids[k].seg, t));
+        }
+      }
+    }
+  }
   /* 只在越线那一刻提示一次（去重），绝不调用 render() */
-  checkLimitNotice(running.projectId, dayKeyOf(t), t, false);
+  checkLimitNotice(boat.projectId, dayKeyOf(t), t, false);
 }
 
 /** 状态条作为 #app 的直接子元素（包含块足够高，sticky 才能持续生效）；无计时完全不渲染 */
@@ -2120,6 +2295,26 @@ function renderStatusBar(running) {
           '<button class="btn btn-outline status-btn" data-action="interrupt" data-id="' + id + '">中断</button>' +
           '<button class="btn btn-primary status-btn" data-action="finish" data-id="' + id + '">结束</button>' +
         '</div>';
+    }
+  }
+  /* v0.3V：船上正在做的事单独一行；「收」只结束这一件，船继续走 */
+  if (running) {
+    var kids = runningChildrenOf(state, running.seg.id);
+    if (kids.length) {
+      html += '<div class="status-parallel">';
+      for (var ki = 0; ki < kids.length; ki++) {
+        var kp = getProject(kids[ki].projectId);
+        if (!kp) continue;
+        html += '<div class="sp-row">' +
+          '<span class="sp-dot" style="background:' + projectColor(kp) + '"></span>' +
+          '<span class="sp-name">' + esc(kp.name) + '</span>' +
+          '<span class="sp-tag">· 船上</span>' +
+          '<span class="sp-elapsed" data-pid="' + esc(kp.id) + '">' +
+            formatMinutes(minutesOfSegment(kids[ki].seg, Date.now())) + '</span>' +
+          '<button class="sp-finish" data-action="finish" data-id="' + esc(kp.id) + '">收</button>' +
+        '</div>';
+      }
+      html += '</div>';
     }
   }
   if (choreNoticeText) html += '<span class="status-notice">' + esc(choreNoticeText) + '</span>';
@@ -2446,10 +2641,13 @@ function goalOrbHTML(p, limitByPid, minutesByPid) {
 }
 
 /** 单张项目卡片：沿用原有单行结构，只按组决定圆形图标与右侧小字；无记录时右侧首行留空 */
-function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey, useCounts) {
+function projectCardHTML(p, bucket, minutesByPid, limitByPid, ctx, dayKey, useCounts) {
   var segs = Array.isArray(bucket[p.id]) ? bucket[p.id] : [];
   var hasSegments = segs.length > 0;
-  var isRunning = !!running && running.projectId === p.id;
+  /* v0.3V：ctx = { running:{pid:true}, boat, boatInfo, now }
+     船与船上同时计时，两种卡片都算「计时中」（.proj-actions 仍为空，样式规则不变） */
+  var isRunning = !!(ctx && ctx.running && ctx.running[p.id]);
+  var boatRow = boatSubHTML(p, ctx);
   var lastInt = lastInterruptionFor(state, dayKey, p.id);
   var pid = esc(p.id);
   /* v0.3G：次数徽标放进右侧「今日合计」列，不参与 .proj-top 的 flex 伸缩，
@@ -2475,8 +2673,27 @@ function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey, u
           '<span class="today-sub">' + limitNoteHTML(limitRow, lastInt) + '</span>' +
         '</span>' +
         '<button class="icon-btn menu-btn" data-action="menu" data-id="' + pid + '" aria-label="项目菜单">⋯</button>' +
+        boatRow +
       '</div>' +
     '</div>' +
+  '</div>';
+}
+
+/**
+ * v0.3V：船卡片第三行「⤷ 船上 · 刷漫画 00:31    净 00:30」。
+ * 只有「这条船正在计时 + 船上确实有记录」才出现，其余情况整行不存在（不占位）。
+ * 净时长 = 船已计时 − 船上合计，最小值 0，不会出现负数。
+ */
+function boatSubHTML(p, ctx) {
+  if (!ctx || !ctx.boat || ctx.boat.projectId !== p.id) return "";
+  var info = ctx.boatInfo;
+  if (!info || !info.parts.length) return "";
+  var now = (typeof ctx.now === "number" && isFinite(ctx.now)) ? ctx.now : Date.now();
+  var netM = Math.max(0, minutesOfSegment(ctx.boat.seg, now) - info.minutes);
+  return '<div class="boat-sub">' +
+    '<span class="boat-ico">⤷</span>' +
+    '<span class="boat-text">船上 · ' + esc(info.parts.join("、")) + '</span>' +
+    '<span class="boat-net">净 ' + formatMinutes(netM) + '</span>' +
   '</div>';
 }
 
@@ -2485,6 +2702,22 @@ function projectCardHTML(p, bucket, minutesByPid, limitByPid, running, dayKey, u
  * expandedGroups 是纯 UI 状态：只在内存里，刷新回到收起，不写 state / localStorage / 同步。 */
 var GROUP_VISIBLE_COUNT = 3;
 var expandedGroups = {};
+
+/* v0.3Z：分类筛选 + 扁平清单折叠，同为纯 UI 状态（不写 state / localStorage / 同步）。
+   与 expandedGroups 各自独立，点分类不会搅乱原分组展开态；刷新回到「全部 + 收起」。 */
+var FLAT_VISIBLE_COUNT = 3;
+var catFilter = "all";
+var flatListOpen = false;
+
+function setCatFilter(g) {
+  catFilter = g;
+  flatListOpen = false;   /* 换视角回到 3 条，不带着上一组的展开态 */
+  refreshProjectList();
+}
+function toggleFlatList() {
+  flatListOpen = !flatListOpen;
+  refreshProjectList();
+}
 
 function toggleGroupExpanded(group) {
   expandedGroups[group] = !expandedGroups[group];
@@ -2527,19 +2760,42 @@ function clearSearch() {
   if (input) { try { input.focus(); } catch (e) {} }
 }
 
+/* v0.3Y：搜索结果里点「开始」后退出筛选视图。
+ * 与 v0.3G 新建项目后的静默清空同一手法：只清纯 UI 状态，不写 state / 不触发同步，
+ * 也不抢焦点（clearSearch 会把光标放回输入框，手机上会弹出键盘，这里不要）。
+ * setSearchQuery("") 自带一次局部重绘，即使 startTimer 提前 return，
+ * 也不会留下「输入框空了但列表还在筛选」的不一致状态。 */
+function clearSearchQuietly() {
+  if (!searchQuery) return;
+  var input = document.getElementById("proj-search-input");
+  if (input) input.value = "";
+  setSearchQuery("");
+}
+
 function renderProjectList(stats, running, dayKey) {
   var host = document.getElementById("project-list");
   var projects = orderedProjectsForDisplay();
   var useCounts = useCountMap();   /* v0.3G：一次遍历供所有卡片复用，纯读 */
   var bucket = (state.days && state.days[dayKey]) || {};
+  /* v0.3V：一次算出「哪些项目在计时」「哪条是船」「船上有什么」，所有卡片复用，不逐张查 state */
+  var allRunning = findAllRunningSegments(state);
+  var runningPids = {};
+  for (var ri = 0; ri < allRunning.length; ri++) runningPids[allRunning[ri].projectId] = true;
+  var boat = findBoatSegment(state);
+  var cardCtx = {
+    running: runningPids,
+    boat: boat,
+    boatInfo: boat ? boatChildrenInfo(state, dayKey, boat.seg) : null,
+    now: stats.now
+  };
   var minutesByPid = {};
   for (var m = 0; m < stats.perProject.length; m++) minutesByPid[stats.perProject[m].projectId] = stats.perProject[m].minutes;
   var limitByPid = {};
   var lrows = limitRowsForDay(dayKey, stats.now);
   for (var li = 0; li < lrows.length; li++) limitByPid[lrows[li].projectId] = lrows[li];
 
-  /* 搜索模式（v0.3F）：忽略分组标题与每组 3 项折叠，跨三组平铺所有名称匹配项。
-     清空关键词立刻回到原有分组 + 折叠视图，expandedGroups 的展开状态原样保留。 */
+  /* 搜索模式（v0.3F）：忽略分类筛选与清单折叠，跨全部分类平铺所有名称匹配项。
+     清空关键词立刻回到 v0.3Z 的分类筛选 + 3 条清单视图，筛选与展开态原样保留。 */
   if (searchQuery) {
     var words = searchQuery.toLowerCase().split(/\s+/).filter(function (w) { return !!w; });
     var hits = [];
@@ -2556,7 +2812,7 @@ function renderProjectList(stats, running, dayKey) {
           ? ' · 仅显示前 ' + SEARCH_MAX_RESULTS + ' 项，补充关键词可缩小范围' : '') +
         '</div><div class="group-cards">';
       for (var hk = 0; hk < Math.min(hits.length, SEARCH_MAX_RESULTS); hk++) {
-        sr += projectCardHTML(hits[hk], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
+        sr += projectCardHTML(hits[hk], bucket, minutesByPid, limitByPid, cardCtx, dayKey, useCounts);
       }
       sr += '</div>';
     }
@@ -2574,6 +2830,9 @@ function renderProjectList(stats, running, dayKey) {
     else more.push(projects[i]);
   }
 
+  /* v0.3Z：默认视图改为「分类筛选 + 扁平清单」，下方不再调用本函数。
+     原分组渲染（分组头 / 组汇总 / 组内 ＋ 新建 / 每组 3 项折叠）整段保留，
+     不删功能，供分组复盘与后续回退复用。 */
   function block(group, list, appendCards) {
     appendCards = appendCards || [];
     var html = '<div class="group-block">' +
@@ -2596,7 +2855,7 @@ function renderProjectList(stats, running, dayKey) {
           shown = list;
         } else {
           for (si = 0; si < list.length; si++) {
-            var runningHere = !!running && running.projectId === list[si].id;
+            var runningHere = !!runningPids[list[si].id];
             /* v0.3G：新建 / 移动后的高亮项目也强制可见。热度排序下 0 次项目会沉进折叠区，
                若卡片不生成，applyReveal() 的浅蓝高亮与自动滚动都会失效。 */
             var revealingHere = !!revealPid && list[si].id === revealPid;
@@ -2606,7 +2865,7 @@ function renderProjectList(stats, running, dayKey) {
         }
         html += '<div class="group-cards">';
         for (var k = 0; k < shown.length; k++) {
-          html += projectCardHTML(shown[k], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
+          html += projectCardHTML(shown[k], bucket, minutesByPid, limitByPid, cardCtx, dayKey, useCounts);
         }
         /* 超过 N 项才有按钮；展开态显示「收起」。系统项目在下方 chore-cards，不参与折叠 */
         if (list.length > GROUP_VISIBLE_COUNT) {
@@ -2625,7 +2884,7 @@ function renderProjectList(stats, running, dayKey) {
       if (appendCards.length > 0) {
         html += '<div class="chore-cards">';
         for (var c = 0; c < appendCards.length; c++) {
-          html += projectCardHTML(appendCards[c], bucket, minutesByPid, limitByPid, running, dayKey, useCounts);
+          html += projectCardHTML(appendCards[c], bucket, minutesByPid, limitByPid, cardCtx, dayKey, useCounts);
         }
         html += '</div>';
       }
@@ -2633,7 +2892,63 @@ function renderProjectList(stats, running, dayKey) {
     return html + '</div>';
   }
 
-  var html = block(GROUP_MORE, more) + block(GROUP_LESS, less) + block(GROUP_FLOW, flow, chore);
+  /* v0.3Z：三个分类从「快速记录入口」改为「复盘筛选视角」。
+     默认「全部」= 扁平清单，只显示前 3 条，其余收进「⋯」；点分类才看该组与汇总。
+     搜索态已在上面 early-return，不经过这里，匹配结果不会被折叠吞掉。 */
+  var chips = [
+    ["all", "全部", projects.length],
+    [GROUP_MORE, GROUP_LABEL[GROUP_MORE], more.length],
+    [GROUP_LESS, GROUP_LABEL[GROUP_LESS], less.length],
+    /* 「事来则应」视觉上归入如实知见，计数一并带上，保证各 chip 之和 = 全部 */
+    [GROUP_FLOW, GROUP_LABEL[GROUP_FLOW], flow.length + chore.length]
+  ];
+  var html = '<div class="cat-chips">';
+  for (var chi = 0; chi < chips.length; chi++) {
+    var on = catFilter === chips[chi][0];
+    html += '<button type="button" class="cat-chip' + (on ? ' on' : '') +
+      '" data-action="set-cat-filter" data-group="' + chips[chi][0] +
+      '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+      esc(chips[chi][1]) + ' ' + chips[chi][2] + '</button>';
+  }
+  html += '</div>';
+
+  var flatList = [], flatSum = '';
+  if (catFilter === "all") {
+    for (var fi = 0; fi < projects.length; fi++) flatList.push(projects[fi]);
+  } else {
+    var groupMap = {};
+    groupMap[GROUP_MORE] = more; groupMap[GROUP_LESS] = less; groupMap[GROUP_FLOW] = flow;
+    flatList = (groupMap[catFilter] || []).slice();
+    if (catFilter === GROUP_FLOW) flatList = flatList.concat(chore);
+    flatSum = '<div class="cat-filter-sum">' +
+      esc(groupSummaryText(catFilter, minutesByPid, groupMap[catFilter] || [])) + '</div>';
+  }
+  html += flatSum;
+
+  /* 沿用原分组折叠的既有能力：进行中 / 新建高亮项目即使排在 3 条之外也强制可见，
+     否则点不到「停止」，新建后的浅蓝高亮与自动滚动也会失效。 */
+  var shown = [], hiddenCount = 0, fk;
+  if (flatListOpen) shown = flatList;
+  else {
+    for (fk = 0; fk < flatList.length; fk++) {
+      var fp = flatList[fk];
+      var mustShow = !!runningPids[fp.id] || (!!revealPid && fp.id === revealPid);
+      if (fk < FLAT_VISIBLE_COUNT || mustShow) shown.push(fp);
+      else hiddenCount++;
+    }
+  }
+  html += '<div class="flat-wrap"><div class="flat-cards">';
+  for (var sc = 0; sc < shown.length; sc++) {
+    html += projectCardHTML(shown[sc], bucket, minutesByPid, limitByPid, cardCtx, dayKey, useCounts);
+  }
+  html += '</div>';
+  if (hiddenCount > 0 || flatListOpen) {
+    html += '<button type="button" class="flat-more" data-action="toggle-flat-list"' +
+      ' aria-expanded="' + (flatListOpen ? 'true' : 'false') + '">' +
+      (flatListOpen ? '⋯ 收起' : '⋯ 还有 ' + hiddenCount + ' 项 · 展开全部') +
+      '</button>';
+  }
+  html += '</div>';
   /* 完全没有项目时保留原有空状态入口，不删功能 */
   if (projects.length === 0) {
     html = '<div class="empty-block">还没有项目' +
@@ -2723,6 +3038,9 @@ function renderHistory() {
     var src = (typeof seg.sourceProject === "string") ? seg.sourceProject : "";
     var noteHTML = note ? '<span class="rec-note">' + esc(note) + '</span>' : "";
     var fromHTML = src ? '<span class="rec-from">← ' + esc(src) + '</span>' : "";
+    /* v0.3W：与今日小时明细同款双按钮；data-day 让弹层知道改的是哪一天 */
+    var sid = esc(String(seg.id === undefined || seg.id === null ? "" : seg.id));
+    var dayAttr = ' data-day="' + esc(historyDayKey) + '"';
     html += '<div class="record-row">' +
       '<span class="dot" style="background:' + (rec.colorHex || colorOf(rec.project.colorIndex)) + '"></span>' +
       '<div class="rec-main">' +
@@ -2731,6 +3049,12 @@ function renderHistory() {
           '<span class="rec-time">' + timeText + '</span>' +
         '</div>' +
         '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
+      '</div>' +
+      '<div class="rec-btns">' +
+        (isRunning ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' +
+          sid + '"' + dayAttr + ' aria-label="编辑本段">✎</button>') +
+        '<button class="icon-btn rec-del" data-action="delete-record" data-id="' +
+          sid + '"' + dayAttr + ' aria-label="删除本段">×</button>' +
       '</div>' +
     '</div>';
   }
@@ -2772,7 +3096,7 @@ function render() {
   var now = Date.now();
   var dayKey = dayKeyOf(now);
   var stats = computeDayStats(state, dayKey, now);
-  var running = findRunningSegment(state);
+  var running = findBoatSegment(state);   /* v0.3V：状态条主行永远显示船 */
   renderHeader();
   renderStatusBar(running);
   renderOverview(stats);
@@ -2791,27 +3115,44 @@ function startTimer(pid) {
   syncRolloverForNow(now);
   var dayKey = dayKeyOf(now);
   var toastText = null;
-  /* 全局最多一个进行中段：若别的项目正在计时，系统代关（finished），不弹窗、不二次确认 */
-  var guard = 0;
-  while (guard++ < 20) {
-    var running = findRunningSegment(state);
-    if (!running || running.projectId === pid) break;
-    var closedProject = getProject(running.projectId);
-    var mins = minutesOfSegment(running.seg, now);
+  var newProj = getProject(pid);
+  var all = findAllRunningSegments(state);
+
+  /* 防御：这个项目已经在计时（不管是船还是船上），不重复开段 */
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].projectId === pid) { save(); render(); return; }
+  }
+
+  /* v0.3V 船上穿插：
+     · 有船在走 + 这不是「事来则应」→ 这件事挂到船上（parent = 船段 id），船继续走；
+       船上原有的事被顶掉（同一条船上一次只做一件事），弹一句「《X》已记录 N 分钟」。
+     · 没有船（首次开始 / 只有事来则应 / 数据异常只剩船上的段）→ 顶层开始，
+       其余进行中段按原规则代关（finished）。 */
+  var boat = findBoatSegment(state);
+  var parentId = "";
+  /* 只有「真正的船」（自己没挂在别人船上）才收留这件事；
+     数据异常只剩船上的段时按顶层开始，不叠出第二层，避免链式嵌套看不清 */
+  if (boat && !boat.seg.parent && !isChoreProject(newProj) &&
+      !isChoreProject(getProject(boat.projectId))) parentId = boat.seg.id;
+  for (var j = 0; j < all.length; j++) {
+    var other = all[j];
+    if (parentId && other.seg.id === boat.seg.id) continue;  /* 船不动 */
+    var closedProject = getProject(other.projectId);
+    var mins = minutesOfSegment(other.seg, now);
     if (isChoreProject(closedProject)) {
       /* 事来则应被代关：不弹窗，顶部状态条浮现一行「事来则应已记录 XX 分钟」 */
       showChoreNotice("事来则应已记录 " + mins + " 分钟");
     } else if (!toastText && closedProject) {
       toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
     }
-    closeRunningAt(running, now, "finished");
+    closeRunningAt(other, now, "finished");
   }
-  var still = findRunningSegment(state);
-  if (still && still.projectId === pid) { save(); render(); return; } /* 防御：不重复开段 */
   var b = ensureBucket(state.days, dayKey, pid);
   /* v0.3O：originStart 记录「最初点开始」的时刻，之后调整 start 也不改它，
      供 mergeRemote() 在多端之间认出这是同一段（可选字段，旧数据没有就走原逻辑）。 */
-  b.push({ id: newId("s"), start: now, originStart: now, end: null, endType: "running", note: "", sourceProject: "" });
+  var newSeg = { id: newId("s"), start: now, originStart: now, end: null, endType: "running", note: "", sourceProject: "" };
+  if (parentId) newSeg.parent = parentId;   /* v0.3V：只在真的挂到船上时才写这个键 */
+  b.push(newSeg);
   state.currentDayKey = dayKey;
   save();
   render();
@@ -2821,8 +3162,11 @@ function startTimer(pid) {
 function stopTimer(pid, endType) {
   var now = Date.now();
   syncRolloverForNow(now);
-  var running = findRunningSegment(state);
-  if (running && running.projectId === pid) closeRunningAt(running, now, endType);
+  /* v0.3V：结束的是船就带上船上那件事；结束的是船上那件事就只关它，船照走 */
+  var all = findAllRunningSegments(state);
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].projectId === pid) closeRunningWithChildren(all[i], now, endType);
+  }
   state.currentDayKey = dayKeyOf(now);
   save();
   render();
@@ -2837,7 +3181,7 @@ function stopTimer(pid, endType) {
 function openAdjustStartModal() {
   var now = Date.now();
   syncRolloverForNow(now);
-  var running = findRunningSegment(state);
+  var running = findBoatSegment(state);   /* v0.3V：状态条主段（船）才有「已计时」入口 */
   if (!running || running.seg.endType !== "running" || running.seg.end !== null) {
     showToast("当前没有正在计时的记录"); return;
   }
@@ -2919,7 +3263,7 @@ function applyAdjustQuick(mins) {
 function saveAdjustStart() {
   var now = Date.now();
   syncRolloverForNow(now);
-  var running = findRunningSegment(state);
+  var running = findBoatSegment(state);   /* v0.3V：与状态条「已计时」入口保持一致 */
   if (!running || running.seg.endType !== "running" || running.seg.end !== null) {
     showModalError("当前没有正在计时的记录"); return false;
   }
@@ -2947,10 +3291,12 @@ function saveAdjustStart() {
   return true;
 }
 
-function deleteRecordById(segId) {
+function deleteRecordById(segId, dayKeyOpt) {
   var now = Date.now();
   syncRolloverForNow(now);
-  var dayKey = dayKeyOf(now);
+  var today = dayKeyOf(now);
+  var dayKey = isValidDayKey(dayKeyOpt) ? dayKeyOpt : today;
+  if (dayKey > today) dayKey = today;
   var bucket = (state.days && state.days[dayKey]) || {};
   var pids = Object.keys(bucket);
   for (var i = 0; i < pids.length; i++) {
@@ -2965,7 +3311,8 @@ function deleteRecordById(segId) {
     }
   }
   if (Object.keys(bucket).length === 0 && state.days) delete state.days[dayKey];
-  state.currentDayKey = dayKey;
+  /* v0.3W：改历史日期不改写「当前活跃日」，避免跨零点把计时段算错天 */
+  if (dayKey === today) state.currentDayKey = dayKey;
   save();
   render();
 }
@@ -3002,6 +3349,8 @@ function onDocumentClick(e) {
     case "add-project": openGroupChoiceModal(); break;
     case "add-project-group": openProjectModal(el.getAttribute("data-group")); break;
     case "toggle-group-more": toggleGroupExpanded(el.getAttribute("data-group")); break;
+    case "set-cat-filter": setCatFilter(el.getAttribute("data-group")); break;
+    case "toggle-flat-list": toggleFlatList(); break;
     case "toggle-sort-mode": toggleSortMode(); break;
     case "search-clear": clearSearch(); break;
     case "choose-group":
@@ -3012,7 +3361,7 @@ function onDocumentClick(e) {
       closeModal();
       moveProjectToGroup(el.getAttribute("data-pid"), el.getAttribute("data-group"));
       break;
-    case "start": startTimer(id); break;
+    case "start": clearSearchQuietly(); startTimer(id); break;
     case "interrupt": openInterruptSheet(id); break;
     case "finish": stopTimer(id, "finished"); break;
     case "adjust-start": openAdjustStartModal(); break;
@@ -3031,8 +3380,8 @@ function onDocumentClick(e) {
       });
       break;
     case "target": openTargetModal(id); break;
-    case "delete-record": openDeleteRecordModal(id); break;
-    case "edit-record": openEditRecordModal(id); break;
+    case "delete-record": openDeleteRecordModal(id, el.getAttribute("data-day")); break;
+    case "edit-record": openEditRecordModal(id, el.getAttribute("data-day")); break;
     case "toggle-history": toggleHistoryExpanded(); break;
     case "toggle-hour": toggleTimelineHour(el.getAttribute("data-hour")); break;
     case "add-hour-record": openAddHourRecordModal(el.getAttribute("data-hour")); break;
@@ -3411,13 +3760,17 @@ function openDeleteProjectModal(pid) {
   });
 }
 
-function openDeleteRecordModal(segId) {
+function openDeleteRecordModal(segId, dayKeyOpt) {
+  var today = dayKeyOf(Date.now());
+  var dayKey = isValidDayKey(dayKeyOpt) ? dayKeyOpt : today;
+  if (dayKey > today) dayKey = today;
   openConfirmModal({
     title: "撤销这段记录",
-    message: "删除后，这段时长会从项目合计、今日总时长、圆环与百分比中同步扣除。",
+    message: "删除后，这段时长会从项目合计、" +
+      (dayKey === today ? "今日" : "当天") + "总时长、圆环与百分比中同步扣除。",
     confirmText: "删除记录",
     danger: true,
-    onConfirm: function () { deleteRecordById(segId); }
+    onConfirm: function () { deleteRecordById(segId, dayKey); }
   });
 }
 
@@ -3475,14 +3828,18 @@ function refreshEditPreview() {
   box.className = "edit-preview";
 }
 
-/** 打开「编辑这段时间」弹窗：同一个 openModalShell，项目下拉 + 两个 time 输入 + 备注 + 实时时长预览。
-    v0.3J：新增「所属项目」选择，复用补记弹窗的 projectOptionsHTML / 内联新建组件；
-    系统项目「事来则应」的记录锁死归属（段带 sourceProject，挪走会语义错乱）。 */
-function openEditRecordModal(segId) {
+/** 打开「编辑这段时间」弹窗：同一个 openModalShell，两个 time 输入 + 备注 + 实时时长预览。
+    v0.3X：整块去掉「改所属项目」区（标签 / 搜索框 / 已选条 / 候选清单 / 直接新建项目），
+    编辑只改钟点与备注；保存时把原项目 id 传回，段不换桶。补记弹窗不受影响。
+    v0.3J 的换桶逻辑仍留在 saveRecordEdit 中，只是编辑弹窗不再提供入口；
+    系统项目「事来则应」的记录同样保持原归属不变。 */
+function openEditRecordModal(segId, dayKeyOpt) {
   var now = Date.now();
-  var dayKey = dayKeyOf(now);
+  var today = dayKeyOf(now);
+  var dayKey = isValidDayKey(dayKeyOpt) ? dayKeyOpt : today;
+  if (dayKey > today) dayKey = today;
   var found = findSegmentById(segId, dayKey);
-  if (!found) { showToast("这段记录已不在今天，请刷新后重试"); return; }
+  if (!found) { showToast("这段记录已不存在，请刷新后重试"); return; }
   var seg = found.seg;
   /* 进行中段（还没点结束）不可编辑：先结束再改，避免破坏「计时中」语义与状态条 */
   if (seg.endType === "running" || seg.end === null || seg.end === undefined) {
@@ -3490,17 +3847,11 @@ function openEditRecordModal(segId) {
   }
   var p = getProject(found.pid);
   var pname = p ? p.name : "";
-  var locked = isSystemChore(p) || found.pid === CHORE_ID;
   /* 复用补记弹窗同一套 id 与 data-action，内联新建相关函数零改动直接可用 */
-  var projectHTML = locked
-    ? ""
-    : '<label class="edit-note-label" for="add-project-search">项目（可改到别的项目）</label>' +
-      projectPickerHTML({ includeChore: false, selectedPid: found.pid, disabled: false }) +
-      inlineNewProjectHTML(false,
-        "将创建这个项目，并把这一段改到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。");
-  var desc = locked
-    ? esc(pname) + ' · 只改今天的钟点，日期不变（系统项目不可改归属）'
-    : esc(pname) + ' · 可改钟点、备注与所属项目，日期不变';
+  /* v0.3X 方案 A：整块去掉「改所属项目」区；编辑只改钟点与备注。
+     补记弹窗仍用 projectPickerHTML / inlineNewProjectHTML，组件本身一行未动。 */
+  var projectHTML = "";
+  var desc = esc(pname) + ' · 可改钟点与备注，日期不变';
   var panel =
     '<div class="modal-title">编辑这段时间</div>' +
     '<div class="modal-desc">' + desc + '</div>' +
@@ -3530,7 +3881,7 @@ function openEditRecordModal(segId) {
           st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end"), nt = root.querySelector("#edit-note");
       return saveRecordEdit(segId,
         st ? st.value : "", en ? en.value : "", nt ? nt.value : "",
-        sel ? sel.value : "", isAddInlineNew());
+        sel ? sel.value : found.pid, isAddInlineNew(), dayKey);
     }
   });
   var stEl = document.getElementById("edit-start"), enEl = document.getElementById("edit-end");
@@ -3545,10 +3896,12 @@ function openEditRecordModal(segId) {
     校验：结束 > 开始、都在今天、结束不晚于现在；备注截断 50 字（与 sanitizeSegment 一致）。
     换项目时保持同一个 seg 对象与 id / endType / sourceProject 不变，只改它所在的桶，不改日期；
     系统项目「事来则应」的记录锁死归属；内联新建在所有校验通过后才创建，失败不残留空项目。 */
-function saveRecordEdit(segId, startStr, endStr, noteStr, newPid, inlineNew) {
+function saveRecordEdit(segId, startStr, endStr, noteStr, newPid, inlineNew, dayKeyOpt) {
   var now = Date.now();
   syncRolloverForNow(now);
-  var dayKey = dayKeyOf(now);
+  var today = dayKeyOf(now);
+  var dayKey = isValidDayKey(dayKeyOpt) ? dayKeyOpt : today;
+  if (dayKey > today) dayKey = today;
   var found = findSegmentById(segId, dayKey);
   if (!found) { showModalError("这段记录已不可编辑，请刷新后重试"); return false; }
   var seg = found.seg;
@@ -3586,8 +3939,8 @@ function saveRecordEdit(segId, startStr, endStr, noteStr, newPid, inlineNew) {
     if (!created) return false;
     targetPid = created;
   }
-  /* 改动前目标项目的超额量：用于「从没超额变超额」的橙条提示判断 */
-  var before = limitRowsForDay(dayKey, now), oldOver = 0;
+  /* 改动前目标项目的超额量：用于「从没超额变超额」的橙条提示判断；只属于今天 */
+  var before = (dayKey === today) ? limitRowsForDay(dayKey, now) : [], oldOver = 0;
   for (var i = 0; i < before.length; i++) if (before[i].projectId === targetPid) { oldOver = before[i].over; break; }
   /* 原地改写，保持 id / endType / sourceProject 不变 */
   seg.start = startTs;
@@ -3599,12 +3952,12 @@ function saveRecordEdit(segId, startStr, endStr, noteStr, newPid, inlineNew) {
     removeSegmentRaw(state, dayKey, oldPid, seg);
     ensureBucket(state.days, dayKey, targetPid).push(seg);
   }
-  state.currentDayKey = dayKey;
+  if (dayKey === today) state.currentDayKey = dayKey;
   save();
   render();
   /* 编辑后若「适可而止」项目从没超额变超额，弹一次橙色提示条（只提示，不阻断） */
   var p = getProject(targetPid);
-  if (p && groupOf(p) === GROUP_LESS) {
+  if (dayKey === today && p && groupOf(p) === GROUP_LESS) {
     var after = limitRowsForDay(dayKey, now), newOver = 0;
     for (var j = 0; j < after.length; j++) if (after[j].projectId === targetPid) { newOver = after[j].over; break; }
     if (oldOver <= 0 && newOver > 0) showLimitNotice("《" + p.name + "》今天已超 " + newOver + " 分钟");
@@ -4887,6 +5240,10 @@ function mergeSameSegment(cloudSeg, localSeg) {
             String(lose.sourceProject == null ? "" : lose.sourceProject);
   out.note = note;
   out.sourceProject = src;
+  /* v0.3V：船上关系跟着段一起合并——任何一侧有船票就留着，两边都没有就不写这个键 */
+  var par = String(win.parent == null ? "" : win.parent) ||
+            String(lose.parent == null ? "" : lose.parent);
+  if (par) out.parent = par; else delete out.parent;
   return out;
 }
 
@@ -5452,6 +5809,12 @@ window.TTR = {
   runSync: runSync,
   mergeRemote: mergeRemote,
   mergeSameSegment: mergeSameSegment,
+  findAllRunningSegments: findAllRunningSegments,
+  normalizeDayRollover: normalizeDayRollover,
+  findBoatSegment: findBoatSegment,
+  runningChildrenOf: runningChildrenOf,
+  boatChildrenInfo: boatChildrenInfo,
+  closeRunningWithChildren: closeRunningWithChildren,
   openAdjustStartModal: openAdjustStartModal,
   saveAdjustStart: saveAdjustStart,
   refreshAdjustPreview: refreshAdjustPreview,
