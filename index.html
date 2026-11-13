@@ -311,6 +311,13 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .modal-error{min-height:20px;margin-top:8px;font-size:14px;color:#E0453B;line-height:1.4;}
 .modal-actions{display:flex;gap:10px;margin-top:14px;}
 .modal-actions .btn{flex:1 1 0;min-width:0;}
+/* v0.4D：小屏弹窗内容超出一屏时，按钮行吸在面板底部，不用滚也能看见「保存」 */
+.modal-actions.is-sticky{
+  position:sticky;bottom:-20px;z-index:2;
+  margin:14px -20px -20px;padding:12px 20px 20px;
+  background:#fff;border-top:1px solid #EEF1F7;border-radius:0 0 18px 18px;
+  box-shadow:0 -8px 16px rgba(20,40,80,.05);
+}
 .target-inputs{display:flex;gap:10px;margin-top:12px;}
 .target-field{flex:1 1 0;min-width:0;}
 .target-field label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px;}
@@ -674,6 +681,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .hist-label{font-size:13px;font-weight:700;margin-top:10px;font-variant-numeric:tabular-nums;}
 .hist-summary{font-size:12px;color:var(--muted);margin-top:2px;}
 .hist-summary:empty{display:none;}
+.hist-summary .hist-sub{display:block;margin-top:3px;font-size:11px;color:#9AA4B4;}
 .hist-empty{font-size:14px;color:var(--muted);text-align:center;padding:22px 8px;line-height:1.6;}
 .hist-empty-hint{display:block;font-size:12px;color:#AEB7C6;margin-top:4px;}
 /* 补记弹窗的日期输入 */
@@ -838,6 +846,75 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 #status-bar .sp-finish:active{background:#E7F0FF;}
 
 
+/* ===== v0.4D 预览：编辑这段时间 · 排版 + 改项目 ===== */
+.rec-title{margin-bottom:12px;}
+.proj-row{display:flex;align-items:center;gap:8px;margin:0 0 18px;min-height:30px;}
+.proj-row .pp-hint{margin-left:auto;flex:0 0 auto;font-size:11px;color:#A6B2C4;letter-spacing:.2px;}
+.proj-pill{
+  display:inline-flex;align-items:center;gap:6px;max-width:60%;
+  height:30px;padding:0 10px;border:1px solid #DCE5F2;border-radius:999px;background:#F8FAFF;
+  font-family:inherit;cursor:pointer;
+}
+.proj-pill:active{background:#EEF4FF;}
+.proj-pill.on{border-color:#B9D4FF;background:#EFF5FF;}
+.proj-pill.locked{cursor:default;background:#F4F6FA;border-color:#E7ECF4;}
+.proj-pill:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.pp-dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%;}
+.pp-name{
+  min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13px;font-weight:600;color:var(--text);
+}
+.proj-pill.locked .pp-name{color:#8A94A6;font-weight:500;}
+.pp-to{color:#2F6BFF;}
+.pp-arrow{font-size:11px;color:#A9B6C9;margin:0 -1px;}
+.pp-caret{font-size:9px;color:#9DB0CB;margin-left:-1px;transform:translateY(-1px);}
+.rec-time-block .edit-time-field label{display:block;font-size:12.5px;font-weight:600;color:#6E7C93;margin:0 0 7px;letter-spacing:.2px;}
+.rec-time-block .edit-time-field .modal-input{font-weight:700;letter-spacing:.4px;color:#1F2A44;}
+.rec-note-hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:16px 0 7px;}
+.rec-lab{font-size:12.5px;font-weight:600;color:#6E7C93;letter-spacing:.2px;}
+.rec-lab-aside{font-size:11px;color:#AEB9C9;}
+.rec-dur{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin:14px 0 0;padding:9px 12px;background:#F3F8FF;border-radius:10px;min-height:36px;}
+.rec-dur .rd-k{font-size:11.5px;color:#7B8BA3;}
+.rec-dur .edit-preview{margin:0;min-height:0;font-size:13.5px;font-weight:700;color:#2F6BFF;text-align:right;}
+.rec-dur .edit-preview.invalid{font-size:12.5px;font-weight:500;color:#D8412F;text-align:right;}
+.rec-dur.is-invalid{background:#FFF4F2;}
+.rec-dur.is-invalid .rd-k{display:none;}
+.rec-dur.is-invalid .edit-preview{flex:1 1 auto;text-align:left;}
+.rec-err{min-height:0;margin-top:0;}
+.rec-err:not(:empty){margin-top:9px;font-size:13px;}
+
+/* --- 底部面板：改到哪个项目 --- */
+.rec-sheet .sheet-title{margin-bottom:5px;}
+.rec-sheet-sub{font-size:12px;color:#98A5B8;margin-bottom:13px;line-height:1.4;}
+.rec-sheet-sub b{font-weight:600;color:#5B6B85;}
+.rec-sheet .sheet-search-row{margin-bottom:10px;}
+.rec-sheet .sheet-items{max-height:252px;}
+.rec-newrow{
+  display:flex;align-items:center;justify-content:center;gap:5px;width:100%;height:44px;margin-top:10px;
+  border:1px dashed #C3D4EE;border-radius:12px;background:#F8FBFF;color:#2F6BFF;
+  font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+}
+.rec-newrow:active{background:#EDF4FF;}
+.rec-empty{padding:20px 14px 18px;text-align:center;border:1px solid #E7ECF4;border-radius:12px;background:#FBFCFE;}
+.rec-empty .re-ico{color:#B9C6DA;}
+.rec-empty .re-t{font-size:14px;font-weight:600;color:#1F2A44;margin-top:8px;word-break:break-all;}
+.rec-empty .re-s{font-size:12px;color:#9AA6B8;margin-top:5px;}
+.rec-empty .re-btn{
+  margin-top:14px;height:42px;padding:0 18px;border:0;border-radius:10px;
+  background:var(--blue);color:#fff;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.rec-empty .re-btn:active{filter:brightness(.95);}
+.rec-mini-label{font-size:11.5px;font-weight:600;color:#8A94A6;margin:14px 0 6px;letter-spacing:.2px;}
+.rec-new-err{min-height:16px;margin-top:7px;font-size:12.5px;color:#D8412F;line-height:1.3;}
+.rec-sheet .sheet-foot{margin-top:12px;}
+.rec-quiet{
+  flex:1 1 auto;height:46px;border:0;border-radius:10px;background:#F2F5FA;color:#5B6B85;
+  font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;
+}
+.rec-quiet:active{background:#E8EDF5;}
+.rec-sheet .sheet-foot .btn-primary{height:46px;border-radius:10px;font-size:15px;}
 /* ===== v0.3Z：我的项目 · 分类作筛选 + 清单默认 3 条 ===== */
 .cat-chips{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px;}
 .cat-chip{
@@ -858,6 +935,40 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   .cat-chip{padding:6px 9px;font-size:11px;}
 }
 
+/* ========== v0.4B：中断面板（单弹窗 · 选/建船上事） ========== */
+.sheet-search-row{position:relative;margin-bottom:6px;}
+.sheet-search-row .sheet-input{padding-left:34px;}
+.sheet-search-ico{position:absolute;left:11px;top:15px;color:#9AA6B8;pointer-events:none;}
+.sheet-sec-label{font-size:11.5px;font-weight:600;color:#8A94A6;margin:9px 0 4px;}
+.sheet-items{max-height:184px;overflow-y:auto;-webkit-overflow-scrolling:touch;border:1px solid #E7ECF4;border-radius:12px;}
+.sheet-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;text-align:left;font-size:14.5px;border-bottom:1px solid #F2F5FA;background:#fff;}
+.sheet-item:last-child{border-bottom:0;}
+.sheet-item.on{background:#EEF4FF;color:#2F6BFF;font-weight:600;}
+.sheet-item .si-dot{flex:0 0 8px;width:8px;height:8px;border-radius:50%;}
+.sheet-item .si-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sheet-item .si-grp{flex:0 0 auto;font-size:11px;color:#9AA6B8;font-weight:400;}
+.sheet-empty{padding:14px 4px;font-size:13px;color:#8A94A6;text-align:center;}
+.sheet-new{margin-top:8px;padding:12px;border:1px dashed #BFD2F2;border-radius:12px;background:#F7FAFF;}
+.sheet-new-title{font-size:13px;font-weight:600;color:#2F4C86;margin-bottom:9px;line-height:1.4;}
+.sheet-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;}
+.sheet-group{padding:8px 2px;border:1px solid #DCE5F2;border-radius:9px;background:#fff;font-size:12px;color:#5A6A85;text-align:center;}
+.sheet-group.on{border-color:var(--blue);background:#E8F1FF;color:var(--blue);font-weight:600;}
+.sheet-group small{display:block;font-size:10px;font-weight:400;color:#9AA6B8;margin-top:2px;}
+.sheet-newtoggle{margin-top:9px;font-size:13px;color:var(--blue);background:none;border:0;padding:4px 0;}
+.sheet-foot{display:flex;gap:10px;margin-top:14px;align-items:center;}
+.sheet-foot .btn-primary{flex:1 1 auto;min-width:0;}
+.sheet-foot .btn[disabled]{opacity:.45;cursor:not-allowed;}
+.sheet-foot .btn-end{flex:0 0 auto;height:44px;padding:0 15px;font-size:14px;color:#B05252;border:1px solid #EBC9C9;background:#FFF7F7;border-radius:10px;}
+/* 记录里：船上事折叠成子行 + 主段「合计 / 净」双数字 */
+.rec-child{margin:3px 0 3px 18px;padding:6px 8px;background:#F7FAFF;border-left:2px solid #BFD2F2;border-radius:0 8px 8px 0;display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6A85;}
+.rec-child .rc-name{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:#1F2A44;}
+.rec-child .rc-time{flex:0 0 auto;color:#8A94A6;font-variant-numeric:tabular-nums;}
+.rec-child .rc-mins{flex:0 0 auto;color:#3B5BA9;font-weight:600;}
+.rec-child .rec-btns{display:flex;gap:1px;flex:0 0 auto;}
+.rec-child .icon-btn{font-size:14px;}
+.rec-dual{color:#3B5BA9;font-weight:600;}
+.tag-boat{color:#3B5BA9;background:#EEF4FF;border-radius:5px;padding:1px 5px;font-size:11px;margin-left:4px;font-weight:600;}
+@media (max-width:360px){.sheet-group{font-size:11px;}.sheet-foot .btn-end{padding:0 10px;font-size:13px;}}
 </style>
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
@@ -911,7 +1022,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.3Z</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.4D</span></div>
   </div>
 </div>
 
@@ -1111,7 +1222,7 @@ function computeDayStats(state, dayKey, now) {
       colorHex: projectColor(p), isChore: isChoreProject(p) });
   }
   records.sort(function (a, b) { return b.segment.start - a.segment.start; });
-  var totalMinutes = 0, choreMinutes = 0;
+  var totalMinutes = 0, choreMinutes = 0, boatMinutes = 0;
   for (var a = 0; a < perProject.length; a++) {
     totalMinutes += perProject[a].minutes;
     if (perProject[a].isChore) choreMinutes += perProject[a].minutes;
@@ -1122,7 +1233,7 @@ function computeDayStats(state, dayKey, now) {
   var targetMinutes = 0, hasTarget = false, goalMinutes = 0;
   for (var k = 0; k < projects.length; k++) {
     var pk = projects[k];
-    if (isChoreProject(pk)) continue;
+    /* v0.4B：完成度口径不再按「事来则应」特判；旧系统项目本就无目标，自然不参与 */
     var tm = pk.targetMinutes;
     if (typeof tm === "number" && Number.isFinite(tm) && tm > 0) {
       targetMinutes += tm;
@@ -1131,6 +1242,11 @@ function computeDayStats(state, dayKey, now) {
         if (perProject[g].projectId === pk.id) { goalMinutes += perProject[g].minutes; break; }
       }
     }
+  }
+  /* v0.4B：船上事单独汇总（所有带 parent 的段），供「其中船上」使用；
+     只是新增一个派生值，上面任何既有统计口径都不改。 */
+  for (var bi = 0; bi < records.length; bi++) {
+    if (records[bi].segment && records[bi].segment.parent) boatMinutes += records[bi].minutes;
   }
   var ratio = (hasTarget && targetMinutes > 0) ? (goalMinutes / targetMinutes) : 0;
   /* 保留一位小数：16.7% 这类分数百分比可正确显示，整数仍显示 50%（不出现 50.0） */
@@ -1141,7 +1257,7 @@ function computeDayStats(state, dayKey, now) {
   var moreTargetMinutes = 0, moreGoalMinutes = 0, moreHasTarget = false;
   for (var mk = 0; mk < projects.length; mk++) {
     var mp = projects[mk];
-    if (isChoreProject(mp) || groupOf(mp) !== GROUP_MORE) continue;
+    if (groupOf(mp) !== GROUP_MORE) continue;
     var mtm = mp.targetMinutes;
     if (typeof mtm === "number" && Number.isFinite(mtm) && mtm > 0) {
       moreTargetMinutes += mtm;
@@ -1157,11 +1273,80 @@ function computeDayStats(state, dayKey, now) {
   return {
     dayKey: dayKey, now: now, perProject: perProject, records: records,
     totalMinutes: totalMinutes, targetMinutes: targetMinutes,
-    choreMinutes: choreMinutes, goalMinutes: goalMinutes,
+    choreMinutes: choreMinutes, boatMinutes: boatMinutes, goalMinutes: goalMinutes,
     hasTarget: hasTarget, ratio: ratio, percent: percent,
     moreTargetMinutes: moreTargetMinutes, moreGoalMinutes: moreGoalMinutes,
-    moreHasTarget: moreHasTarget, moreRatio: moreRatio, morePercent: morePercent
+    moreHasTarget: moreHasTarget, moreRatio: moreRatio, morePercent: morePercent,
+    coveredMinutes: computeCoveredMinutes(state, dayKey, now),
+    rawTotalMinutes: totalMinutes
   };
+}
+
+
+/* -------------------- v0.4A：当天实际覆盖（纯增量，不改任何既有统计口径） --------------------
+ * 背景：computeDayStats() 的 totalMinutes 是「所有段时长的算术和」，不做区间去重；
+ *       且 minutesOfSegment() 对未结束段无条件拿 now 当终点，翻看历史日期时会跨到今天。
+ *       两者叠加会让「合计」超过 24 小时。下面两个函数只提供新口径，不改动旧值。
+ */
+
+/**
+ * 某一天「实际被记录覆盖」的分钟数（时间轴并集）。
+ * 把当天所有段投影成 [start,end] 区间并夹到 [当天零点, 次日零点)，
+ * 合并重叠区间后求和：任何重叠只算一次，结果恒 <= 1440 分钟。
+ * - 已结束段：end 原样（越过零点的脏数据夹到 dayEnd）
+ * - 未结束段：查看今天算到 now；查看历史日期算到当天末尾，不再跨到今天
+ * 纯读，不改 state、不写存储、不触发同步。
+ */
+function computeCoveredMinutes(state, dayKey, now) {
+  if (!isValidDayKey(dayKey)) return 0;
+  var dayStart = midnightOf(dayKey);
+  var dayEnd = nextMidnightOf(dayStart);
+  if (!Number.isFinite(dayStart) || !Number.isFinite(dayEnd)) return 0;
+  var t = Number(now) || Date.now();
+  var cap = (t >= dayStart && t < dayEnd) ? t : dayEnd;
+  var bucket = (state && state.days && state.days[dayKey]) || {};
+  var ivs = [], pids = Object.keys(bucket);
+  for (var i = 0; i < pids.length; i++) {
+    var arr = Array.isArray(bucket[pids[i]]) ? bucket[pids[i]] : [];
+    for (var j = 0; j < arr.length; j++) {
+      var seg = arr[j];
+      if (!seg || typeof seg.start !== "number" || !Number.isFinite(seg.start)) continue;
+      var a = Math.max(seg.start, dayStart);
+      var rawEnd = (seg.end === null || seg.end === undefined) ? cap : seg.end;
+      var b = Math.min(rawEnd, dayEnd);
+      if (b > a) ivs.push([a, b]);
+    }
+  }
+  if (!ivs.length) return 0;
+  ivs.sort(function (x, y) { return x[0] - y[0]; });
+  var total = 0, curA = ivs[0][0], curB = ivs[0][1];
+  for (var k = 1; k < ivs.length; k++) {
+    if (ivs[k][0] < curB) { if (ivs[k][1] > curB) curB = ivs[k][1]; }
+    else { total += curB - curA; curA = ivs[k][0]; curB = ivs[k][1]; }
+  }
+  total += curB - curA;
+  return Math.max(0, Math.ceil(total / 60000));
+}
+
+/**
+ * 单段在指定「那一天」里应显示的分钟数（仅历史记录行使用）。
+ * 沿用 minutesOfSegment 的「不足 1 分钟按 1 分钟」口径，但把区间夹到当天：
+ * 查看历史日期时未结束段只算到当天 23:59，不再拿「现在」当终点。
+ * 今天查看今天时结果与 minutesOfSegment 完全一致。
+ */
+function segmentMinutesForDay(seg, dayKey, now) {
+  if (!seg || typeof seg.start !== "number" || !Number.isFinite(seg.start)) return 0;
+  if (!isValidDayKey(dayKey)) return minutesOfSegment(seg, now);
+  var dayStart = midnightOf(dayKey);
+  var dayEnd = nextMidnightOf(dayStart);
+  if (!Number.isFinite(dayStart) || !Number.isFinite(dayEnd)) return minutesOfSegment(seg, now);
+  var t = Number(now) || Date.now();
+  var cap = (t >= dayStart && t < dayEnd) ? t : dayEnd;
+  var a = Math.max(seg.start, dayStart);
+  var rawEnd = (seg.end === null || seg.end === undefined) ? cap : seg.end;
+  var b = Math.min(rawEnd, dayEnd);
+  if (!(b > a)) return 0;
+  return Math.max(1, Math.ceil((b - a) / 60000));
 }
 
 /* -------------------- 二、状态与存储 -------------------- */
@@ -1526,12 +1711,9 @@ function ensureChoreProject(st) {
     if (isSystemChore(p) || byName) { if (!chore) chore = p; else extras.push(p); }
   }
   var changed = false;
-  if (!chore) {
-    chore = { id: CHORE_ID, name: CHORE_NAME, colorIndex: 0,
-      targetMinutes: null, createdAt: Date.now(), sortIndex: 0, isSystem: true, group: null };
-    ps.push(chore);
-    changed = true;
-  }
+  /* v0.4B：不再自动补齐系统「事来则应」项目 —— 新数据里不会再出现那个灰色固定条。
+     旧数据里若已存在（连同旧记录段），下面照旧规整并保留可读，不删、不拆、不迁移。 */
+  if (!chore) return false;
   function force(k, v) { if (chore[k] !== v) { chore[k] = v; changed = true; } }
   force("isSystem", true);
   force("name", CHORE_NAME);
@@ -1562,52 +1744,188 @@ function showChoreNotice(text) {
   }, 3000);
 }
 
-/* ---- 中断原因底部面板 ---- */
-var CHORE_REASONS = ["喝咖啡休息", "接电话", "临时被叫走", "事来则应"];
-var sheetState = null;
+/* ---- v0.4B：中断面板 = 唯一制造「船上」的入口（单弹窗） ----
+   点「中断」只弹出这一个面板：要么搜已建项目，要么在同一个面板里新建。
+   三种退出：选事项->在船上开始（船继续）；点「结束」按钮->船靠岸；
+   点弹窗外(遮罩/Esc/下滑)->纯关闭，不中断、不结束、不写任何 state。
+   下面的 doInterrupt / startChoreSegment / clearChoreToday 保留为旧数据兼容链路，
+   新面板与 Esc/下滑都不再调用它们。 */
+var sheetState = null;   /* { pid, query, chosenPid, group, newOpen } */
 
 function closeSheet() {
+  /* 纯关闭：只移除 DOM，不动 state、不结束任何计时 */
   sheetState = null;
   var root = document.getElementById("sheet-root");
   if (root && root.parentNode) root.parentNode.removeChild(root);
 }
 
-function readSheetNote() {
-  var input = document.getElementById("sheet-note");
-  if (!input) return "";
-  return noteChars(input.value).slice(0, 20).join("").trim();
+/** 面板候选：排除当前船项目、排除旧系统「事来则应」，按名称匹配 query */
+function sheetCandidates() {
+  var out = [];
+  if (!sheetState) return out;
+  var q = String(sheetState.query || "").trim().toLowerCase();
+  var ps = orderedProjectsForDisplay();
+  for (var i = 0; i < ps.length; i++) {
+    var p = ps[i];
+    if (!p || p.id === sheetState.pid) continue;
+    if (isChoreProject(p)) continue;   /* 「事来则应」不再是船上事项候选 */
+    if (q && String(p.name).toLowerCase().indexOf(q) < 0) continue;
+    out.push(p);
+  }
+  return out;
 }
 
-function toggleSheetReason(el) {
-  if (!sheetState) return;
-  var r = el.getAttribute("data-reason") || "";
-  var input = document.getElementById("sheet-note");
-  var all = document.querySelectorAll(".sheet-reason");
-  for (var i = 0; i < all.length; i++) all[i].classList.remove("active");
-  if (sheetState.selected === r) {
-    sheetState.selected = "";
-    if (input) input.value = "";
-  } else {
-    sheetState.selected = r;
-    if (input) input.value = r;
-    el.classList.add("active");
+function sheetItemHTML(p) {
+  return '<button type="button" class="sheet-item' + (sheetState.chosenPid === p.id ? ' on' : '') +
+    '" data-sheet-action="pick" data-pid="' + esc(p.id) + '">' +
+    '<span class="si-dot" style="background:' + projectColor(p) + '"></span>' +
+    '<span class="si-name">' + esc(p.name) + '</span>' +
+    '<span class="si-grp">' + esc(GROUP_LABEL[groupOf(p)] || "如实知见") + '</span>' +
+    '</button>';
+}
+
+/** 同面板新建区：名字取搜索框内容，三分类都在，默认「如实知见」 */
+function sheetNewBoxHTML(q) {
+  var gs = [
+    [GROUP_MORE, "多多益善", "至少投入多少"],
+    [GROUP_LESS, "适可而止", "别超过多少"],
+    [GROUP_FLOW, "如实知见", "只记流水 · 默认"]
+  ];
+  var h = '<div class="sheet-new">' +
+    '<div class="sheet-new-title">＋ 新建事项「' + esc(q || "新事项") + '」· 会常驻「我的项目」</div>' +
+    '<div class="sheet-groups">';
+  for (var i = 0; i < gs.length; i++) {
+    h += '<button type="button" class="sheet-group' + (sheetState.group === gs[i][0] ? ' on' : '') +
+      '" data-sheet-action="group" data-group="' + gs[i][0] + '">' +
+      esc(gs[i][1]) + '<small>' + esc(gs[i][2]) + '</small></button>';
   }
+  return h + '</div></div>';
+}
+
+/** 局部重绘候选区（不重建输入框，避免打字时丢焦点） */
+function refreshSheetResults() {
+  var root = document.getElementById("sheet-root");
+  if (!root || !sheetState) return;
+  var box = root.querySelector("#sheet-results");
+  var mainBtn = root.querySelector("#sheet-main-btn");
+  if (!box) return;
+  var q = String(sheetState.query || "").trim();
+  var cand = sheetCandidates();
+  var exact = false, i;
+  for (i = 0; i < cand.length; i++) {
+    if (String(cand[i].name).trim().toLowerCase() === q.toLowerCase()) exact = true;
+  }
+  var autoNew = !!(q && !exact && cand.length === 0);
+  var showNew = sheetState.newOpen || autoNew;
+  var html = "";
+  if (!q) {
+    var counts = useCountMap();
+    var recent = cand.slice().sort(function (a, b) {
+      return (counts[b.id] || 0) - (counts[a.id] || 0);
+    }).slice(0, 3);
+    html += '<div class="sheet-sec-label">最近用过</div><div class="sheet-items">';
+    for (i = 0; i < recent.length; i++) html += sheetItemHTML(recent[i]);
+    html += '</div>';
+    html += '<div class="sheet-sec-label">全部项目</div><div class="sheet-items">';
+    for (i = 0; i < Math.min(cand.length, 12); i++) html += sheetItemHTML(cand[i]);
+    html += '</div>';
+  } else if (cand.length) {
+    html += '<div class="sheet-sec-label">找到 ' + cand.length + ' 项</div><div class="sheet-items">';
+    for (i = 0; i < cand.length; i++) html += sheetItemHTML(cand[i]);
+    html += '</div>';
+  } else {
+    html += '<div class="sheet-empty">没有找到「' + esc(q) + '」· 就在这里新建</div>';
+  }
+  if (showNew) html += sheetNewBoxHTML(q);
+  else html += '<button type="button" class="sheet-newtoggle" data-sheet-action="new-toggle">＋ 新建事项（会常驻「我的项目」）</button>';
+  box.innerHTML = html;
+  if (mainBtn) {
+    var chosen = getProject(sheetState.chosenPid);
+    var creating = showNew && !chosen;
+    mainBtn.setAttribute("data-sheet-action", creating ? "create" : "start");
+    mainBtn.textContent = creating ? "创建并常驻 · 在船上开始"
+      : (chosen ? "在船上开始 · " + chosen.name : "选一个项目，在船上开始");
+    mainBtn.disabled = !creating && !chosen;
+  }
+}
+
+/** 在船上开始一件事：船不靠岸，只顶掉船上原有的那件，新段带 parent 指向船段 */
+function startBoatTask(boatPid, taskPid) {
+  var now = Date.now();
+  syncRolloverForNow(now);
+  var dayKey = dayKeyOf(now);
+  var boat = findBoatSegment(state);
+  if (!boat || boat.projectId !== boatPid) return false;
+  var task = getProject(taskPid);
+  if (!task || taskPid === boatPid) return false;
+  var kids = runningChildrenOf(state, boat.seg.id);
+  for (var i = 0; i < kids.length; i++) closeRunningAt(kids[i], now, "finished");
+  var b = ensureBucket(state.days, dayKey, taskPid);
+  b.push({
+    id: newId("s"), start: now, originStart: now, end: null, endType: "running",
+    note: "", sourceProject: "", parent: boat.seg.id
+  });
+  state.currentDayKey = dayKey;
+  save();
+  render();
+  return true;
+}
+
+/** 面板内新建事项：常驻「我的项目」，默认如实知见；重名则复用已有项目，不建第二个 */
+function createProjectForBoat(name, group) {
+  var nm = String(name === null || name === undefined ? "" : name).trim();
+  if (!nm || Array.from(nm).length > 10) return null;
+  var ps = Array.isArray(state.projects) ? state.projects : (state.projects = []);
+  for (var i = 0; i < ps.length; i++) {
+    if (String(ps[i].name).trim().toLowerCase() === nm.toLowerCase()) return ps[i].id;
+  }
+  var g = (group === GROUP_MORE || group === GROUP_LESS || group === GROUP_FLOW) ? group : GROUP_FLOW;
+  var idx = state.nextColorIndex % PALETTE.length;
+  state.nextColorIndex = idx + 1;
+  var pid = newId("p");
+  ps.push({
+    id: pid, name: nm, colorIndex: idx, targetMinutes: null, dailyLimit: null,
+    createdAt: Date.now(), sortIndex: nextSortIndex(), group: g
+  });
+  markReveal(pid);
+  return pid;
 }
 
 function onSheetClick(e) {
   var t = (e.target && typeof e.target.closest === "function") ? e.target : null;
-  if (!t) return;
+  if (!t || !sheetState) return;
   var el = t.closest("[data-sheet-action]");
   if (!el) return;
   var act = el.getAttribute("data-sheet-action");
-  if (act === "reason") { toggleSheetReason(el); return; }
-  var pid = sheetState ? sheetState.pid : null;
-  var note = (act === "only" || act === "chore") ? readSheetNote() : "";
-  closeSheet();
-  if (!pid) return;
-  if (act === "chore") doInterrupt(pid, "chore", note);
-  else if (act === "only") doInterrupt(pid, "only", note);
-  else if (act === "backdrop") doInterrupt(pid, "only", "");
+  /* 点弹窗外：只关弹窗，不中断、不结束、不写 state */
+  if (act === "backdrop") { closeSheet(); return; }
+  if (act === "end") {
+    var endPid = sheetState.pid;
+    closeSheet();
+    stopTimer(endPid, "finished");   /* 与状态条 / 卡片上的「结束」同一个动作 */
+    return;
+  }
+  if (act === "pick") { sheetState.chosenPid = el.getAttribute("data-pid") || ""; refreshSheetResults(); return; }
+  if (act === "group") { sheetState.group = el.getAttribute("data-group"); refreshSheetResults(); return; }
+  if (act === "new-toggle") {
+    sheetState.newOpen = !sheetState.newOpen;
+    if (sheetState.newOpen) sheetState.chosenPid = "";
+    refreshSheetResults(); return;
+  }
+  if (act === "create") {
+    var npid = createProjectForBoat(sheetState.query, sheetState.group);
+    if (!npid) { showToast("先输入事项名（最多 10 个字）"); return; }
+    var bp = sheetState.pid;
+    closeSheet();
+    startBoatTask(bp, npid);
+    return;
+  }
+  if (act === "start") {
+    if (!sheetState.chosenPid) return;
+    var sp = sheetState.pid, tp = sheetState.chosenPid;
+    closeSheet();
+    startBoatTask(sp, tp);
+  }
 }
 
 function bindSheetSwipe(panel) {
@@ -1626,11 +1944,8 @@ function bindSheetSwipe(panel) {
     var shouldClose = dy > 60;
     startY = null; dy = 0;
     panel.style.transform = "";
-    if (shouldClose) {
-      var pid = sheetState ? sheetState.pid : null;
-      closeSheet();
-      if (pid) doInterrupt(pid, "only", "");
-    }
+    /* v0.4B：下滑只是收起弹窗，不结束、不中断、不写 state */
+    if (shouldClose) closeSheet();
   }, { passive: true });
 }
 
@@ -1638,34 +1953,44 @@ function openInterruptSheet(pid) {
   closeSheet();
   var p = getProject(pid);
   if (!p) return;
-  sheetState = { pid: pid, selected: "" };
-  var reasons = "";
-  for (var i = 0; i < CHORE_REASONS.length; i++) {
-    reasons += '<button class="sheet-reason" data-sheet-action="reason" data-reason="' + esc(CHORE_REASONS[i]) + '">' + esc(CHORE_REASONS[i]) + '</button>';
-  }
+  sheetState = { pid: pid, query: "", chosenPid: "", group: GROUP_FLOW, newOpen: false };
+  var first = sheetCandidates()[0];
+  if (first) sheetState.chosenPid = first.id;
   var root = document.createElement("div");
   root.id = "sheet-root";
   root.innerHTML =
     '<div class="sheet-backdrop" data-sheet-action="backdrop"></div>' +
     '<div class="sheet-panel">' +
       '<div class="sheet-handle"></div>' +
-      '<div class="sheet-title">中断《' + esc(p.name) + '》</div>' +
-      '<div class="sheet-reasons">' + reasons + '</div>' +
-      '<input id="sheet-note" class="sheet-input" type="text" maxlength="20" placeholder="补充说明" autocomplete="off">' +
-      '<div class="sheet-actions">' +
-        '<button class="btn btn-primary" data-sheet-action="chore">中断并开始记事来则应</button>' +
-        '<button class="btn btn-outline" data-sheet-action="only">只中断</button>' +
+      '<div class="sheet-title">中断《' + esc(p.name) + '》· 选一件船上的事</div>' +
+      '<div class="sheet-search-row">' +
+        '<svg class="sheet-search-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.8 10.8 L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' +
+        '<input id="sheet-search" class="sheet-input" type="text" maxlength="20" ' +
+          'placeholder="搜已建项目，或输入新事项名" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+      '</div>' +
+      '<div id="sheet-results"></div>' +
+      '<div class="sheet-foot">' +
+        '<button type="button" class="btn btn-primary" id="sheet-main-btn" data-sheet-action="start">在船上开始</button>' +
+        '<button type="button" class="btn btn-end" data-sheet-action="end">结束</button>' +
       '</div>' +
     '</div>';
   document.body.appendChild(root);
   root.addEventListener("click", onSheetClick);
-  var input = document.getElementById("sheet-note");
+  var input = root.querySelector("#sheet-search");
   if (input) input.addEventListener("input", function () {
     if (!sheetState) return;
-    sheetState.selected = "";
-    var all = root.querySelectorAll(".sheet-reason");
-    for (var j = 0; j < all.length; j++) all[j].classList.remove("active");
+    sheetState.query = input.value;
+    sheetState.chosenPid = "";
+    var q = sheetState.query.trim().toLowerCase();
+    var cs = sheetCandidates(), exact = false;
+    for (var ci = 0; ci < cs.length; ci++) {
+      if (String(cs[ci].name).trim().toLowerCase() === q) exact = true;
+    }
+    sheetState.newOpen = false;
+    if (q && !exact && cs.length === 0) sheetState.newOpen = true;
+    refreshSheetResults();
   });
+  refreshSheetResults();
   bindSheetSwipe(root.querySelector(".sheet-panel"));
 }
 
@@ -1940,11 +2265,11 @@ function exportRecords() {
   for (var r = 0; r < rows.length; r++) lines.push(rows[r]);
   /* 按日汇总区：空一行后追加，含「超额项目数」列；仍是同一个文件、同一个导出入口 */
   lines.push([""]);
-  lines.push(["按日汇总", "日期", "今日合计_分钟", "目标合计_分钟", "完成率", "记录段数", "超额项目数", "多多益善完成率"]);
+  lines.push(["按日汇总", "日期", "今日合计_分钟", "覆盖_分钟", "目标合计_分钟", "完成率", "记录段数", "超额项目数", "多多益善完成率"]);
   for (var dd = 0; dd < dayKeys.length; dd++) {
     var k = dayKeys[dd];
     var st = computeDayStats(state, k, now);
-    lines.push(["", k, String(st.totalMinutes), String(st.targetMinutes),
+    lines.push(["", k, String(st.totalMinutes), String(st.coveredMinutes), String(st.targetMinutes),
       st.percent + "%", String(st.records.length), String(limitExceededProjects(k, now).length),
       st.morePercent + "%"]);
   }
@@ -2269,7 +2594,7 @@ function tickRunningElapsed() {
 function renderStatusBar(running) {
   var old = document.getElementById("status-bar");
   if (old) old.remove();
-  if (!running && !choreNoticeText) return;
+  if (!running) return;   /* v0.4B：旧「事来则应已记录」提示整条退场 */
   /* 方案 A：计时中升级为高亮活动卡；无计时仅剩提示时保持轻量文字条，不新增第二个状态条 */
   var html = '<div id="status-bar"' + (running ? ' class="status-active"' : '') + '>';
   if (running) {
@@ -2285,8 +2610,8 @@ function renderStatusBar(running) {
           '<span class="status-tag">· 计时中</span>' +
           '<div class="status-right">' +
             '<button type="button" class="status-elapsed" id="status-elapsed" ' +
-              'data-action="adjust-start" aria-label="调整开始时间" ' +
-              'title="点这里把起点改回真正开始的时刻">已计时 ' +
+              'data-action="adjust-start" aria-label="调整开始时间与备注" ' +
+              'title="点这里改开始时间，或补一句备注">已计时 ' +
               formatMinutes(minutesOfSegment(seg0, Date.now())) + '</button>' +
             (adjusted ? '<span class="status-badge">起点已调整</span>' : '') +
           '</div>' +
@@ -2317,7 +2642,6 @@ function renderStatusBar(running) {
       html += '</div>';
     }
   }
-  if (choreNoticeText) html += '<span class="status-notice">' + esc(choreNoticeText) + '</span>';
   html += '</div>';
   document.getElementById("app-header").insertAdjacentHTML("afterend", html);
 }
@@ -2330,7 +2654,7 @@ function renderOverview(stats) {
   if (ovCard) ovCard.style.display = "";
   /* v0.3T：今日累计整块已删除，以下节点可能不存在，逐处加空值保护，避免整页渲染中断 */
   var elTotal = document.getElementById("stat-total");
-  if (elTotal) elTotal.textContent = formatMinutes(stats.totalMinutes);
+  if (elTotal) elTotal.textContent = formatMinutes(stats.coveredMinutes);
   var elTarget = document.getElementById("stat-target");
   if (elTarget) elTarget.textContent = stats.moreHasTarget ? "目标 " + formatMinutes(stats.moreTargetMinutes) : "未设置目标";
   var elPercent = document.getElementById("stat-percent-text");
@@ -2348,11 +2672,12 @@ function renderOverview(stats) {
   }
   var elRemaining = document.getElementById("stat-remaining");
   if (elRemaining) elRemaining.textContent = remaining;
-  /* 其中事来则应 XX 分钟：没有事来则应记录时不显示 */
+  /* v0.4B：旧「其中事来则应」文案退场，改为按「船上」汇总。
+     该节点在 v0.3T 已从 DOM 移除，这里保留空值保护与正确口径，不新增界面元素。 */
   var choreLine = document.getElementById("stat-chore-line");
   if (choreLine) {
-    if (stats.choreMinutes > 0) {
-      choreLine.textContent = "其中事来则应 " + stats.choreMinutes + " 分钟";
+    if (stats.boatMinutes > 0) {
+      choreLine.textContent = "其中船上 " + stats.boatMinutes + " 分钟";
       choreLine.style.display = "";
     } else {
       choreLine.textContent = "";
@@ -2538,10 +2863,12 @@ function renderTimeline(stats, dayKey, now) {
           '<span class="dot" style="background:' + esc(sg2.color) + '"></span>' +
           '<div class="rec-main">' +
             '<div class="rec-line1">' +
-              '<span class="rec-name ellipsis">' + esc(sg2.name) + '</span>' +
+              '<span class="rec-name ellipsis">' + (seg3 && seg3.parent ? '⤷ ' : '') + esc(sg2.name) + '</span>' +
               '<span class="rec-time">' + realTime + '</span>' +
             '</div>' +
-            '<div class="rec-line2">' + (rr.minutes || 0) + ' 分钟' + tag3 + fromHTML3 + noteHTML3 + '</div>' +
+            '<div class="rec-line2">' + (rr.minutes || 0) + ' 分钟' +
+              (seg3 && seg3.parent ? '<span class="tag-boat">船上</span>' : '') +
+              tag3 + fromHTML3 + noteHTML3 + '</div>' +
           '</div>' +
           '<div class="rec-btns">' +
             (isRun ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' + sid3 + '" aria-label="编辑本段">✎</button>') +
@@ -2689,11 +3016,13 @@ function boatSubHTML(p, ctx) {
   var info = ctx.boatInfo;
   if (!info || !info.parts.length) return "";
   var now = (typeof ctx.now === "number" && isFinite(ctx.now)) ? ctx.now : Date.now();
-  var netM = Math.max(0, minutesOfSegment(ctx.boat.seg, now) - info.minutes);
+  var totalM = minutesOfSegment(ctx.boat.seg, now);
+  var netM = Math.max(0, totalM - info.minutes);
+  /* v0.4B：合计（墙上时间 · 占河）与净（合计 − 船上）两个数字并列，都不做减法替换 */
   return '<div class="boat-sub">' +
     '<span class="boat-ico">⤷</span>' +
     '<span class="boat-text">船上 · ' + esc(info.parts.join("、")) + '</span>' +
-    '<span class="boat-net">净 ' + formatMinutes(netM) + '</span>' +
+    '<span class="boat-net">合计 ' + formatMinutes(totalM) + ' · 净 ' + formatMinutes(netM) + '</span>' +
   '</div>';
 }
 
@@ -3014,9 +3343,16 @@ function renderHistory() {
   var now = Date.now();
   var stats = computeDayStats(state, historyDayKey, now);
   if (sum) {
-    sum.textContent = stats.records.length
-      ? ("共 " + stats.records.length + " 段 · 合计 " + remainingText(stats.totalMinutes))
-      : "";
+    if (!stats.records.length) { sum.innerHTML = ""; }
+    else {
+      var diffMin = Math.max(0, (stats.rawTotalMinutes || 0) - (stats.coveredMinutes || 0));
+      var subHTML = diffMin > 0
+        ? '<span class="hist-sub">累计投入 ' + remainingText(stats.rawTotalMinutes) +
+          '（含 ' + remainingText(diffMin) + '重叠）</span>'
+        : "";
+      sum.innerHTML = '<span>共 ' + stats.records.length + ' 段 · 覆盖 ' +
+        remainingText(stats.coveredMinutes) + '</span>' + subHTML;
+    }
   }
   if (stats.records.length === 0) {
     list.innerHTML = '<div class="hist-empty">暂无记录' +
@@ -3025,11 +3361,25 @@ function renderHistory() {
   }
   /* 按时间从早到晚展示（computeDayStats 的 records 是 start 降序） */
   var recs = stats.records.slice().reverse();
-  /* v0.3I：与「今日记录」统一，默认只显示前 RECORDS_PAGE_SIZE 条，其余由底部按钮展开 */
-  var visible = (historyExpanded || recs.length <= RECORDS_PAGE_SIZE) ? recs.length : RECORDS_PAGE_SIZE;
+  /* v0.4B：把「船上」段折叠到父段下面；父段不在本日（跨天/已删）时降级为顶层，保证不丢记录 */
+  var topIds = {}, ki;
+  for (ki = 0; ki < recs.length; ki++) {
+    if (!recs[ki].segment.parent) topIds[String(recs[ki].segment.id)] = true;
+  }
+  var kidsByParent = {}, top = [];
+  for (ki = 0; ki < recs.length; ki++) {
+    var rk = recs[ki], par = rk.segment.parent ? String(rk.segment.parent) : "";
+    if (par && topIds[par]) {
+      if (!kidsByParent[par]) kidsByParent[par] = [];
+      kidsByParent[par].push(rk);
+    } else top.push(rk);
+  }
+  /* v0.3I：与「今日记录」统一，默认只显示前 RECORDS_PAGE_SIZE 条主段，其余由底部按钮展开 */
+  var visible = (historyExpanded || top.length <= RECORDS_PAGE_SIZE) ? top.length : RECORDS_PAGE_SIZE;
   var html = "";
   for (var i = 0; i < visible; i++) {
-    var rec = recs[i], seg = rec.segment;
+    var rec = top[i], seg = rec.segment;
+    var shownMin = segmentMinutesForDay(seg, historyDayKey, now);
     var isRunning = (seg.endType === "running" || seg.end === null || seg.end === undefined);
     var timeText = formatTime(seg.start) + "–" + (isRunning ? "现在" : formatTime(seg.end));
     var tag = isRunning ? '<span class="tag tag-running">计时中</span>'
@@ -3038,9 +3388,15 @@ function renderHistory() {
     var src = (typeof seg.sourceProject === "string") ? seg.sourceProject : "";
     var noteHTML = note ? '<span class="rec-note">' + esc(note) + '</span>' : "";
     var fromHTML = src ? '<span class="rec-from">← ' + esc(src) + '</span>' : "";
-    /* v0.3W：与今日小时明细同款双按钮；data-day 让弹层知道改的是哪一天 */
     var sid = esc(String(seg.id === undefined || seg.id === null ? "" : seg.id));
     var dayAttr = ' data-day="' + esc(historyDayKey) + '"';
+    /* v0.4B：主段有船上事时，同时显示「合计（墙上）」与「净（合计 − 船上）」 */
+    var kids = kidsByParent[String(seg.id)] || [], kidMin = 0;
+    for (var kj = 0; kj < kids.length; kj++) kidMin += segmentMinutesForDay(kids[kj].segment, historyDayKey, now);
+    var durHTML = kids.length
+      ? '<span class="rec-dual">合计 ' + formatMinutes(shownMin) + ' · 净 ' +
+        formatMinutes(Math.max(0, shownMin - kidMin)) + '</span>'
+      : shownMin + ' 分钟';
     html += '<div class="record-row">' +
       '<span class="dot" style="background:' + (rec.colorHex || colorOf(rec.project.colorIndex)) + '"></span>' +
       '<div class="rec-main">' +
@@ -3048,7 +3404,7 @@ function renderHistory() {
           '<span class="rec-name ellipsis">' + esc(rec.project.name) + '</span>' +
           '<span class="rec-time">' + timeText + '</span>' +
         '</div>' +
-        '<div class="rec-line2">' + rec.minutes + ' 分钟' + tag + fromHTML + noteHTML + '</div>' +
+        '<div class="rec-line2">' + durHTML + tag + fromHTML + noteHTML + '</div>' +
       '</div>' +
       '<div class="rec-btns">' +
         (isRunning ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' +
@@ -3057,10 +3413,29 @@ function renderHistory() {
           sid + '"' + dayAttr + ' aria-label="删除本段">×</button>' +
       '</div>' +
     '</div>';
+    /* 船上事折叠成子行，跟在主段后面；仍保留逐条编辑 / 删除 */
+    for (var kc = 0; kc < kids.length; kc++) {
+      var kr = kids[kc], ks = kr.segment;
+      var kRun = (ks.endType === "running" || ks.end === null || ks.end === undefined);
+      var kTime = formatTime(ks.start) + "–" + (kRun ? "现在" : formatTime(ks.end));
+      var kMin = segmentMinutesForDay(ks, historyDayKey, now);
+      var ksid = esc(String(ks.id === undefined || ks.id === null ? "" : ks.id));
+      html += '<div class="rec-child">' +
+        '<span class="rc-name">⤷ ' + esc(kr.project.name) + '<span class="tag-boat">船上</span></span>' +
+        '<span class="rc-time">' + kTime + '</span>' +
+        '<span class="rc-mins">' + kMin + ' 分</span>' +
+        '<span class="rec-btns">' +
+          (kRun ? "" : '<button class="icon-btn rec-edit" data-action="edit-record" data-id="' +
+            ksid + '"' + dayAttr + ' aria-label="编辑本段">✎</button>') +
+          '<button class="icon-btn rec-del" data-action="delete-record" data-id="' +
+            ksid + '"' + dayAttr + ' aria-label="删除本段">×</button>' +
+        '</span>' +
+      '</div>';
+    }
   }
-  if (recs.length > RECORDS_PAGE_SIZE) {
+  if (top.length > RECORDS_PAGE_SIZE) {
     html += '<button class="records-toggle" data-action="toggle-history">' +
-      (historyExpanded ? "收起" : "展开全部（共 " + recs.length + " 条）") + '</button>';
+      (historyExpanded ? "收起" : "展开全部（共 " + top.length + " 条）") + '</button>';
   }
   list.innerHTML = html;
 }
@@ -3115,7 +3490,6 @@ function startTimer(pid) {
   syncRolloverForNow(now);
   var dayKey = dayKeyOf(now);
   var toastText = null;
-  var newProj = getProject(pid);
   var all = findAllRunningSegments(state);
 
   /* 防御：这个项目已经在计时（不管是船还是船上），不重复开段 */
@@ -3123,35 +3497,20 @@ function startTimer(pid) {
     if (all[i].projectId === pid) { save(); render(); return; }
   }
 
-  /* v0.3V 船上穿插：
-     · 有船在走 + 这不是「事来则应」→ 这件事挂到船上（parent = 船段 id），船继续走；
-       船上原有的事被顶掉（同一条船上一次只做一件事），弹一句「《X》已记录 N 分钟」。
-     · 没有船（首次开始 / 只有事来则应 / 数据异常只剩船上的段）→ 顶层开始，
-       其余进行中段按原规则代关（finished）。 */
-  var boat = findBoatSegment(state);
-  var parentId = "";
-  /* 只有「真正的船」（自己没挂在别人船上）才收留这件事；
-     数据异常只剩船上的段时按顶层开始，不叠出第二层，避免链式嵌套看不清 */
-  if (boat && !boat.seg.parent && !isChoreProject(newProj) &&
-      !isChoreProject(getProject(boat.projectId))) parentId = boat.seg.id;
+  /* v0.4B：恢复互斥（v0.3V 的自动挂船分支整段移除）。
+     「船上」只能由「中断」产生；船在走时直接点别的项目「开始」
+     = 结束当前船（连船上那件事一起）、开始一条新船。 */
   for (var j = 0; j < all.length; j++) {
     var other = all[j];
-    if (parentId && other.seg.id === boat.seg.id) continue;  /* 船不动 */
     var closedProject = getProject(other.projectId);
     var mins = minutesOfSegment(other.seg, now);
-    if (isChoreProject(closedProject)) {
-      /* 事来则应被代关：不弹窗，顶部状态条浮现一行「事来则应已记录 XX 分钟」 */
-      showChoreNotice("事来则应已记录 " + mins + " 分钟");
-    } else if (!toastText && closedProject) {
-      toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
-    }
+    if (!toastText && closedProject) toastText = "《" + closedProject.name + "》已记录 " + mins + " 分钟";
     closeRunningAt(other, now, "finished");
   }
   var b = ensureBucket(state.days, dayKey, pid);
   /* v0.3O：originStart 记录「最初点开始」的时刻，之后调整 start 也不改它，
      供 mergeRemote() 在多端之间认出这是同一段（可选字段，旧数据没有就走原逻辑）。 */
   var newSeg = { id: newId("s"), start: now, originStart: now, end: null, endType: "running", note: "", sourceProject: "" };
-  if (parentId) newSeg.parent = parentId;   /* v0.3V：只在真的挂到船上时才写这个键 */
   b.push(newSeg);
   state.currentDayKey = dayKey;
   save();
@@ -3190,9 +3549,10 @@ function openAdjustStartModal() {
   }
   var startText = formatTime(running.seg.start);
   var elapsed = formatMinutes(minutesOfSegment(running.seg, now));
+  var noteVal = (typeof running.seg.note === "string") ? running.seg.note : "";
   var panel =
     '<div class="modal-title">调整开始时间</div>' +
-    '<div class="modal-desc">想起点开始时已经过去一会儿？把起点改回真正开始的时刻，已计时会自动跟着变。</div>' +
+    '<div class="modal-desc">起点记错了就改回真正开始的时刻；也可以只补一句备注，时间不动。</div>' +
     '<div class="adjust-cur">当前：<b>' + startText + '</b> 开始 · 已计时 <b>' + elapsed + '</b></div>' +
     '<label class="edit-note-label" for="adjust-start">改成几点开始</label>' +
     '<div class="edit-time-field" style="width:100%">' +
@@ -3204,8 +3564,13 @@ function openAdjustStartModal() {
       '<button type="button" class="adjust-chip" data-action="adjust-quick" data-minutes="60">−1 小时</button>' +
     '</div>' +
     '<div class="edit-preview" id="adjust-preview"></div>' +
+    /* v0.4D：备注并入本弹窗（与时间互不影响；只改备注时时间保持原值即可保存） */
+    '<label class="edit-note-label" for="adjust-note">备注（最多 50 字，可留空）</label>' +
+    '<input id="adjust-note" class="modal-input" type="text" maxlength="50" ' +
+      'value="' + esc(noteVal) + '" placeholder="例：改需求文档、和产品对方案" autocomplete="off">' +
+    noteSuggestBoxHTML("adjust-note", running.projectId, running.seg.id) +
     '<div class="modal-error" id="modal-error"></div>' +
-    '<div class="modal-actions">' +
+    '<div class="modal-actions is-sticky">' +
       '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
       '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
     '</div>';
@@ -3216,6 +3581,7 @@ function openAdjustStartModal() {
   var inp = document.getElementById("adjust-start");
   if (inp) inp.oninput = refreshAdjustPreview;
   refreshAdjustPreview();
+  refreshNoteSuggest(); /* v0.3S 的「最近用过」在备注框下方复用同一套 */
 }
 
 /** 弹窗内实时预览：把「改完后已计时多久」算给用户看，不写 state */
@@ -3259,7 +3625,8 @@ function applyAdjustQuick(mins) {
   refreshAdjustPreview();
 }
 
-/** 保存：校验 → 补写 originStart（兼容旧段）→ 只改 start → save() 自动同步 */
+/** 保存：校验 → 时间/备注各自判断是否变化 → 只写变化的那部分 → save() 自动同步
+    v0.4D：备注并入后，「只补备注、时间不动」也必须能存（旧版这里用的是 startTs === seg.start 直接关闭）。 */
 function saveAdjustStart() {
   var now = Date.now();
   syncRolloverForNow(now);
@@ -3279,15 +3646,28 @@ function saveAdjustStart() {
   if (startTs < midnight) { showModalError("开始时间不能早于今天 0 点"); return false; }
   if (startTs >= now) { showModalError("开始时间必须早于现在"); return false; }
   var seg = running.seg;
-  if (startTs === Number(seg.start)) return true; /* 没变化：直接关闭，不触发无谓同步 */
-  if (typeof seg.originStart !== "number" || !isFinite(seg.originStart)) {
-    seg.originStart = Number(seg.start); /* v0.3N 及更早的旧段：用当前起点补写身份 */
+  /* 输入框精度到分钟：与当前起点落在同一分钟内视为「没改时间」，
+     否则「只补备注」会被误判成调整起点（还会把起点里原本的秒数抹掉）。 */
+  var timeChanged = Math.abs(startTs - Number(seg.start)) >= 60000;
+  var noteInp = root && root.querySelector("#adjust-note");
+  var newNote = (noteInp ? noteChars(noteInp.value) : []).slice(0, 50).join("");
+  var oldNote = (typeof seg.note === "string") ? seg.note : "";
+  var noteChanged = newNote !== oldNote;
+  if (!timeChanged && !noteChanged) return true; /* 两样都没动：直接关闭，不触发无谓同步 */
+  if (timeChanged) {
+    if (typeof seg.originStart !== "number" || !isFinite(seg.originStart)) {
+      seg.originStart = Number(seg.start); /* v0.3N 及更早的旧段：用当前起点补写身份 */
+    }
+    seg.start = startTs;
   }
-  seg.start = startTs;
+  if (noteChanged) seg.note = newNote;
   state.currentDayKey = dayKeyOf(now);
   save();
   render();
-  showToast("起点已调为 " + pad2(a.h) + ":" + pad2(a.m) + "，已计时按新起点计算");
+  var tips = [];
+  if (timeChanged) tips.push("起点已调为 " + pad2(a.h) + ":" + pad2(a.m));
+  if (noteChanged) tips.push(newNote ? "备注已记下" : "备注已清空");
+  showToast(tips.join(" · "));
   return true;
 }
 
@@ -3382,6 +3762,7 @@ function onDocumentClick(e) {
     case "target": openTargetModal(id); break;
     case "delete-record": openDeleteRecordModal(id, el.getAttribute("data-day")); break;
     case "edit-record": openEditRecordModal(id, el.getAttribute("data-day")); break;
+    case "rec-proj-open": openRecProjSheet(); break;
     case "toggle-history": toggleHistoryExpanded(); break;
     case "toggle-hour": toggleTimelineHour(el.getAttribute("data-hour")); break;
     case "add-hour-record": openAddHourRecordModal(el.getAttribute("data-hour")); break;
@@ -3420,7 +3801,8 @@ function onDocumentClick(e) {
 function onDocumentKeydown(e) {
   if (e.key === "Escape") {
     closeProjMenu();
-    if (sheetState) { var sp = sheetState.pid; closeSheet(); doInterrupt(sp, "only", ""); }
+    /* v0.4B：Esc 只关弹窗，不结束、不中断、不写 state */
+    if (sheetState) { closeSheet(); }
     else if (modalState) closeModal();
     else if (searchQuery) clearSearch();
   }
@@ -3441,6 +3823,7 @@ function closeModal() {
   /* v0.3G：新建项目后紧接的「设置目标」面板会盖住浅蓝高亮（1.3s 就过期），
      关掉面板时重新高亮一次，避免热度排序下新项目沉进折叠区后看不见。 */
   var wasTargetPid = (modalState && modalState.kind === "target") ? targetModalPid : null;
+  rollbackRecNewProject();
   modalState = null;
   document.getElementById("modal-root").innerHTML = "";
   if (wasTargetPid) {
@@ -3811,20 +4194,20 @@ function refreshEditPreview() {
   if (!root) return;
   var st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end");
   var box = root.querySelector("#edit-preview");
+  var wrap = root.querySelector("#rec-dur");
   if (!st || !en || !box) return;
   var a = parseClockHM(st.value), b = parseClockHM(en.value);
-  if (!a || !b) {
-    box.textContent = "请填写开始和结束时间";
+  var bad = "";
+  if (!a || !b) bad = "请把开始和结束时间都填上";
+  else if ((b.h * 60 + b.m) - (a.h * 60 + a.m) <= 0) bad = "结束时间要晚于开始时间";
+  if (bad) {
+    if (wrap) wrap.classList.add("is-invalid");
+    box.textContent = bad;
     box.className = "edit-preview invalid";
     return;
   }
-  var diff = (b.h * 60 + b.m) - (a.h * 60 + a.m);
-  if (diff <= 0) {
-    box.textContent = "结束时间需晚于开始时间";
-    box.className = "edit-preview invalid";
-    return;
-  }
-  box.textContent = "修改后时长 " + Math.max(1, diff) + " 分钟";
+  if (wrap) wrap.classList.remove("is-invalid");
+  box.textContent = Math.max(1, (b.h * 60 + b.m) - (a.h * 60 + a.m)) + " 分钟";
   box.className = "edit-preview";
 }
 
@@ -3833,6 +4216,277 @@ function refreshEditPreview() {
     编辑只改钟点与备注；保存时把原项目 id 传回，段不换桶。补记弹窗不受影响。
     v0.3J 的换桶逻辑仍留在 saveRecordEdit 中，只是编辑弹窗不再提供入口；
     系统项目「事来则应」的记录同样保持原归属不变。 */
+/* -------------------- v0.4D 预览：编辑这段时间 · 改项目 -------------------- */
+var recProjState = null;
+
+function refreshProjRow() {
+  var slot = document.getElementById("rec-proj-row");
+  if (!slot || !modalState || !modalState.segId) return;
+  slot.innerHTML = recordProjRowHTML(modalState.segId, modalState.dayKey);
+}
+
+function recordProjRowHTML(segId, dayKey) {
+  var found = findSegmentById(segId, dayKey);
+  if (!found) return "";
+  var oldP = getProject(found.pid);
+  if (!oldP) return "";
+  var oldId = String(found.pid);
+  var curId = (modalState && modalState.pendingPid) ? String(modalState.pendingPid) : oldId;
+  var curP = getProject(curId) || oldP;
+  var dot = function (p) { return '<span class="pp-dot" style="background:' + projectColor(p) + '"></span>'; };
+  if (isSystemChore(oldP) || oldId === CHORE_ID) {
+    return '<span class="proj-pill locked">' + dot(oldP) +
+      '<span class="pp-name">' + esc(oldP.name) + '</span></span>' +
+      '<span class="pp-hint">系统项目 · 归属固定</span>';
+  }
+  var changed = curId !== oldId;
+  var inner = dot(oldP) + '<span class="pp-name">' + esc(oldP.name) + '</span>';
+  if (changed) {
+    inner += '<span class="pp-arrow">→</span>' + dot(curP) +
+      '<span class="pp-name pp-to">' + esc(curP.name) + '</span>';
+  }
+  inner += '<span class="pp-caret" aria-hidden="true">▾</span>';
+  return '<button type="button" class="proj-pill' + (changed ? " on" : "") + '" ' +
+    'data-action="rec-proj-open" aria-label="改到另一个项目">' + inner + '</button>' +
+    '<span class="pp-hint">' + (changed ? "保存后生效" : "只改归属") + '</span>';
+}
+
+/** 候选项目：排除系统「事来则应」；按名称过滤；按使用次数、再按排序号 */
+function recProjPool(q) {
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var qq = String(q === null || q === undefined ? "" : q).trim().toLowerCase();
+  var counts = useCountMap();
+  var out = [], i;
+  for (i = 0; i < ps.length; i++) {
+    var p = ps[i];
+    if (!p || isSystemChore(p) || p.id === CHORE_ID) continue;
+    if (qq && String(p.name).toLowerCase().indexOf(qq) < 0) continue;
+    out.push(p);
+  }
+  out.sort(function (a, b) {
+    var ca = counts[a.id] || 0, cb = counts[b.id] || 0;
+    if (cb !== ca) return cb - ca;
+    return sortIndexOf(b) - sortIndexOf(a);
+  });
+  return out;
+}
+
+function recProjListHTML(q) {
+  var curId = (modalState && modalState.pendingPid) ? String(modalState.pendingPid) : "";
+  var ps = recProjPool(q), out = "", i;
+  for (i = 0; i < ps.length; i++) {
+    var p = ps[i], on = String(p.id) === curId;
+    out += '<button type="button" class="sheet-item' + (on ? " on" : "") + '" data-rec-pid="' + esc(p.id) + '">' +
+      '<span class="si-dot" style="background:' + projectColor(p) + '"></span>' +
+      '<span class="si-name">' + esc(p.name) + '</span>' +
+      '<span class="si-grp">' + (on ? "当前" : esc(groupLabelOf(p))) + '</span>' +
+      '</button>';
+  }
+  return out;
+}
+
+var REC_PROJ_SEARCH_SVG =
+  '<svg class="sheet-search-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+  '<circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/>' +
+  '<path d="M10.8 10.8 L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+
+var REC_EMPTY_SVG =
+  '<svg class="re-ico" width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">' +
+  '<rect x="1.2" y="1.2" width="33.6" height="33.6" rx="10" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 3.6"/>' +
+  '<path d="M18 11.5 v13 M11.5 18 h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+
+function recProjSubHTML() {
+  if (!modalState || !modalState.segId) return "";
+  var f = findSegmentById(modalState.segId, modalState.dayKey);
+  if (!f) return "";
+  var p = getProject(f.pid);
+  return '<b>' + esc(p ? p.name : "") + '</b> · ' +
+    formatTime(f.seg.start) + ' – ' + formatTime(f.seg.end);
+}
+
+/** 结果区：有候选 → 列表 + 新建行；没有候选 → 空态 + 直接新建 */
+function recProjResultsHTML(q) {
+  var qq = String(q === null || q === undefined ? "" : q).trim();
+  var ps = recProjPool(qq);
+  if (!ps.length) {
+    return '<div class="rec-empty">' + REC_EMPTY_SVG +
+      '<div class="re-t">没找到「' + esc(qq || "这个项目") + '」</div>' +
+      '<div class="re-s">新建一个，这段记录直接改到它</div>' +
+      '<button type="button" class="re-btn" data-rec-act="new">＋ 新建「' + esc(qq || "新项目") + '」</button>' +
+      '</div>';
+  }
+  return '<div class="sheet-items" id="rec-proj-items">' + recProjListHTML(qq) + '</div>' +
+    '<button type="button" class="rec-newrow" data-rec-act="new">＋ 新建项目' +
+    (qq ? '「' + esc(qq) + '」' : '') + '</button>';
+}
+
+function recProjCreateHTML() {
+  var s = recProjState;
+  var gs = [
+    [GROUP_MORE, "多多益善", "至少投入多少"],
+    [GROUP_LESS, "适可而止", "别超过多少"],
+    [GROUP_FLOW, "如实知见", "只记流水 · 默认"]
+  ];
+  var h = '<div class="sheet-title">新建项目</div>' +
+    '<div class="rec-sheet-sub">建好后常驻「我的项目」，这段记录接着改到它</div>' +
+    '<div class="rec-mini-label">项目名称</div>' +
+    '<input id="rec-new-name" class="sheet-input" type="text" maxlength="10" value="' +
+      esc(s.name || "") + '" placeholder="最多 10 个字" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+    '<div class="rec-mini-label">归到哪一类</div><div class="sheet-groups">';
+  for (var i = 0; i < gs.length; i++) {
+    h += '<button type="button" class="sheet-group' + (s.group === gs[i][0] ? " on" : "") +
+      '" data-rec-group="' + gs[i][0] + '">' + gs[i][1] + '<small>' + gs[i][2] + '</small></button>';
+  }
+  h += '</div><div class="rec-new-err" id="rec-new-err">' + esc(s.err || "") + '</div>' +
+    '<div class="sheet-foot">' +
+      '<button type="button" class="btn rec-quiet" data-rec-act="back">返回</button>' +
+      '<button type="button" class="btn btn-primary" data-rec-act="create">创建并选中</button>' +
+    '</div>';
+  return h;
+}
+
+function recProjBodyHTML() {
+  var s = recProjState;
+  if (!s) return "";
+  if (s.step === "create") return recProjCreateHTML();
+  return '<div class="sheet-title">这段记录改到哪个项目</div>' +
+    '<div class="rec-sheet-sub">' + recProjSubHTML() + '</div>' +
+    '<div class="sheet-search-row">' + REC_PROJ_SEARCH_SVG +
+      '<input id="rec-proj-search" class="sheet-input" type="text" maxlength="12" value="' +
+        esc(s.q || "") + '" placeholder="搜项目名，找不到就新建" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+    '</div>' +
+    '<div id="rec-proj-results">' + recProjResultsHTML(s.q) + '</div>' +
+    '<div class="sheet-foot"><button type="button" class="btn rec-quiet" data-rec-act="cancel">取消</button></div>';
+}
+
+function renderRecProjBody(focusSel) {
+  var box = document.getElementById("rec-proj-body");
+  if (!box) return;
+  box.innerHTML = recProjBodyHTML();
+  var se = box.querySelector("#rec-proj-search");
+  if (se) se.addEventListener("input", function () {
+    recProjState.q = se.value;
+    var res = document.getElementById("rec-proj-results");
+    if (res) res.innerHTML = recProjResultsHTML(se.value);
+  });
+  var nm = box.querySelector("#rec-new-name");
+  if (nm) nm.addEventListener("input", function () {
+    recProjState.name = nm.value;
+    if (recProjState.err) {
+      recProjState.err = "";
+      var eb = document.getElementById("rec-new-err");
+      if (eb) eb.textContent = "";
+    }
+  });
+  if (focusSel) {
+    var f = box.querySelector(focusSel);
+    if (f) { try { f.focus(); f.setSelectionRange(f.value.length, f.value.length); } catch (e) {} }
+  }
+}
+
+function startRecProjCreate(prefill) {
+  recProjState.step = "create";
+  recProjState.err = "";
+  var pre = String(prefill === null || prefill === undefined ? "" : prefill).trim();
+  if (pre) recProjState.name = Array.from(pre).slice(0, 10).join("");
+  renderRecProjBody("#rec-new-name");
+}
+
+function submitRecProjCreate() {
+  var inp = document.getElementById("rec-new-name");
+  var nm = String(inp ? inp.value : (recProjState.name || "")).trim();
+  recProjState.name = nm;
+  var eb = document.getElementById("rec-new-err");
+  function fail(msg) { recProjState.err = msg; if (eb) eb.textContent = msg; }
+  if (!nm) { fail("先给项目起个名字"); return; }
+  if (Array.from(nm).length > 10) { fail("最多 10 个字"); return; }
+  if (isChoreName(nm)) { fail("「" + CHORE_NAME + "」是系统项目，换个名字"); return; }
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  for (var i = 0; i < ps.length; i++) {
+    if (String(ps[i].name).trim().toLowerCase() === nm.toLowerCase()) {
+      applyRecProjPick(ps[i].id);
+      showToast("已有同名项目，已选中《" + ps[i].name + "》");
+      return;
+    }
+  }
+  var pid = createProjectForBoat(nm, recProjState.group);
+  if (!pid) { fail("没能新建，换个名字试试"); return; }
+  if (modalState) modalState.newPid = String(pid);
+  applyRecProjPick(pid);
+  showToast("已新建《" + nm + "》，点「保存」改过去");
+}
+
+function applyRecProjPick(pid) {
+  if (!modalState || !pid) return;
+  modalState.pendingPid = String(pid);
+  closeSheet();
+  refreshProjRow();
+  /* 换了项目，「最近用过」也要换成新项目的历史备注 */
+  var sug = document.getElementById("note-sug");
+  if (sug) { sug.setAttribute("data-pid", String(pid)); refreshNoteSuggest(); }
+}
+
+function onRecProjClick(e) {
+  var t = (e.target && typeof e.target.closest === "function") ? e.target : null;
+  if (!t || !recProjState) return;
+  var item = t.closest("[data-rec-pid]");
+  if (item) { applyRecProjPick(item.getAttribute("data-rec-pid")); return; }
+  var grp = t.closest("[data-rec-group]");
+  if (grp) {
+    recProjState.group = grp.getAttribute("data-rec-group");
+    var chips = document.querySelectorAll("#sheet-root [data-rec-group]");
+    for (var i = 0; i < chips.length; i++) {
+      if (chips[i].getAttribute("data-rec-group") === recProjState.group) chips[i].classList.add("on");
+      else chips[i].classList.remove("on");
+    }
+    return;
+  }
+  var act = t.closest("[data-rec-act]");
+  if (!act) return;
+  var k = act.getAttribute("data-rec-act");
+  if (k === "cancel" || k === "backdrop") { closeSheet(); return; }
+  if (k === "new") { startRecProjCreate(recProjState.q); return; }
+  if (k === "back") { recProjState.step = "list"; recProjState.err = ""; renderRecProjBody(); return; }
+  if (k === "create") { submitRecProjCreate(); return; }
+}
+
+function openRecProjSheet() {
+  if (!modalState || !modalState.segId) return;
+  closeSheet();
+  sheetState = { kind: "rec-proj" };
+  recProjState = { step: "list", q: "", group: GROUP_FLOW, name: "", err: "" };
+  var root = document.createElement("div");
+  root.id = "sheet-root";
+  root.innerHTML =
+    '<div class="sheet-backdrop" data-rec-act="backdrop"></div>' +
+    '<div class="sheet-panel rec-sheet">' +
+      '<div class="sheet-handle"></div>' +
+      '<div id="rec-proj-body"></div>' +
+    '</div>';
+  document.body.appendChild(root);
+  root.addEventListener("click", onRecProjClick);
+  renderRecProjBody();
+  bindSheetSwipe(root.querySelector(".sheet-panel"));
+}
+
+/** 新建的项目若最终没保存（点取消/点遮罩关掉），顺手删掉，别在「我的项目」里留一个 0 次的项目 */
+function rollbackRecNewProject() {
+  if (!modalState || modalState.kind !== "edit-record" || !modalState.newPid) return;
+  var pid = String(modalState.newPid);
+  var days = state.days || {};
+  for (var dk in days) {
+    if (!Object.prototype.hasOwnProperty.call(days, dk)) continue;
+    var bucket = days[dk] ? days[dk][pid] : null;
+    if (Array.isArray(bucket) && bucket.length) return;
+  }
+  var before = (state.projects || []).length;
+  state.projects = (state.projects || []).filter(function (p) { return String(p.id) !== pid; });
+  if ((state.projects || []).length === before) return;
+  save();
+  render();
+  showToast("这段没保存，刚建的项目也撤掉了");
+}
+
 function openEditRecordModal(segId, dayKeyOpt) {
   var now = Date.now();
   var today = dayKeyOf(now);
@@ -3850,25 +4504,24 @@ function openEditRecordModal(segId, dayKeyOpt) {
   /* 复用补记弹窗同一套 id 与 data-action，内联新建相关函数零改动直接可用 */
   /* v0.3X 方案 A：整块去掉「改所属项目」区；编辑只改钟点与备注。
      补记弹窗仍用 projectPickerHTML / inlineNewProjectHTML，组件本身一行未动。 */
-  var projectHTML = "";
-  var desc = esc(pname) + ' · 可改钟点与备注，日期不变';
   var panel =
-    '<div class="modal-title">编辑这段时间</div>' +
-    '<div class="modal-desc">' + desc + '</div>' +
-    projectHTML +
-    '<div class="edit-time-row">' +
+    '<div class="modal-title rec-title">编辑这段时间</div>' +
+    '<div class="proj-row" id="rec-proj-row"></div>' +
+    '<div class="rec-time-block"><div class="edit-time-row">' +
       '<div class="edit-time-field"><label for="edit-start">开始时间</label>' +
         '<input id="edit-start" class="modal-input" type="time" value="' + formatTime(seg.start) + '"></div>' +
       '<div class="edit-time-field"><label for="edit-end">结束时间</label>' +
         '<input id="edit-end" class="modal-input" type="time" value="' + formatTime(seg.end) + '"></div>' +
-    '</div>' +
-    '<label class="edit-note-label" for="edit-note">备注（最多 50 字，可留空）</label>' +
+    '</div></div>' +
+    '<div class="rec-note-hd"><span class="rec-lab">备注</span>' +
+      '<span class="rec-lab-aside">可选 · 最多 50 字</span></div>' +
     '<input id="edit-note" class="modal-input" type="text" maxlength="50" ' +
       'value="' + esc(seg.note || "") + '" placeholder="可留空" autocomplete="off">' +
     noteSuggestBoxHTML("edit-note", found.pid, segId) +
-    '<div class="edit-preview" id="edit-preview"></div>' +
-    '<div class="modal-error" id="modal-error"></div>' +
-    '<div class="modal-actions">' +
+    '<div class="rec-dur" id="rec-dur"><span class="rd-k">修改后时长</span>' +
+      '<span class="edit-preview" id="edit-preview"></span></div>' +
+    '<div class="modal-error rec-err" id="modal-error"></div>' +
+    '<div class="modal-actions is-sticky">' +
       '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
       '<button class="btn btn-primary" data-action="modal-confirm">保存</button>' +
     '</div>';
@@ -3881,9 +4534,17 @@ function openEditRecordModal(segId, dayKeyOpt) {
           st = root.querySelector("#edit-start"), en = root.querySelector("#edit-end"), nt = root.querySelector("#edit-note");
       return saveRecordEdit(segId,
         st ? st.value : "", en ? en.value : "", nt ? nt.value : "",
-        sel ? sel.value : found.pid, isAddInlineNew(), dayKey);
+        sel ? sel.value : ((modalState && modalState.pendingPid) ? modalState.pendingPid : found.pid),
+        isAddInlineNew(), dayKey);
     }
   });
+  if (modalState) {
+    modalState.segId = segId;
+    modalState.dayKey = dayKey;
+    modalState.pendingPid = String(found.pid);
+    modalState.newPid = "";
+  }
+  refreshProjRow();
   var stEl = document.getElementById("edit-start"), enEl = document.getElementById("edit-end");
   if (stEl) stEl.oninput = refreshEditPreview;
   if (enEl) enEl.oninput = refreshEditPreview;
@@ -4086,14 +4747,14 @@ function projectOptionsHTML(opts) {
   var defs = [
     { key: GROUP_MORE, label: "多多益善" },
     { key: GROUP_LESS, label: "适可而止" },
-    { key: GROUP_FLOW, label: "如实知见" },
-    { key: "chore", label: CHORE_NAME }
+    { key: GROUP_FLOW, label: "如实知见" }
   ];
   var buckets = {};
   for (var d = 0; d < defs.length; d++) buckets[defs[d].key] = [];
   for (var i = 0; i < ps.length; i++) {
     var p = ps[i];
-    var k = (isSystemChore(p) || isChoreProject(p)) ? "chore" : groupOf(p);
+    var k = groupOf(p);
+    if (k === null) k = GROUP_FLOW;   /* v0.4B：旧系统项目按普通「如实知见」项目出现，不再单列分组 */
     if (!buckets[k]) k = GROUP_MORE;
     buckets[k].push(p);
   }
@@ -4228,15 +4889,15 @@ function pickerProjectList(includeChore) {
   var defs = [
     { key: GROUP_MORE, label: GROUP_LABEL.more },
     { key: GROUP_LESS, label: GROUP_LABEL.less },
-    { key: GROUP_FLOW, label: GROUP_LABEL.flow },
-    { key: "chore", label: "系统" }
+    { key: GROUP_FLOW, label: GROUP_LABEL.flow }
   ];
   var buckets = {};
   for (var d = 0; d < defs.length; d++) buckets[defs[d].key] = [];
   for (var i = 0; i < ps.length; i++) {
     var p = ps[i];
-    var k = (isSystemChore(p) || isChoreProject(p)) ? "chore" : groupOf(p);
-    if (!k || !buckets[k]) k = GROUP_MORE;
+    var k = groupOf(p);
+    if (k === null) k = GROUP_FLOW;   /* v0.4B：不再单列「系统」分组 */
+    if (!buckets[k]) k = GROUP_MORE;
     buckets[k].push(p);
   }
   var out = [];
@@ -4666,10 +5327,10 @@ function drawCardCanvas(canvas, stats, now) {
   ctx.beginPath(); ctx.moveTo(left, 214); ctx.lineTo(right, 214); ctx.stroke();
 
   ctx.fillStyle = "#8A94A6"; ctx.font = "24px " + FONT_STACK;
-  ctx.fillText("今日总时长", left, 268);
+  ctx.fillText("今日覆盖", left, 268);
   ctx.fillText("目标完成", 410, 268);
   ctx.fillStyle = "#2F7DF6"; ctx.font = "bold 68px " + FONT_STACK;
-  ctx.fillText(formatMinutes(stats.totalMinutes), left, 344);
+  ctx.fillText(formatMinutes(stats.coveredMinutes), left, 344);
   ctx.fillText(stats.percent + "%", 410, 344);
 
   var barY = 382, barW = right - left, barH = 14;
@@ -4684,9 +5345,10 @@ function drawCardCanvas(canvas, stats, now) {
 
   /* 其中事来则应 XX 分钟：位置在今日总时长下面，无事来则应记录时不显示。
      事来则应行/小节标题/列表统一下移，给这行灰字留出不与标题相挤的间距（画布高度 H 无需改动）。 */
-  if (stats.choreMinutes > 0) {
+  /* v0.4B：旧「其中事来则应」文案退场，改为按「船上」单独汇总 */
+  if (stats.boatMinutes > 0) {
     ctx.fillStyle = "#8A94A6"; ctx.font = "22px " + FONT_STACK;
-    ctx.fillText("其中事来则应 " + stats.choreMinutes + " 分钟", left, 430);
+    ctx.fillText("其中船上 " + stats.boatMinutes + " 分钟", left, 430);
   }
 
   ctx.fillStyle = "#1F2A44"; ctx.font = "bold 30px " + FONT_STACK;
@@ -5776,6 +6438,8 @@ window.TTR = {
   setStateForTest: function (s) { state = s; save(); render(); },
   render: render,
   computeDayStats: computeDayStats,
+  computeCoveredMinutes: computeCoveredMinutes,
+  segmentMinutesForDay: segmentMinutesForDay,
   dayKeyOf: dayKeyOf,
   minutesOfSegment: minutesOfSegment,
   formatMinutes: formatMinutes,
@@ -5812,6 +6476,14 @@ window.TTR = {
   findAllRunningSegments: findAllRunningSegments,
   normalizeDayRollover: normalizeDayRollover,
   findBoatSegment: findBoatSegment,
+  startTimer: startTimer,
+  stopTimer: stopTimer,
+  openInterruptSheet: openInterruptSheet,
+  closeSheet: closeSheet,
+  startBoatTask: startBoatTask,
+  createProjectForBoat: createProjectForBoat,
+  refreshSheetResults: refreshSheetResults,
+  sheetCandidates: sheetCandidates,
   runningChildrenOf: runningChildrenOf,
   boatChildrenInfo: boatChildrenInfo,
   closeRunningWithChildren: closeRunningWithChildren,
