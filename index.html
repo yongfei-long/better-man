@@ -565,6 +565,26 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .proj-search-empty{padding:24px 10px;text-align:center;color:var(--muted);font-size:14px;line-height:1.7;}
 @media (max-width:360px){.proj-search{height:38px;}.proj-search-input::placeholder{font-size:13px;}}
 
+/* 主搜索「搜不到就原地新建」：空态给按钮 → 一步弹窗（名称预填 + 三分类同屏）。
+   沿用「改项目」面板的空态语汇与 .sheet-groups 三分类，不新增第二套组件。 */
+.proj-search-empty.pse-empty{
+  padding:20px 14px 18px;text-align:center;color:var(--text);font-size:14px;line-height:1.5;
+  border:1px solid #E7ECF4;border-radius:12px;background:#FBFCFE;
+}
+.pse-t{font-weight:600;color:#1F2A44;word-break:break-all;}
+.pse-s{font-size:12px;color:#9AA6B8;margin-top:5px;}
+.pse-btn{
+  margin-top:14px;height:42px;padding:0 18px;border:0;border-radius:10px;
+  background:var(--blue);color:#fff;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.pse-btn:active{filter:brightness(.95);}
+.pnew-label{font-size:11.5px;font-weight:600;color:#8A94A6;margin:14px 0 6px;letter-spacing:.2px;}
+/* 错误区平时不占高，出现红字时才撑开 */
+.modal-error.pnew-err{min-height:0;margin-top:0;font-size:12.5px;color:#D8412F;line-height:1.3;}
+.modal-error.pnew-err:not(:empty){margin-top:9px;}
+@media (max-width:360px){.pse-btn{font-size:13px;padding:0 14px;}}
+
 /* ===== 项目热度排序（v0.3G）=====
  * 排序切换按钮位于「我的项目」标题行；次数徽标放在卡片右侧 .proj-today 列内，
  * 不参与 .proj-top 的 flex 伸缩，避免窄屏下唯一可收缩的 .proj-name 被挤没。 */
@@ -969,12 +989,123 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .rec-dual{color:#3B5BA9;font-weight:600;}
 .tag-boat{color:#3B5BA9;background:#EEF4FF;border-radius:5px;padding:1px 5px;font-size:11px;margin-left:4px;font-weight:600;}
 @media (max-width:360px){.sheet-group{font-size:11px;}.sheet-foot .btn-end{padding:0 10px;font-size:13px;}}
+
+/* ========== 最近 7 天统计：视图切换 + 只读统计页（沿用 :root / PALETTE，零新增色值） ========== */
+.viewtabs{
+  display:flex;gap:4px;background:#fff;border:1px solid #E3EDFB;border-radius:14px;
+  padding:4px;margin:0 0 12px;box-shadow:0 2px 10px rgba(47,125,246,.05);
+}
+.viewtabs button{
+  flex:1 1 0;min-width:0;height:40px;border-radius:10px;
+  font-size:13px;font-weight:600;color:var(--muted);background:transparent;
+}
+.viewtabs button.on{background:#EAF2FF;color:var(--blue);font-weight:700;}
+.viewtabs button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;}
+@media (max-width:360px){.viewtabs button{font-size:12px;height:38px;}}
+
+#stats-view{padding-bottom:8px;}
+.st-card{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(30,60,110,.06);padding:16px;margin-bottom:12px;}
+.st-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px;}
+.st-title{font-size:16px;font-weight:700;}
+.st-range{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.st-kicker{font-size:12px;color:var(--muted);}
+.st-hero{display:flex;align-items:baseline;flex-wrap:wrap;font-size:40px;line-height:1.15;
+  font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);letter-spacing:-.5px;}
+.st-hero small{font-size:14px;font-weight:600;color:var(--muted);margin-left:8px;letter-spacing:0;}
+.st-sub{margin-top:8px;font-size:13px;color:#5A6A85;line-height:1.75;}
+.st-sub em{font-style:normal;color:var(--muted);}
+.st-delta{display:inline-flex;align-items:center;gap:4px;margin-top:10px;padding:4px 10px;
+  border-radius:999px;background:#EAF2FF;color:var(--blue);font-size:12px;font-weight:700;
+  font-variant-numeric:tabular-nums;}
+.st-delta.down{background:#F1F4F9;color:#7E8BA1;}
+.st-delta.flat{background:#F1F4F9;color:#A6AFC0;}
+
+/* 三分类汇总条 */
+.st-stack{display:flex;height:10px;border-radius:6px;overflow:hidden;background:var(--line);}
+.st-stack i{display:block;height:100%;}
+.st-legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 6px;margin-top:11px;}
+.st-lg{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;}
+.st-lg-t{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:#5A6A85;white-space:nowrap;}
+.st-lg-v{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.st-lg b{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
+.st-lg .dot{width:8px;height:8px;flex:0 0 8px;}
+
+/* 7 天柱 */
+.st-week{display:flex;align-items:flex-end;gap:6px;height:102px;margin-top:6px;}
+.st-day{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center;}
+.st-val{font-size:10px;color:var(--muted);margin-bottom:4px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.st-day.today .st-val{color:var(--blue);font-weight:700;}
+.st-bar{width:100%;max-width:30px;border-radius:5px 5px 2px 2px;background:#C7DBFD;min-height:3px;}
+.st-day.today .st-bar{background:var(--blue);}
+.st-day.none .st-bar{background:var(--line);}
+.st-day.none .st-val{font-size:9px;color:#AEB8C8;letter-spacing:-.3px;}
+.st-lb{font-size:11px;color:var(--muted);margin-top:6px;white-space:nowrap;}
+.st-day.today .st-lb{color:var(--blue);font-weight:700;}
+
+/* 项目排行 */
+.st-rows{margin-top:2px;}
+.st-row{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:9px;align-items:center;
+  padding:9px 0;border-bottom:1px solid var(--line);}
+.st-row:last-child{border-bottom:0;}
+.st-row .dot{width:10px;height:10px;flex:0 0 10px;}
+.st-row-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0;}
+.st-nm{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.st-num{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.st-num span{font-size:11px;color:var(--muted);font-weight:500;margin-left:6px;}
+.st-track{height:5px;border-radius:4px;background:#F0F3F8;margin-top:6px;overflow:hidden;}
+.st-track i{display:block;height:100%;border-radius:4px;}
+.st-df{font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--blue);}
+.st-df.down{color:var(--muted);}
+.st-df.flat{color:#B4BDCB;}
+.st-foot{margin-top:12px;padding-top:10px;border-top:1px dashed #E6EBF3;
+  font-size:11.5px;color:#A6AFC0;line-height:1.75;}
+.st-note{text-align:center;font-size:11.5px;color:#A6AFC0;line-height:1.8;padding:2px 4px 6px;}
+.st-empty{padding:26px 6px;text-align:center;color:var(--muted);font-size:14px;font-weight:600;}
+.st-empty span{display:block;margin-top:8px;font-size:12px;font-weight:400;color:#A6AFC0;line-height:1.7;}
+@media (max-width:360px){
+  .st-hero{font-size:34px;}
+  .st-legend{gap:6px 10px;}
+  .st-week{gap:4px;}
+  .st-val{font-size:9px;}
+  .st-lb{font-size:10px;}
+}
+@media (prefers-reduced-motion:reduce){.st-bar,.st-track i{transition:none!important;}}
+/* PWA 离线态：只留一条说明，隐藏全部记录与操作区；页脚版本标记保留 */
+.pwa-offline{display:none;margin:0 0 14px;padding:16px 16px 15px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:12px;}
+body.is-offline .pwa-offline{display:block;}
+.pwa-off-t{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pwa-off-s{font-size:13px;line-height:1.7;color:var(--muted);}
+body.is-offline #viewtabs,
+body.is-offline #overview-card,
+body.is-offline #projects-card,
+body.is-offline #history-card,
+body.is-offline #stats-view,
+body.is-offline #btn-generate-card,
+body.is-offline #btn-export-records{display:none !important;}
 </style>
+<!-- PWA：添加到主屏幕。相对路径，www 与 apex 都能安装；正式地址 https://www.oktime.cc/ -->
+<link rel="manifest" href="./manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="时间记录">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 </head>
 <body data-page-node-id="RNf4JYrlnckIrgzztu2cyy">
 <div data-page-node-id="PxD6YnMqZiSJB92k1X2TUS" id="app">
   <header data-page-node-id="UDOlncxaWheaJ2hNm8FTBq" id="app-header"></header>
   <div data-page-node-id="ZuJqvnEOuQ2S9LEKNxX23n" class="wrap">
+    <!-- 最近 7 天统计：三个并列入口只做显隐切换，默认「今日概览」= 原来的完整页面，零行为倒退 -->
+    <div class="pwa-offline" id="pwa-offline" role="status" aria-live="polite">
+      <div class="pwa-off-t">当前没联网</div>
+      <div class="pwa-off-s">记录看不到，操作也存不上。不用急着补，联网后重新打开就能看到；本页不会显示 0，也不会提示保存成功。</div>
+    </div>
+    <nav class="viewtabs" id="viewtabs" aria-label="视图切换">
+      <button type="button" data-action="switch-view" data-view="overview" class="on" aria-current="page">今日概览</button>
+      <button type="button" data-action="switch-view" data-view="stats">统计</button>
+      <button type="button" data-action="switch-view" data-view="history">历史记录</button>
+    </nav>
+    <div id="stats-view" style="display:none"></div>
     <!-- v0.3R：今日概览置顶、我的项目次之；只调卡片顺序，样式与逻辑不变 -->
     <!-- v0.3S：补记 / 编辑弹窗的备注框新增「最近用过」候选，只读已有记录，不改数据结构 -->
     <section data-page-node-id="RIchE3qsHTZvXKLOjUVQMk" class="card" id="overview-card">
@@ -989,7 +1120,7 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
       </div>
     </section>
 
-    <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card">
+    <section data-page-node-id="fOoZ6lXt8ac2cAcNLSuRth" class="card" id="projects-card">
       <div class="section-head">
         <div data-page-node-id="HyUhN78bJ4OWJsZkwDrsJL" class="section-title"><!--pnid:rh9DhYDZJ7afAHPKbSFG3g-->我的项目</div>
         <button type="button" class="sort-mode-btn" id="sort-mode-btn" data-action="toggle-sort-mode" title="当前按调用次数排序，点击切回新建顺序">⇅ 按热度</button>
@@ -3133,8 +3264,12 @@ function renderProjectList(stats, running, dayKey) {
     }
     var sr;
     if (hits.length === 0) {
-      sr = '<div class="proj-search-empty">没有找到「' + esc(searchQuery) + '」' +
-        '<span class="empty-hint">换个词试试，或清空搜索后新建项目</span></div>';
+      /* 搜不到就给出口：搜索词直接带进新建按钮，不用清空搜索、不用退回列表 */
+      sr = '<div class="proj-search-empty pse-empty">' +
+        '<div class="pse-t">没找到「' + esc(searchQuery) + '」</div>' +
+        '<div class="pse-s">不用退出搜索，名字已经带上</div>' +
+        '<button type="button" class="pse-btn" data-action="search-new">＋ 新建「' + esc(searchQuery) + '」</button>' +
+        '</div>';
     } else {
       sr = '<div class="proj-search-result">找到 ' + hits.length + ' 项' +
         (hits.length > SEARCH_MAX_RESULTS
@@ -3480,6 +3615,203 @@ function render() {
   renderLimitSummary(dayKey, now);
   renderHistory();
   applyReveal();
+  /* renderOverview() 会无条件把 #overview-card 的 display 还原成 ""，
+     所以每次整页渲染后按当前视图再压一次显隐（纯 UI，不写 state）。 */
+  applyViewVisibility(currentView);
+  if (currentView === "stats") renderStats();   /* 统计页随数据变化刷新，仍只读 */
+}
+
+/* -------------------- 最近 7 天统计（只读视图 · 纯增量） --------------------
+ * 只读 state：不写段、不改结构、不触发同步，也不另存一份数据副本。
+ * 口径沿用既有实现：覆盖 = computeDayStats().coveredMinutes（区间并集，一天 ≤1440）；
+ * 累计投入 = 逐段 segmentMinutesForDay（未结束的历史段封顶 23:59，不跨到今天）。
+ * 船上段（带 parent）并入父段所属项目，不做任何减法。
+ * 最近 7 天 = 含今天往前 6 个自然日，按北京时间 0 点切分。 */
+
+var STATS_GROUP_COLOR = { more: "#2F7DF6", less: PALETTE[3], flow: PALETTE[2] };
+var currentView = "overview";   /* 纯 UI 状态，不写 state / localStorage / 不同步 */
+
+function statsGroupOf(p) {
+  var g = groupOf(p);           /* 系统「事来则应」不属于任何组，返回 null，归入如实知见 */
+  return (g === GROUP_MORE || g === GROUP_LESS) ? g : GROUP_FLOW;
+}
+function statsProjectById(id) {
+  var ps = (state && Array.isArray(state.projects)) ? state.projects : [];
+  for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i];
+  return null;
+}
+function statsShortDate(k) {
+  var p = String(k).split("-");
+  return Number(p[1]) + "/" + Number(p[2]);
+}
+
+/** 聚合连续 7 天；cur / prev 同构，便于环比 */
+function computeWeekStats(now) {
+  var t = Number(now) || Date.now();
+  var today = bjTodayKey();
+  var keys = [], prevKeys = [], i;
+  for (i = 6; i >= 0; i--) keys.push(shiftDayKey(today, -i));
+  for (i = 13; i >= 7; i--) prevKeys.push(shiftDayKey(today, -i));
+
+  function collect(list) {
+    var perDay = [], byProj = {}, groups = { more: 0, less: 0, flow: 0 };
+    var boat = 0, raw = 0, covered = 0;
+    list.forEach(function (k) {
+      var s = computeDayStats(state, k, t);
+      var idmap = {};
+      s.records.forEach(function (r) { idmap[r.segment.id] = r.project.id; });
+      s.records.forEach(function (r) {
+        var seg = r.segment, pid = r.project.id;
+        var m = segmentMinutesForDay(seg, k, t);
+        if (m <= 0) return;
+        raw += m;
+        if (seg.parent && idmap[seg.parent]) { boat += m; pid = idmap[seg.parent]; }
+        byProj[pid] = (byProj[pid] || 0) + m;
+      });
+      perDay.push({ key: k, covered: s.coveredMinutes, n: s.records.length });
+      covered += s.coveredMinutes;
+    });
+    Object.keys(byProj).forEach(function (pid) {
+      groups[statsGroupOf(statsProjectById(pid))] += byProj[pid];
+    });
+    return { perDay: perDay, byProj: byProj, groups: groups, boat: boat, raw: raw, covered: covered };
+  }
+  return { keys: keys, prevKeys: prevKeys, cur: collect(keys), prev: collect(prevKeys) };
+}
+
+function statsHTML(w) {
+  var keys = w.keys, cur = w.cur, prev = w.prev;
+  var fmt = formatMinutes, cn = remainingText, md = statsShortDate;
+  var head = '<div class="st-head"><div class="st-title">最近 7 天</div>' +
+    '<div class="st-range">' + md(keys[0]) + ' – ' + md(keys[6]) + ' · 含今天</div></div>';
+  var note = '<div class="st-note">只读视图 · 不写入、不修改任何记录<br>按北京时间自然日切分，一天最多 24 小时</div>';
+
+  /* 这 7 天与上 7 天都没有记录：给能接上动作的提示，不画一堆空图 */
+  if (cur.raw <= 0 && prev.raw <= 0) {
+    return '<section class="st-card">' + head +
+      '<div class="st-empty">这 7 天还没有记录<span>回到「今日概览」点开始，或去「历史记录」补记一段</span></div>' +
+      '</section>' + note;
+  }
+
+  var overlap = Math.max(0, cur.raw - cur.covered);
+  var diff = cur.covered - prev.covered;
+  var cls = diff > 0 ? "" : (diff < 0 ? " down" : " flat");
+  var dtxt = diff > 0 ? "↑ 比上 7 天多 " + cn(diff) :
+             (diff < 0 ? "↓ 比上 7 天少 " + cn(-diff) : "与上 7 天持平");
+
+  /* 卡 1：总览 */
+  var h1 = '<section class="st-card">' + head +
+    '<div class="st-kicker">覆盖时长</div>' +
+    '<div class="st-hero">' + fmt(cur.covered) + '<small>净 · 7 天</small></div>' +
+    '<div class="st-sub">累计投入 ' + fmt(cur.raw) + '<em>（含 ' + fmt(overlap) + ' 重叠）</em></div>' +
+    '<div class="st-delta' + cls + '">' + dtxt + '</div></section>';
+
+  /* 卡 2：三分类汇总条 */
+  var gt = cur.groups.more + cur.groups.less + cur.groups.flow;
+  var stack = '<div class="st-stack">', legend = '<div class="st-legend">';
+  ["more", "less", "flow"].forEach(function (g) {
+    var wdt = gt > 0 ? (cur.groups[g] / gt * 100) : 0;
+    var pct = gt > 0 ? Math.round(cur.groups[g] / gt * 100) : 0;
+    stack += '<i style="width:' + wdt.toFixed(2) + '%;background:' + STATS_GROUP_COLOR[g] + '"></i>';
+    legend += '<span class="st-lg">' +
+      '<span class="st-lg-t"><span class="dot" style="background:' + STATS_GROUP_COLOR[g] + '"></span>' + GROUP_LABEL[g] + '</span>' +
+      '<span class="st-lg-v"><b>' + fmt(cur.groups[g]) + '</b> · ' + pct + '%</span></span>';
+  });
+  stack += '</div>'; legend += '</div>';
+  var h2 = '<section class="st-card"><div class="st-head"><div class="st-title">三类各占多少</div>' +
+    '<div class="st-range">按累计投入</div></div>' + stack + legend + '</section>';
+
+  /* 卡 3：7 天趋势 */
+  var max = 1;
+  cur.perDay.forEach(function (d) { if (d.covered > max) max = d.covered; });
+  var bars = '<div class="st-week">';
+  cur.perDay.forEach(function (d, idx) {
+    var isToday = idx === 6, none = d.n === 0;
+    var hgt = none ? 0 : Math.max(3, Math.round(d.covered / max * 74));
+    bars += '<div class="st-day' + (isToday ? " today" : "") + (none ? " none" : "") + '">' +
+      '<span class="st-val">' + (none ? "无记录" : fmt(d.covered)) + '</span>' +
+      '<span class="st-bar" style="height:' + hgt + 'px"></span>' +
+      '<span class="st-lb">' + (isToday ? "今天" : md(d.key)) + '</span></div>';
+  });
+  bars += '</div>';
+  var h3 = '<section class="st-card"><div class="st-head"><div class="st-title">每天投入</div>' +
+    '<div class="st-range">覆盖 · 7 个自然日</div></div>' + bars + '</section>';
+
+  /* 卡 4：项目排行 + 与上 7 天环比 */
+  function signed(m) {
+    if (m > 0) return '<span class="st-df">↑ ' + fmt(m) + '</span>';
+    if (m < 0) return '<span class="st-df down">↓ ' + fmt(-m) + '</span>';
+    return '<span class="st-df flat">持平</span>';
+  }
+  var rows = Object.keys(cur.byProj).map(function (pid) {
+    var p = statsProjectById(pid);
+    return { pid: pid, name: p ? p.name : "已删除项目", color: p ? projectColor(p) : "#9CA3AF",
+             mins: cur.byProj[pid], prev: prev.byProj[pid] || 0 };
+  }).sort(function (a, b) { return b.mins - a.mins; });
+  var total = rows.reduce(function (a, r) { return a + r.mins; }, 0);
+  var top = rows.length ? rows[0].mins : 1;
+  var rhtml = '<div class="st-rows">';
+  rows.forEach(function (r) {
+    var pct = total > 0 ? Math.round(r.mins / total * 100) : 0;
+    var wdt = total > 0 ? (r.mins / top * 100) : 0;
+    rhtml += '<div class="st-row">' +
+      '<span class="dot" style="background:' + r.color + '"></span>' +
+      '<div class="st-row-main"><div class="st-row-top">' +
+        '<span class="st-nm">' + esc(r.name) + '</span>' +
+        '<span class="st-num">' + fmt(r.mins) + '<span>' + pct + '%</span></span>' +
+      '</div><div class="st-track"><i style="width:' + wdt.toFixed(1) + '%;background:' + r.color + '"></i></div></div>' +
+      signed(r.mins - r.prev) + '</div>';
+  });
+  rhtml += '</div>';
+  if (!rows.length) rhtml = '<div class="st-empty">还没有可统计的项目</div>';
+  var h4 = '<section class="st-card" id="st-rank"><div class="st-head">' +
+    '<div class="st-title">时间都去哪了</div><div class="st-range">按累计投入 · 右侧为环比</div></div>' +
+    rhtml + '<div class="st-foot">其中：被打断 ' + fmt(cur.boat) +
+    '（船上，已并进主项目，不重复计）。<br>排行按累计投入，与上方「覆盖」口径不同，两者不要求相加相等。</div>' +
+    '</section>';
+
+  return h1 + h2 + h3 + h4 + note;
+}
+
+function renderStats() {
+  var el = document.getElementById("stats-view");
+  if (el) el.innerHTML = statsHTML(computeWeekStats(Date.now()));
+}
+
+/** 三个入口只做显隐；底部「生成记录卡 / 导出记录」在统计页收起，
+ *  同步条与页脚始终可见。历史记录卡只在「历史记录」视图显示——
+ *  「今日概览」视图不再重复挂一整块历史记录（入口已在顶部 tab）。
+ *  单独抽成函数：render() 里 renderOverview() 会把 #overview-card 的 display 还原，
+ *  所以整页渲染结束后必须再调用一次，否则统计页下方会冒出今日概览卡。 */
+function applyViewVisibility(v) {
+  var visible = {
+    "overview-card": v === "overview",
+    "projects-card": v === "overview",
+    "history-card": v === "history",
+    "btn-generate-card": v !== "stats",
+    "btn-export-records": v !== "stats",
+    "stats-view": v === "stats"
+  };
+  Object.keys(visible).forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.style.display = visible[id] ? "" : "none";
+  });
+  var nav = document.getElementById("viewtabs");
+  if (nav) {
+    Array.prototype.forEach.call(nav.querySelectorAll("button[data-view]"), function (b) {
+      var on = b.getAttribute("data-view") === v;
+      if (on) { b.classList.add("on"); b.setAttribute("aria-current", "page"); }
+      else { b.classList.remove("on"); b.removeAttribute("aria-current"); }
+    });
+  }
+}
+
+function switchView(v) {
+  if (v !== "overview" && v !== "stats" && v !== "history") v = "overview";
+  currentView = v;
+  applyViewVisibility(v);
+  if (v === "stats") renderStats();
+  try { window.scrollTo(0, 0); } catch (e) {}
 }
 
 /* -------------------- 五、事件与业务流程 -------------------- */
@@ -3714,6 +4046,11 @@ function deleteProjectById(pid) {
 }
 
 function onDocumentClick(e) {
+  if (pwaOffline) {
+    showToast("没联网，存不上");
+    try { e.preventDefault(); } catch (err) {}
+    return;
+  }
   var target = (e.target && typeof e.target.closest === "function") ? e.target : null;
   if (!target) return;
   var menuEl = target.closest(".proj-menu");
@@ -3732,7 +4069,10 @@ function onDocumentClick(e) {
     case "set-cat-filter": setCatFilter(el.getAttribute("data-group")); break;
     case "toggle-flat-list": toggleFlatList(); break;
     case "toggle-sort-mode": toggleSortMode(); break;
+    case "switch-view": switchView(el.getAttribute("data-view")); break;
     case "search-clear": clearSearch(); break;
+    case "search-new": openSearchNewModal(); break;
+    case "search-new-group": setSearchNewGroup(el.getAttribute("data-group")); break;
     case "choose-group":
       closeModal();
       openProjectModal(el.getAttribute("data-group"));
@@ -4031,6 +4371,75 @@ function openProjectModal(group) {
       return true;
     }
   });
+}
+
+/* 主搜索框「搜不到就原地新建」：空态按钮 → 一步弹窗。
+   名称取搜索词预填、三分类同屏，默认「如实知见」（与中断面板新建事项一致）；
+   建完直接结束，不接目标 / 上限设置面板。校验与 openProjectModal 一致。 */
+function openSearchNewModal() {
+  var name = String(searchQuery || "").trim();
+  if (!name) return;
+  var panel =
+    '<div class="modal-title">新建项目</div>' +
+    '<div class="modal-desc">名字已带上，改一改也行；建好后常驻「我的项目」</div>' +
+    '<div class="pnew-label">项目名称</div>' +
+    '<input id="modal-input" class="modal-input" type="text" maxlength="10" ' +
+      'value="' + esc(name) + '" placeholder="最多 10 个字" autocomplete="off" ' +
+      'autocapitalize="off" spellcheck="false">' +
+    '<div class="pnew-label">归到哪一类</div>' +
+    '<div class="sheet-groups" id="search-new-groups">' +
+      '<button type="button" class="sheet-group" data-action="search-new-group" data-group="' + GROUP_MORE + '">多多益善<small>至少投入多少</small></button>' +
+      '<button type="button" class="sheet-group" data-action="search-new-group" data-group="' + GROUP_LESS + '">适可而止<small>别超过多少</small></button>' +
+      '<button type="button" class="sheet-group on" data-action="search-new-group" data-group="' + GROUP_FLOW + '">如实知见<small>只记流水 · 默认</small></button>' +
+    '</div>' +
+    '<div class="modal-error pnew-err" id="modal-error"></div>' +
+    '<div class="modal-actions">' +
+      '<button class="btn btn-outline" data-action="modal-cancel">取消</button>' +
+      '<button class="btn btn-primary" data-action="modal-confirm">创建项目</button>' +
+    '</div>';
+  openModalShell(panel, { kind: "search-new", group: GROUP_FLOW, onConfirm: createProjectFromSearch });
+}
+
+/* 只登记选中的分类，不写 state；点「创建项目」时才落库 */
+function setSearchNewGroup(g) {
+  if (!modalState || modalState.kind !== "search-new") return;
+  var ng = (g === GROUP_MORE || g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_FLOW;
+  modalState.group = ng;
+  var box = document.getElementById("search-new-groups");
+  if (!box) return;
+  var chips = box.querySelectorAll(".sheet-group");
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].getAttribute("data-group") === ng) chips[i].classList.add("on");
+    else chips[i].classList.remove("on");
+  }
+  var err = document.getElementById("modal-error");
+  if (err) err.textContent = "";
+}
+
+/* onConfirm：返回 false 表示校验失败、弹层保留；成功交给 handleModalConfirm 关闭 */
+function createProjectFromSearch() {
+  var input = document.getElementById("modal-input");
+  var name = input ? String(input.value || "").trim() : "";
+  if (!name) { showModalError("项目名称不能为空"); return false; }
+  if (Array.from(name).length > 10) { showModalError("项目名称最多 10 个字"); return false; }
+  var dup = (Array.isArray(state.projects) ? state.projects : []).some(function (p) {
+    return String(p.name).trim().toLowerCase() === name.toLowerCase();
+  });
+  if (dup) { showModalError("已存在同名项目"); return false; }
+  var g = (modalState && modalState.group) ? modalState.group : GROUP_FLOW;
+  var idx = state.nextColorIndex % PALETTE.length;
+  state.nextColorIndex = idx + 1;
+  var pid = newId("p");
+  state.projects.push({
+    id: pid, name: name, colorIndex: idx,
+    targetMinutes: null, dailyLimit: null, createdAt: Date.now(),
+    sortIndex: nextSortIndex(), group: g
+  });
+  /* 新建卡片不一定匹配搜索词：先静默清空搜索词（不聚焦、不弹键盘）再高亮 */
+  clearSearchQuietly();
+  markReveal(pid);
+  save(); render();
+  return true;
 }
 
 /* ---- 统一设置弹窗：more / less 共用同一组件与布局 ----
@@ -5235,7 +5644,34 @@ function closeProjMenu() {
   if (m) m.remove();
 }
 
+/* -------------------- PWA：离线态（纯 UI，不读写 state） --------------------
+ * 断网时隐藏全部记录与操作区，只留一条说明；所有点击被拦下，toast 一律改口。
+ * 不做离线补传、不缓存云端记录、不把本机旧记录当成最新显示。
+ * 联网后自动恢复；页脚版本标记始终保留。 */
+var pwaOfflineForced = null;              /* 仅本地自测用，正式运行恒为 null */
+function pwaIsOffline() {
+  if (pwaOfflineForced !== null) return pwaOfflineForced;
+  return (typeof navigator !== "undefined" && navigator.onLine === false);
+}
+var pwaOffline = pwaIsOffline();
+function applyOfflineState() {
+  pwaOffline = pwaIsOffline();
+  if (document.body) document.body.classList.toggle("is-offline", pwaOffline);
+}
+window.addEventListener("offline", applyOfflineState);
+window.addEventListener("online", applyOfflineState);
+applyOfflineState();
+
+/* Service Worker：只在 http(s) 下注册；file:// 打开（本地预览 / 回归）静默跳过。
+   注册失败一律吞掉，绝不影响主程序。 */
+if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(function () {});
+  });
+}
+
 function showToast(text) {
+  if (pwaOffline) text = "没联网，存不上";
   var el = document.getElementById("toast");
   if (!el) return;
   el.textContent = text;
@@ -6517,7 +6953,17 @@ window.TTR = {
     updateSortModeBtn(); refreshProjectList();
   },
   SORT_MODE_KEY: SORT_MODE_KEY,
-  toggleSortMode: toggleSortMode
+  toggleSortMode: toggleSortMode,
+  switchView: switchView,
+  getCurrentView: function () { return currentView; },
+  renderStats: renderStats,
+  computeWeekStats: computeWeekStats,
+  statsHTML: statsHTML,
+  isOffline: function () { return pwaOffline; },
+  setOfflineForTest: function (v) {
+    pwaOfflineForced = (v === null || v === undefined) ? null : !!v;
+    applyOfflineState();
+  }
 };
 </script>
 </body>
