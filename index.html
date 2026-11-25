@@ -756,6 +756,31 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   .picker-item{font-size:13.5px;padding:9px 10px}
   .picker-chosen .pc-hint{display:none}
 }
+/* ===== 补记弹窗：搜不到就在结果区新建（融入主搜索框语汇） =====
+   复用主搜索 .pse-* 空态卡片，零新增色值；新建表单就地展开，不重建弹窗、不写搜索词到 state。 */
+.picker-list .pse-pick{margin:0;border:0;border-radius:0;background:#fff;padding:18px 12px 16px;}
+.picker-list .pse-pick .pse-btn{margin-top:12px;}
+/* 展开后收起触发按钮，避免同一处出现两次「新建」 */
+.pse-pick:has(.pnew-inline:not([hidden])) > .pse-btn{display:none;}
+/* 展开就地新建时放开候选区高度，保证三分类与创建按钮完整可见 */
+.picker-list:has(.pnew-inline:not([hidden])){max-height:none;overflow:visible;}
+.pnew-inline{
+  margin-top:14px;text-align:left;background:#FBFCFE;border:1px solid #E7ECF4;border-radius:11px;padding:12px;
+}
+.pnew-inline[hidden]{display:none;}
+.pnew-lbl{font-size:11.5px;font-weight:600;color:#8A94A6;margin:2px 0 6px;letter-spacing:.2px;}
+.pnew-inline .modal-input{height:42px;font-size:15px;background:#fff;border:1px solid #DCE4F0;}
+.pnew-inline .modal-input:focus{border-color:var(--blue);}
+.pnew-inline .sheet-groups{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;}
+.pnew-inline .sheet-group{padding:9px 3px;font-size:13px;line-height:1.25;}
+.pnew-inline .sheet-group small{font-size:10px;}
+.pnew-err{min-height:0;margin-top:0;font-size:12px;color:#D8412F;line-height:1.3;}
+.pnew-err:not(:empty){margin-top:9px;}
+.pse-ok{display:block;width:100%;margin-top:12px;height:42px;padding:0 10px;}
+@media (max-width:360px){
+  .pnew-inline .sheet-group{font-size:12px;padding:10px 2px;}
+  .pnew-inline .sheet-group small{display:none;}
+}
 
 /* ===== v0.3U：我的项目 · 清单呼吸（方案 A）=====
  * 只改视觉层：把「名字 + 实心蓝开始 + 环形圈 + 今日合计 + 累计次数 + ⋯」挤在一行的卡片，
@@ -825,6 +850,33 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
   box-shadow:0 0 0 3px rgba(59,91,169,.14);
 }
 #project-list .project-card:has(.proj-actions:empty) .proj-name{color:#3B5BA9;}
+
+/* ===== 项目改色：点左侧色点换色，零新增色值、沿用 PALETTE ===== */
+.pl-dot-btn{-webkit-appearance:none;appearance:none;border:0;background:transparent;
+  padding:0;cursor:pointer;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;}
+.pl-dot-btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
+/* 命中区放大到 28px，视觉仍是 7px 圆点，方便手指点 */
+#project-list .proj-stripe.pl-dot-btn{
+  left:-4px;top:9px;bottom:auto;width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+#project-list .proj-stripe.pl-dot-btn::before{
+  content:"";width:7px;height:7px;border-radius:50%;background:var(--accent,#5B8FF9);
+}
+/* 计时中光环仍落在圆点上，改用 ::before 承载 */
+#project-list .project-card:has(.proj-actions:empty) .proj-stripe.pl-dot-btn{box-shadow:none;}
+#project-list .project-card:has(.proj-actions:empty) .proj-stripe.pl-dot-btn::before{
+  box-shadow:0 0 0 3px rgba(59,91,169,.14);
+}
+.pl-swatch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 4px 2px;}
+.pl-swatch{position:relative;width:46px;height:46px;border-radius:50%;border:0;cursor:pointer;
+  justify-self:center;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
+.pl-swatch:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
+.pl-swatch.on::after{content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:2px solid var(--blue);}
+.pl-swatch .ck{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:20px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.25);}
+.pl-hint{font-size:12px;color:var(--muted);line-height:1.6;margin:2px 0 14px;}
 
 /* ===== v0.3V：船上穿插（方案 B）=====
  * 语义：一件事可以「在船上做」——船继续走，船上这件事另记一段，段上带 parent 指向船段。
@@ -1063,12 +1115,70 @@ input{font-family:inherit;font-size:16px;-webkit-tap-highlight-color:transparent
 .st-note{text-align:center;font-size:11.5px;color:#A6AFC0;line-height:1.8;padding:2px 4px 6px;}
 .st-empty{padding:26px 6px;text-align:center;color:var(--muted);font-size:14px;font-weight:600;}
 .st-empty span{display:block;margin-top:8px;font-size:12px;font-weight:400;color:#A6AFC0;line-height:1.7;}
+
+/* ===== 作息图：零新增色值，全部沿用 :root 与 PALETTE ===== */
+.rh-lead-card{padding-bottom:14px;}
+.rh-facts{display:flex;flex-direction:column;gap:9px;margin:2px 0 14px;}
+.rh-fact{display:flex;align-items:center;gap:9px;min-width:0;font-size:13px;line-height:1.5;}
+.rh-fact .dot{width:9px;height:9px;flex:0 0 9px;}
+.rh-fact .rh-when{flex:0 0 auto;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap;}
+.rh-fact .rh-what{color:#5A6A85;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rh-fact .rh-what b{color:var(--text);font-weight:700;}
+.rh-typical{border-top:1px dashed #E6EBF3;padding-top:12px;}
+.rh-typical-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:9px;
+  font-size:12px;font-weight:700;color:#5A6A85;}
+.rh-typical-h span{font-size:11px;font-weight:400;color:var(--muted);white-space:nowrap;}
+.rh-tbar{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;}
+.rh-tcell{height:26px;border-radius:3px;background:#F0F3F8;position:relative;overflow:hidden;}
+.rh-tfill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;}
+.rh-ticks{display:flex;justify-content:space-between;margin-top:6px;color:#A6AFC0;
+  font-size:10px;font-variant-numeric:tabular-nums;}
+.rh-cap{margin-top:10px;font-size:11.5px;color:#A6AFC0;line-height:1.7;}
+
+.rh-axis{display:flex;justify-content:space-between;margin-left:40px;margin-bottom:6px;
+  color:#A6AFC0;font-size:10px;font-variant-numeric:tabular-nums;}
+.rh-rows{display:flex;flex-direction:column;gap:5px;}
+.rh-row{display:flex;align-items:center;gap:6px;min-width:0;}
+.rh-date{width:34px;flex:0 0 34px;font-size:11px;color:var(--muted);
+  font-variant-numeric:tabular-nums;white-space:nowrap;}
+.rh-row.today .rh-date{color:var(--blue);font-weight:700;}
+.rh-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;flex:1 1 auto;min-width:0;}
+.rh-cell{height:22px;border-radius:3px;background:#F0F3F8;position:relative;overflow:hidden;}
+.rh-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px;}
+.rh-row.today .rh-cell{box-shadow:inset 0 0 0 1px rgba(47,125,246,.13);}
+.rh-legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 6px;
+  margin-top:13px;padding-top:11px;border-top:1px dashed #E6EBF3;}
+.rh-lg{display:inline-flex;align-items:center;gap:5px;min-width:0;font-size:11.5px;
+  color:#5A6A85;white-space:nowrap;}
+.rh-lg .dot{width:8px;height:8px;flex:0 0 8px;}
+.rh-lg b{font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;}
+
+.rh-more{margin:0 0 12px;}
+.rh-more-btn{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;
+  padding:13px 16px;border-radius:14px;background:#fff;border:1px solid #E3EDFB;
+  box-shadow:0 2px 10px rgba(47,125,246,.05);font-size:13px;font-weight:600;color:#5A6A85;text-align:left;}
+.rh-more-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.rh-more-ic{font-size:12px;color:var(--blue);font-weight:600;white-space:nowrap;}
+.rh-more-body[hidden]{display:none;}
+.rh-more-body{padding-top:4px;}
+.rh-more-hint{font-size:11px;color:#A6AFC0;line-height:1.7;padding:2px 4px 10px;text-align:center;}
+.rh-r-short{display:none;}
 @media (max-width:360px){
   .st-hero{font-size:34px;}
   .st-legend{gap:6px 10px;}
   .st-week{gap:4px;}
   .st-val{font-size:9px;}
   .st-lb{font-size:10px;}
+  .st-title{white-space:nowrap;}
+  .rh-r-long{display:none;}
+  .rh-r-short{display:inline;}
+  .rh-axis{margin-left:36px;}
+  .rh-date{width:30px;flex:0 0 30px;font-size:10px;}
+  .rh-grid,.rh-tbar{gap:2px;}
+  .rh-cell{height:20px;}
+  .rh-tcell{height:24px;}
+  .rh-fact{font-size:12px;gap:7px;}
+  .rh-lg{font-size:10.5px;}
 }
 @media (prefers-reduced-motion:reduce){.st-bar,.st-track i{transition:none!important;}}
 /* PWA 离线态：只留一条说明，隐藏全部记录与操作区；页脚版本标记保留 */
@@ -1153,7 +1263,7 @@ body.is-offline #btn-export-records{display:none !important;}
     <button data-page-node-id="IajyFz4VUvQ0EBWx7FGu1i" class="generate-btn" data-action="generate-card" id="btn-generate-card"><!--pnid:BC8yNgo1VQhfUu5ZgaRLHI-->生成今日记录卡</button>
     <button data-page-node-id="UVoFGblFJ1y3jLpI7fNeoT" class="export-btn" data-action="export-records" id="btn-export-records"><!--pnid:r0lMzHZDLynPia9lWxBF68-->导出记录</button>
     <div id="sync-bar"></div>
-    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.4D</span></div>
+    <div data-page-node-id="NfhP8tOwaIpfjPswnaBzR6" class="footer-note" id="footer-note"><!--pnid:y7gTV9e2EbovQ2g6HzM44e--><span id="footer-note-text">数据保存在本机浏览器</span> <span class="app-version">v0.5</span></div>
   </div>
 </div>
 
@@ -3117,8 +3227,16 @@ function projectCardHTML(p, bucket, minutesByPid, limitByPid, ctx, dayKey, useCo
   }
   /* more 组 / 事来则应不显示任何上限相关信息；「上次中断」位置规则不变 */
   var limitRow = (groupOf(p) === GROUP_LESS) ? limitByPid[p.id] : null;
+  /* 项目改色：普通项目的色点做成可点按钮；系统项目「事来则应」保持原样不给入口 */
+  var stripeHTML;
+  if (isSystemChore(p) || isChoreProject(p)) {
+    stripeHTML = '<div class="proj-stripe"></div>';
+  } else {
+    stripeHTML = '<button type="button" class="proj-stripe pl-dot-btn" data-action="proj-color" data-id="' +
+      pid + '" role="button" aria-label="更改「' + esc(p.name) + '」的颜色" title="更改颜色"></button>';
+  }
   return '<div class="project-card" data-project-id="' + pid + '" style="--accent:' + projectColor(p) + '">' +
-    '<div class="proj-stripe"></div>' +
+    stripeHTML +
     '<div class="proj-body">' +
       '<div class="proj-top">' +
         '<span class="proj-name ellipsis">' + esc(p.name) + '</span>' +
@@ -3773,9 +3891,222 @@ function statsHTML(w) {
   return h1 + h2 + h3 + h4 + note;
 }
 
+/* -------------------- 最近 7 天作息图（只读 · v0.4E）--------------------
+ * 把零散记录还原成「典型的一天 + 一周作息图」：行=自然日、列=2 小时一格。
+ * 颜色=该格投入最多的项目，色条长度=这段时间被记录覆盖的比例，空白=没记录。
+ * 口径与线上同源：格子时长走 segmentMinutesForDay（ceil 到分钟），
+ * 覆盖走区间并集（与 computeCoveredMinutes 一致），船上子段并入父项目不做减法。
+ * 原四张卡不删，收进底部「查看原来的四项数字」，点开仍是 statsHTML 原样。 */
+
+function rhUnionMs(ivs) {
+  if (!ivs.length) return 0;
+  ivs.sort(function (a, b) { return a[0] - b[0]; });
+  var t = 0, a = ivs[0][0], b = ivs[0][1];
+  for (var i = 1; i < ivs.length; i++) {
+    if (ivs[i][0] < b) { if (ivs[i][1] > b) b = ivs[i][1]; }
+    else { t += b - a; a = ivs[i][0]; b = ivs[i][1]; }
+  }
+  return t + b - a;
+}
+function rhArgmax(map) {
+  var best = null, v = -1;
+  Object.keys(map).forEach(function (k) { if (map[k] > v) { v = map[k]; best = k; } });
+  return best;
+}
+function computeRhythm(now) {
+  var t = Number(now) || Date.now();
+  var today = bjTodayKey(), keys = [], i;
+  for (i = 6; i >= 0; i--) keys.push(shiftDayKey(today, -i));
+  var cells = [], byProj = {}, raw = 0, covered = 0;
+  keys.forEach(function (k) {
+    var dayStart = midnightOf(k), dayEnd = dayStart + 86400000;
+    var cap = (t >= dayStart && t < dayEnd) ? t : dayEnd;
+    var s = computeDayStats(state, k, t);
+    var idmap = {};
+    s.records.forEach(function (r) { idmap[r.segment.id] = r.project.id; });
+    var row = [], q;
+    for (q = 0; q < 12; q++) row.push({ byPid: {}, ivs: [] });
+    s.records.forEach(function (r) {
+      var seg = r.segment, pid = r.project.id;
+      if (seg.parent && idmap[seg.parent]) pid = idmap[seg.parent];   /* 船上并进主项目，不做减法 */
+      var a = Math.max(seg.start, dayStart);
+      var rawEnd = (seg.end === null || seg.end === undefined) ? cap : seg.end;
+      var b = Math.min(rawEnd, dayEnd);
+      if (!(b > a)) return;
+      /* 累计投入沿用 segmentMinutesForDay（ceil 到分钟），格内只按真实区间长度占比摊到各格，用来挑主导项目 */
+      var m = segmentMinutesForDay(seg, k, t);
+      raw += m;
+      byProj[pid] = (byProj[pid] || 0) + m;
+      for (q = 0; q < 12; q++) {
+        var s0 = dayStart + q * 7200000, s1 = s0 + 7200000;
+        var x = Math.max(a, s0), y = Math.min(b, s1);
+        if (y > x) {
+          row[q].ivs.push([x, y]);
+          row[q].byPid[pid] = (row[q].byPid[pid] || 0) + (y - x) / (b - a) * m;
+        }
+      }
+    });
+    row.forEach(function (c) {
+      c.covered = rhUnionMs(c.ivs) / 60000;
+      c.pick = rhArgmax(c.byPid);
+      covered += c.covered;
+    });
+    cells.push({ key: k, row: row });
+  });
+  var order = Object.keys(byProj).sort(function (a, b) { return byProj[b] - byProj[a]; });
+  var isTop = {};
+  order.slice(0, 5).forEach(function (pid) { isTop[pid] = true; });
+  function keyOf(pid) { return isTop[pid] ? pid : "__other__"; }
+
+  /* 典型的一天：把 7 天同一时段叠起来 */
+  var slots = [], q;
+  for (q = 0; q < 12; q++) {
+    var sum = {}, days = 0, cov = 0;
+    cells.forEach(function (c) {
+      var cc = c.row[q];
+      if (cc.covered > 0) { days++; cov += cc.covered; }
+      Object.keys(cc.byPid).forEach(function (pid) {
+        var kk = keyOf(pid);
+        sum[kk] = (sum[kk] || 0) + cc.byPid[pid];
+      });
+    });
+    slots.push({ pick: rhArgmax(sum), days: days, ratio: Math.min(1, cov / (7 * 120)), cov: cov });
+  }
+  /* 相邻同色且至少 4 天有记录的时段合并成一句人话；同一项目只说一次 */
+  var segs = [], run = null;
+  for (q = 0; q < 12; q++) {
+    var sl = slots[q], ok = sl.pick && sl.days >= 4;
+    if (ok && run && run.pick === sl.pick) { run.q1 = q + 1; run.cov += sl.cov; run.days = Math.max(run.days, sl.days); }
+    else { if (run) segs.push(run); run = ok ? { pick: sl.pick, q0: q, q1: q + 1, cov: sl.cov, days: sl.days } : null; }
+  }
+  if (run) segs.push(run);
+  segs.sort(function (a, b) { return b.cov - a.cov; });
+  var seen = {}, facts = [];
+  for (var gi = 0; gi < segs.length && facts.length < 2; gi++) {
+    var g = segs[gi];
+    if (seen[g.pick]) continue;
+    seen[g.pick] = true;
+    facts.push({ pick: g.pick, when: (g.q0 * 2) + "–" + (g.q1 * 2) + " 点", days: g.days });
+  }
+  return { keys: keys, cells: cells, byProj: byProj, isTop: isTop, keyOf: keyOf,
+           slots: slots, facts: facts, raw: raw, covered: covered, empty: covered <= 0 };
+}
+/** 作息图里把项目 id 换成颜色 / 名称；"其它"用系统灰，不新增色值 */
+function rhColor(pid) {
+  if (pid === "__other__") return "#9CA3AF";
+  var p = statsProjectById(pid);
+  return p ? projectColor(p) : "#9CA3AF";
+}
+function rhName(pid) {
+  if (pid === "__other__") return "其它";
+  var p = statsProjectById(pid);
+  return p ? p.name : "已删除项目";
+}
+function rhythmHTML(now) {
+  var R = computeRhythm(now);
+  window.__RHYTHM__ = R;
+  var md = statsShortDate, fmt = formatMinutes;
+  var note = '<div class="st-note">只读视图 · 不写入、不修改任何记录<br>按北京时间自然日切分，一天最多 24 小时</div>';
+  var head = '<div class="st-head"><div class="st-title">最近 7 天</div>' +
+    '<div class="st-range">' + md(R.keys[0]) + ' – ' + md(R.keys[6]) + ' · 含今天</div></div>';
+  if (R.empty) {
+    return '<section class="st-card">' + head +
+      '<div class="st-empty">这 7 天还没有记录<span>回到「今日概览」点开始，或去「历史记录」补记一段</span></div>' +
+      '</section>' + note;
+  }
+
+  /* 卡 1：先给两句人话，再给叠起来的「典型的一天」 */
+  var facts = '<div class="rh-facts">';
+  R.facts.forEach(function (f) {
+    facts += '<div class="rh-fact">' +
+      '<span class="dot" style="background:' + rhColor(f.pick) + '"></span>' +
+      '<span class="rh-when">' + f.when + '</span>' +
+      '<span class="rh-what">7 天里有 ' + f.days + ' 天在<b>「' + esc(rhName(f.pick)) + '」</b></span></div>';
+  });
+  facts += '</div>';
+  if (!R.facts.length) facts = '<div class="rh-cap">这 7 天还没形成固定时段，先看看下面这张图。</div>';
+  var tbar = '<div class="rh-tbar">';
+  R.slots.forEach(function (s) {
+    tbar += '<span class="rh-tcell"><i class="rh-tfill" style="width:' +
+      (s.ratio * 100).toFixed(1) + '%;background:' + (s.pick ? rhColor(s.pick) : "transparent") + '"></i></span>';
+  });
+  tbar += '</div>';
+  var h1 = '<section class="st-card rh-lead-card">' + head + facts +
+    '<div class="rh-typical"><div class="rh-typical-h">典型的一天<span>把 7 天同一时段叠起来</span></div>' +
+    tbar + '<div class="rh-ticks"><span>0</span><span>6</span><span>12</span><span>18</span><span>24 点</span></div></div>' +
+    '<div class="rh-cap">色条越长，说明这几天同一时段记得越满。</div></section>';
+
+  /* 卡 2：一周作息图 */
+  var axis = '<div class="rh-axis"><span>0</span><span>4</span><span>8</span><span>12</span>' +
+    '<span>16</span><span>20</span><span>24</span></div>';
+  var rows = '<div class="rh-rows">';
+  R.cells.forEach(function (c, idx) {
+    var isToday = idx === 6;
+    var none = c.row.every(function (x) { return x.covered <= 0; });
+    var lbl = isToday ? "今天" : md(c.key);
+    var aria = lbl + "：" + (none ? "没有记录" : "覆盖 " + fmt(c.row.reduce(function (a, x) { return a + x.covered; }, 0)));
+    rows += '<div class="rh-row' + (isToday ? " today" : "") + '">' +
+      '<span class="rh-date">' + lbl + '</span>' +
+      '<div class="rh-grid" role="img" aria-label="' + aria + '">';
+    c.row.forEach(function (x) {
+      var ratio = Math.min(1, x.covered / 120);
+      var col = x.pick ? R.keyOf(x.pick) : null;
+      rows += '<span class="rh-cell" aria-hidden="true">' +
+        (col && ratio > 0 ? '<i class="rh-fill" style="width:' + (ratio * 100).toFixed(1) +
+          '%;background:' + rhColor(col) + '"></i>' : '') + '</span>';
+    });
+    rows += '</div></div>';
+  });
+  rows += '</div>';
+  var legend = '<div class="rh-legend">';
+  Object.keys(R.byProj).sort(function (a, b) { return R.byProj[b] - R.byProj[a]; })
+    .slice(0, 5).forEach(function (pid) {
+      legend += '<span class="rh-lg"><span class="dot" style="background:' + rhColor(pid) + '"></span>' +
+        esc(rhName(pid)) + ' <b>' + fmt(R.byProj[pid]) + '</b></span>';
+    });
+  var otherMin = 0;
+  Object.keys(R.byProj).forEach(function (pid) { if (!R.isTop[pid]) otherMin += R.byProj[pid]; });
+  if (otherMin > 0) {
+    legend += '<span class="rh-lg"><span class="dot" style="background:#9CA3AF"></span>其它 <b>' +
+      fmt(otherMin) + '</b></span>';
+  }
+  legend += '</div>';
+  var h2 = '<section class="st-card" id="rh-grid-card">' +
+    '<div class="st-head"><div class="st-title">这一周的作息</div>' +
+    '<div class="st-range"><span class="rh-r-long">每格 2 小时 · 颜色是当时投入最多的项目</span>' +
+    '<span class="rh-r-short">每格 2 小时</span></div></div>' +
+    axis + rows + legend +
+    '<div class="st-foot">一格 = 2 小时；色条长度 = 这段时间被记下的比例；空白 = 没记录。<br>' +
+    '船上打断并进主项目，不重复计。只读，不改任何记录。</div></section>';
+
+  /* 卡 3：原四张卡不删，收进底部，点开仍是原来的样子 */
+  var h3 = '<div class="rh-more"><button type="button" class="rh-more-btn" data-action="rh-more" id="rh-more-btn" ' +
+    'aria-expanded="false" aria-controls="rh-more-body"><span>查看原来的四项数字</span>' +
+    '<span class="rh-more-ic">展开 ▾</span></button>' +
+    '<div class="rh-more-body" id="rh-more-body" hidden></div></div>';
+  return h1 + h2 + h3 + note;
+}
+
 function renderStats() {
   var el = document.getElementById("stats-view");
-  if (el) el.innerHTML = statsHTML(computeWeekStats(Date.now()));
+  if (el) el.innerHTML = rhythmHTML(Date.now());
+}
+/** 折叠区：点开才用原 statsHTML 渲染四项数字，口径内容都不改 */
+function toggleRhMore(btn) {
+  var body = document.getElementById("rh-more-body");
+  if (!body) return;
+  var open = btn.getAttribute("aria-expanded") === "true";
+  if (open) {
+    body.hidden = true; body.innerHTML = "";
+    btn.setAttribute("aria-expanded", "false");
+    var ic1 = btn.querySelector(".rh-more-ic"); if (ic1) ic1.textContent = "展开 ▾";
+  } else {
+    body.innerHTML = '<div class="rh-more-hint">下面是原来的四项数字，口径与内容都没改。</div>' +
+      statsHTML(computeWeekStats(Date.now()));
+    body.hidden = false;
+    btn.setAttribute("aria-expanded", "true");
+    var ic2 = btn.querySelector(".rh-more-ic"); if (ic2) ic2.textContent = "收起 ▴";
+  }
 }
 
 /** 三个入口只做显隐；底部「生成记录卡 / 导出记录」在统计页收起，
@@ -4070,6 +4401,7 @@ function onDocumentClick(e) {
     case "toggle-flat-list": toggleFlatList(); break;
     case "toggle-sort-mode": toggleSortMode(); break;
     case "switch-view": switchView(el.getAttribute("data-view")); break;
+    case "rh-more": toggleRhMore(el); break;
     case "search-clear": clearSearch(); break;
     case "search-new": openSearchNewModal(); break;
     case "search-new-group": setSearchNewGroup(el.getAttribute("data-group")); break;
@@ -4087,6 +4419,8 @@ function onDocumentClick(e) {
     case "adjust-start": openAdjustStartModal(); break;
     case "adjust-quick": applyAdjustQuick(el.getAttribute("data-minutes")); break;
     case "menu": toggleProjMenu(id, el); break;
+    case "proj-color": openProjectColorModal(id); break;
+    case "proj-color-pick": applyProjectColor(el.getAttribute("data-idx")); break;
     case "menu-target": closeProjMenu(); openTargetModal(id); break;
     case "menu-move": closeProjMenu(); openMoveGroupModal(id); break;
     case "menu-delete": closeProjMenu(); openDeleteProjectModal(id); break;
@@ -4109,6 +4443,9 @@ function onDocumentClick(e) {
     case "add-inline-new": toggleAddInlineNew(); break;
     case "add-inline-group": setAddInlineGroup(el.getAttribute("data-group")); break;
     case "pick-project": pickProject(el.getAttribute("data-pid")); break;
+    case "picker-new": openPickerNew(); break;
+    case "picker-new-group": setPickerNewGroup(el.getAttribute("data-group")); break;
+    case "picker-new-go": pickerNewGo(); break;
     case "note-pick": pickNote(el); break;
     case "picker-clear": clearPickerSearch(); break;
     case "history-add": openHistoryAddModal(); break;
@@ -4178,6 +4515,39 @@ function openModalShell(panelHTML, config) {
   document.getElementById("modal-root").innerHTML =
     '<div class="modal-backdrop" data-action="modal-backdrop"></div>' +
     '<div class="modal-panel" role="dialog" aria-modal="true">' + panelHTML + '</div>';
+}
+
+/* ===== 项目改色：点色点弹 8 色盘，点一下即改、全处联动 ===== */
+function openProjectColorModal(pid) {
+  var p = getProject(pid);
+  if (!p || isSystemChore(p) || isChoreProject(p)) return;  /* 系统项目不给改 */
+  var grid = '<div class="pl-swatch-grid">';
+  PALETTE.forEach(function (hex, idx) {
+    var on = idx === (Number(p.colorIndex) % PALETTE.length);
+    grid += '<button type="button" class="pl-swatch' + (on ? ' on' : '') + '" data-action="proj-color-pick" ' +
+      'data-idx="' + idx + '" aria-label="颜色 ' + (idx + 1) + '" aria-pressed="' + (on ? 'true' : 'false') +
+      '" style="background:' + hex + '">' + (on ? '<span class="ck">✓</span>' : '') + '</button>';
+  });
+  grid += '</div>';
+  var panel =
+    '<div class="modal-title">给「' + esc(p.name) + '」换个颜色</div>' +
+    '<div class="pl-hint">点一下就生效，卡片、历史、统计里的它都会跟着变。</div>' +
+    grid +
+    '<div class="modal-actions"><button class="btn btn-primary" data-action="modal-cancel">完成</button></div>';
+  openModalShell(panel, { kind: "color", pid: pid, onConfirm: function () { return true; } });
+}
+
+function applyProjectColor(idx) {
+  if (!modalState || modalState.kind !== "color") return;
+  var p = getProject(modalState.pid);
+  if (!p) { closeModal(); return; }
+  var n = Math.floor(Number(idx));
+  if (!Number.isFinite(n) || n < 0 || n >= PALETTE.length) return;
+  p.colorIndex = n;
+  var name = p.name;
+  closeModal();
+  save(); render();               /* 与项目一起落盘、走正常同步 */
+  showToast("「" + name + "」已换色");
 }
 
 function showModalError(msg) {
@@ -5325,7 +5695,8 @@ function projectPickerHTML(opts) {
   var o = opts || {};
   var sel = o.selectedPid ? String(o.selectedPid) : "";
   return '<div class="proj-picker' + (o.disabled ? " picker-disabled" : "") + '" id="proj-picker"' +
-      ' data-chore="' + (o.includeChore === false ? "0" : "1") + '">' +
+      ' data-chore="' + (o.includeChore === false ? "0" : "1") + '"' +
+      (o.searchOnly ? ' data-search-only="1"' : '') + '>' +
       '<div class="proj-search picker-search" id="picker-search">' +
         '<svg class="proj-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M10.8 10.8 L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>' +
         '<input id="add-project-search" class="proj-search-input" type="text" inputmode="search" ' +
@@ -5342,6 +5713,30 @@ function projectPickerHTML(opts) {
     '</div>';
 }
 
+/** 补记弹窗「搜不到就地新建」空态卡片（与主搜索框 .pse-* 同一套语汇）。
+    kw 为搜索词；无项目兜底时传空串，按钮用通用文案。表单默认收起，点按钮才展开。 */
+function pickerNewCardHTML(kw) {
+  var hasKw = !!kw;
+  return '<div class="pse-empty pse-pick">' +
+    '<div class="pse-t">' + (hasKw ? "没找到「" + esc(kw) + "」" : "还没有项目") + '</div>' +
+    '<div class="pse-s">' + (hasKw ? "不用退出，名字已经带上" : "建一个，把这段时间记到它名下") + '</div>' +
+    '<button type="button" class="pse-btn" data-action="picker-new">' +
+      (hasKw ? "＋ 新建「" + esc(kw) + "」" : "＋ 新建项目") + '</button>' +
+    '<div class="pnew-inline" id="picker-new-box" hidden>' +
+      '<div class="pnew-lbl">项目名称</div>' +
+      '<input id="picker-new-name" class="modal-input" type="text" maxlength="10" value="' + esc(kw) + '" autocomplete="off">' +
+      '<div class="pnew-lbl">归到哪一类</div>' +
+      '<div class="sheet-groups" id="picker-new-groups">' +
+        '<button type="button" class="sheet-group" data-action="picker-new-group" data-group="' + GROUP_MORE + '">多多益善<small>至少投入多少</small></button>' +
+        '<button type="button" class="sheet-group" data-action="picker-new-group" data-group="' + GROUP_LESS + '">适可而止<small>别超过多少</small></button>' +
+        '<button type="button" class="sheet-group on" data-action="picker-new-group" data-group="' + GROUP_FLOW + '">如实知见<small>只记流水 · 默认</small></button>' +
+      '</div>' +
+      '<div class="modal-error pnew-err" id="picker-new-err"></div>' +
+      '<button type="button" class="pse-btn pse-ok" data-action="picker-new-go">创建并选为本次事项</button>' +
+    '</div>' +
+  '</div>';
+}
+
 /** 只重绘候选区与「已选」条，绝不重建输入框 —— 边打字边过滤不丢焦点。 */
 function refreshProjectPicker() {
   var root = document.getElementById("modal-root");
@@ -5353,20 +5748,36 @@ function refreshProjectPicker() {
       hd = root.querySelector("#picker-list-hd"),
       items = root.querySelector("#picker-items"),
       hidden = root.querySelector("#add-project"),
+      listBox = root.querySelector("#picker-list"),
       sbox = root.querySelector("#picker-search");
   if (!input || !chosen || !hd || !items || !hidden) return;
   var kw = String(input.value || "").trim();
   if (sbox) { if (kw) sbox.classList.add("has-value"); else sbox.classList.remove("has-value"); }
+  var searchOnly = wrap.getAttribute("data-search-only") === "1";
   var pid = String(hidden.value || "");
   var selP = pid ? getProject(pid) : null;
   if (selP) {
     chosen.className = "picker-chosen has-value";
     chosen.innerHTML = '<span class="pc-ck">✓</span><span class="pc-name">已选 · ' + esc(selP.name) +
-      '</span><span class="pc-hint">重新搜索或点其它行可改</span>';
+      '</span><span class="pc-hint">' + (searchOnly ? "点搜索框可重选" : "重新搜索或点其它行可改") + '</span>';
   } else {
     chosen.className = "picker-chosen";
-    chosen.textContent = "未选择项目 · 请在下方点选或搜索";
+    chosen.textContent = searchOnly
+      ? "未选择项目 · 在上方搜索框输入项目名"
+      : "未选择项目 · 请在下方点选或搜索";
   }
+  /* 只搜索模式：没输入关键词就不铺候选，避免一打开先看到一长串项目。
+     输入后才出匹配结果，点一行即选中；清空关键词自动收起。 */
+  if (searchOnly && !kw) {
+    if (chosen) chosen.style.display = "";
+    if (listBox) listBox.style.display = "none";
+    hd.textContent = "";
+    items.innerHTML = "";
+    return;
+  }
+  if (listBox) listBox.style.display = "";
+  /* 已经在搜索时，状态提示让位给结果，不再占一行 */
+  if (chosen) chosen.style.display = (searchOnly && kw && !selP) ? "none" : "";
   var includeChore = wrap.getAttribute("data-chore") !== "0";
   var all = pickerProjectList(includeChore);
   var words = kw.toLowerCase().split(/\s+/).filter(function (w) { return !!w; });
@@ -5375,9 +5786,8 @@ function refreshProjectPicker() {
     if (!words.length || searchMatch(all[i].p, words)) hits.push(all[i]);
   }
   if (!hits.length) {
-    hd.textContent = kw ? "没有找到「" + kw + "」" : "暂无可选项目";
-    items.innerHTML = '<div class="picker-empty">没有匹配的项目' +
-      '<span class="pe-hint">' + (kw ? "换个词试试，或点下方「＋ 直接新建项目」" : "请在下方「＋ 直接新建项目」创建") + '</span></div>';
+    hd.textContent = "";   /* 标题行不再重复一遍「没有找到」，只留一条完整提示 */
+    items.innerHTML = pickerNewCardHTML(kw);
     return;
   }
   var shown = Math.min(hits.length, SEARCH_MAX_RESULTS);
@@ -5414,8 +5824,80 @@ function pickProject(pid) {
   if (!p) return;
   var hidden = root.querySelector("#add-project");
   if (hidden) hidden.value = p.id;
+  /* 只搜索模式：选完即收起候选，只留「已选」条；点搜索框可重新输入 */
+  if (wrap.getAttribute("data-search-only") === "1") {
+    var search = root.querySelector("#add-project-search");
+    if (search) search.value = "";
+  }
   refreshProjectPicker();
   refreshNoteSuggest(); /* v0.3S：换项目后候选区跟着换 */
+}
+
+/* ---- 补记弹窗：搜不到就地新建（融入主搜索框流程） ----
+   项目在此处直接创建并落盘、自动选为本次事项；补记弹窗不重建，日期/时间/备注保持原值。 */
+function openPickerNew() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var box = root.querySelector("#picker-new-box");
+  if (!box) return;
+  box.hidden = false;
+  var n = root.querySelector("#picker-new-name");
+  if (n) { try { n.focus(); } catch (e) {} }
+}
+function setPickerNewGroup(g) {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var box = root.querySelector("#picker-new-groups");
+  if (!box) return;
+  var ng = (g === GROUP_MORE || g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_FLOW;
+  var chips = box.querySelectorAll(".sheet-group");
+  for (var i = 0; i < chips.length; i++) {
+    if (chips[i].getAttribute("data-group") === ng) chips[i].classList.add("on");
+    else chips[i].classList.remove("on");
+  }
+  var err = root.querySelector("#picker-new-err");
+  if (err) err.textContent = "";
+}
+function pickerNewGroupOf(root) {
+  var box = root.querySelector("#picker-new-groups");
+  var on = box ? box.querySelector(".sheet-group.on") : null;
+  var g = on ? on.getAttribute("data-group") : GROUP_FLOW;
+  return (g === GROUP_MORE || g === GROUP_LESS || g === GROUP_FLOW) ? g : GROUP_FLOW;
+}
+function pickerNewGo() {
+  var root = document.getElementById("modal-root");
+  if (!root) return;
+  var nameEl = root.querySelector("#picker-new-name"),
+      err = root.querySelector("#picker-new-err");
+  var name = nameEl ? String(nameEl.value === null || nameEl.value === undefined ? "" : nameEl.value).trim() : "";
+  if (!name) { if (err) err.textContent = "项目名称不能为空"; return; }
+  if (Array.from(name).length > 10) { if (err) err.textContent = "项目名称最多 10 个字"; return; }
+  if (typeof isChoreName === "function" && isChoreName(name)) {
+    if (err) err.textContent = "「" + CHORE_NAME + "」为系统项目，请换一个名字"; return;
+  }
+  var ps = Array.isArray(state.projects) ? state.projects : [];
+  var dup = ps.some(function (p) { return String(p.name).trim().toLowerCase() === name.toLowerCase(); });
+  if (dup) { if (err) err.textContent = "已存在同名项目"; return; }
+  var idx = state.nextColorIndex % PALETTE.length;
+  state.nextColorIndex = idx + 1;
+  var pid = newId("p");
+  state.projects.push({
+    id: pid, name: name, colorIndex: idx,
+    targetMinutes: null, dailyLimit: null, createdAt: Date.now(),
+    sortIndex: nextSortIndex(), group: pickerNewGroupOf(root)
+  });
+  /* 立即落盘 + 整页刷新（与 openProjectModal 新建一致）；modal-root 不在 render 范围内，弹窗保持不动 */
+  save(); render();
+  /* 自动选为本次事项：写隐藏域、清搜索词、重绘选择器；不触发 render 第二次 */
+  var hidden = root.querySelector("#add-project");
+  if (hidden) hidden.value = pid;
+  var input = root.querySelector("#add-project-search");
+  if (input) input.value = "";
+  var sbox = root.querySelector("#picker-search");
+  if (sbox) sbox.classList.remove("has-value");
+  refreshProjectPicker();
+  refreshNoteSuggest();
+  if (typeof showToast === "function") showToast("已创建《" + name + "》并选为本次事项");
 }
 
 function clearPickerSearch() {
@@ -5486,7 +5968,7 @@ function openAddHourRecordModal(hour, dayKey) {
   var h = (hour === null || hour === undefined || hour === "") ? null : Number(hour);
   if (h !== null && (!Number.isInteger(h) || h < 0 || h > 23)) return;
   var pickerList = pickerProjectList(true);
-  var autoInline = pickerList.length === 0; /* 一个可选项目都没有时，直接展开内联新建区 */
+  var noProject = pickerList.length === 0; /* 一个项目都没有：打开即展开就地新建表单，避免卡死 */
   var today = bjTodayKey();
   var dk = isValidDayKey(dayKey) ? dayKey : today;
   if (dk > today) dk = today;
@@ -5494,16 +5976,13 @@ function openAddHourRecordModal(hour, dayKey) {
   var desc = (h === null)
     ? "日期默认今天，可改到过去 · 补到哪天算哪天"
     : (timelineClock(h * 60) + "–" + timelineClock((h + 1) * 60) + " · 可改日期，补到哪天算哪天");
-  var inlineHTML = inlineNewProjectHTML(autoInline,
-    "将同时创建这个项目，并把这一段记到它名下。目标 / 上限留空，保存后可在项目卡片上再设置。");
   var panel =
     '<div class="modal-title">补记一段时间</div>' +
     '<div class="modal-desc">' + desc + ' · 日期按北京时间</div>' +
     '<label class="edit-note-label" for="add-date">日期（默认今天，可改到过去）</label>' +
     '<input id="add-date" class="modal-input add-date-input" type="date" value="' + esc(dk) + '" max="' + esc(today) + '">' +
     '<label class="edit-note-label" for="add-project-search">事项（项目）</label>' +
-    projectPickerHTML({ includeChore: true, selectedPid: "", disabled: autoInline }) +
-    inlineHTML +
+    projectPickerHTML({ includeChore: true, selectedPid: "", searchOnly: true }) +
     '<div class="edit-time-row">' +
       '<div class="edit-time-field"><label for="add-start">开始时间</label>' +
         '<input id="add-start" class="modal-input" type="time" value="' + range.start + '"></div>' +
@@ -5530,20 +6009,10 @@ function openAddHourRecordModal(hour, dayKey) {
           st = root.querySelector("#add-start"),
           en = root.querySelector("#add-end"),
           nt = root.querySelector("#add-note");
-      var inline = isAddInlineNew();
-      var newName = "";
-      if (inline) {
-        var nm = root.querySelector("#add-new-name");
-        newName = nm ? String(nm.value === null || nm.value === undefined ? "" : nm.value).trim() : "";
-      }
-      var ok = saveHourRecord(inline ? "" : (sel ? sel.value : ""),
+      /* 项目已在搜索结果区就地创建并选中，这里走普通保存路径即可 */
+      return saveHourRecord(sel ? sel.value : "",
         st ? st.value : "", en ? en.value : "", nt ? nt.value : "",
-        dt ? dt.value : "", inline);
-      if (ok && inline) {
-        var dk2 = dt ? dt.value : "", t2 = bjTodayKey();
-        showToast("已创建《" + newName + "》并补记" + (dk2 && dk2 !== t2 ? "到 " + dk2 : ""));
-      }
-      return ok;
+        dt ? dt.value : "", false);
     }
   });
   var stEl = document.getElementById("add-start"), enEl = document.getElementById("add-end");
@@ -5551,6 +6020,16 @@ function openAddHourRecordModal(hour, dayKey) {
   if (enEl) enEl.oninput = refreshAddPreview;
   refreshAddPreview();
   initProjectPicker();
+  /* 一个项目都没有：直接给出就地新建表单并展开，避免对着空搜索框无从下手 */
+  if (noProject) {
+    var items = document.querySelector("#modal-root #picker-items"),
+        listBox = document.querySelector("#modal-root #picker-list"),
+        chosen = document.querySelector("#modal-root #picker-chosen");
+    if (items) items.innerHTML = pickerNewCardHTML("");
+    if (listBox) listBox.style.display = "";   /* 无关键词时列表默认收起，这里强制露出新建卡片 */
+    if (chosen) chosen.style.display = "none"; /* 与「还没有项目」卡片重复，收起 */
+    openPickerNew();
+  }
   refreshNoteSuggest(); /* v0.3S */
 }
 
